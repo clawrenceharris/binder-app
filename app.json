@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "binder-app",
+    "slug": "binder-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "binder-app"
+}
