@@ -26,7 +26,6 @@ const SignUpPhoto = ({ navigation }) => {
         updateUserProfile(firstName + " " + lastName, image)
 
         const doc = db.collection('users').doc()
-        console.log(auth.currentUser.uid)
         doc.set({
             uid: auth.currentUser.uid,
             firstName: firstName,

@@ -3,61 +3,34 @@ import Classes from "./Classes.js";
 import Notes from "./Notes";
 import PrivateChatRooms from "./PrivateChatRooms";
 import Users from "./Users";
-
+const User = {
+    firstName: 'Sarah',
+    lastName: 'Parker',
+    images: [],
+    studyBuddies: [],
+    gpa: 0,
+    birthday: new Date(2002, 11, 24),
+    props: 0,
+    clips: [],
+    gradYear: 0
+}
 export default [
     {
 
-        id: 0,
         name: 'Algebra I',
         type: 'group',
         users: [Users[0], Users[1], Users[2], Users[3], Users[4], Users[5], Users[6]],
         messages: [
             {
-                user: Users[0],
-                id: 0,
-                content: 'Hey',
-                contentType: 'message',
-
-                timestamp: new Date(2022, 9, 12),
-                icon: assets.chat,
-                status: 'sent'
-
-            },
-            {
-                user: Users[1],
-                id: 1,
-                content: 'Anyone do the hw?',
-                contentType: 'message',
-
-                timestamp: new Date(2022, 9, 13),
-                icon: assets.chat,
-                status: 'sent'
-
-
-            },
-            {
-                user: Users[5],
-                id: 2,
-                content: 'notes',
-                contentType: 'notes',
-
-                timestamp: new Date(2022, 9, 13),
-                icon: assets.notes,
-                status: 'sent'
+                user: User,
+                content: '',
+                contentType: '',
+                timestamp: new Date(),
+                icon: '',
+                status: ''
 
             },
 
-            {
-                user: Users[5],
-                id: 3,
-                content: 'Heres the notes for section 1.1',
-                contentType: 'message',
-
-                timestamp: new Date(2022, 9, 13),
-                icon: assets.notes,
-                status: 'sent'
-
-            }
 
 
         ]

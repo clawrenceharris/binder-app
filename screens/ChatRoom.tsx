@@ -4,7 +4,6 @@ import { assets, Colors } from '../constants'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import ChatMessage from '../components/ChatMessage'
 import ClassChatRooms from '../constants/data/ClassChatRooms'
-import GroupChatMessage from '../components/GroupChatMessage'
 import { ImageBackground } from 'react-native'
 import ChatInput from '../components/ChatInput'
 import useColorScheme from '../hooks/useColorScheme'
@@ -91,6 +90,7 @@ const ChatRoom = ({ route }) => {
             messages={messages}
             onSend={onSend}
             showAvatarForEveryMessage
+
             user={
                 {
                     _id: auth?.currentUser?.uid,

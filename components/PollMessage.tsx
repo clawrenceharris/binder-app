@@ -3,7 +3,7 @@ import React from 'react'
 import { Notes, Poll } from '../types';
 import CircleButton from './CircleButton';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Colors } from '../constants/index.ts';
+import { Colors } from '../constants';
 
 
 

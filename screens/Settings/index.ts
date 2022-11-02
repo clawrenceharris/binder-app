@@ -1,9 +1,4 @@
-import SchoolSettings from "./SchoolSettings";
-import EmailSettings from "./EmailSettings";
-import NameSettings from "./NameSettings";
-import BirthdaySettings from "./BirthdaySettings";
-import GPASetttings from "./GPASettings";
-import PasswordSettings from "./PasswordSettings";
+
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -46,7 +41,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderBottomColor: '#6F6F6F',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+
     },
 
 })
@@ -62,4 +58,4 @@ const descriptions = {
 
 }
 
-export { SchoolSettings, EmailSettings, NameSettings, BirthdaySettings, GPASetttings, PasswordSettings, styles, descriptions }
+export { styles, descriptions }

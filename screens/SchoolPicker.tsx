@@ -7,11 +7,9 @@ import ClassListItem from '../components/ClassListItem'
 import SchoolListItem from '../components/SchoolListItem'
 import { useRoute } from '@react-navigation/native'
 import SchoolListItemToJoin from '../components/SchoolListItemToJoin'
-import { faker } from '@faker-js/faker'
 import BackButton from '../components/BackButton'
 import { SHADOWS, SIZES } from '../constants/Theme'
 import Button from '../components/Button'
-import { update } from 'firebase/database'
 
 
 const SELECTION_LIMIT = 1
@@ -26,13 +24,13 @@ const SchoolPicker = ({ navigation }) => {
     const handleSearch = (value) => {
         setSearch(value)
         setNewSchool({
-            id: faker.datatype.uuid(),
             name: value,
             type: undefined,
             logo: undefined,
             location: undefined,
             users: [],
-            active: []
+            active: [],
+            classes: []
         })
         if (!value.length) {
             return setSchools(Schools)

@@ -1,8 +1,3 @@
-import SignUpBirthday from "./SignUpBirthday";
-import SignUpEmailPassword from "./SignUpEmailPassword";
-import SignUpName from "./SignUpName";
-import SignUpSchool from "./SignUpSchool";
-import SignUpPhoto from "./SignUpPhoto";
 import { Colors } from "../../constants";
 import { StyleSheet } from "react-native";
 
@@ -81,4 +76,4 @@ const styles = StyleSheet.create({
 
 })
 
-export { SignUpBirthday, SignUpEmailPassword, SignUpName, SignUpPhoto, styles, descriptions }
+export { styles, descriptions }

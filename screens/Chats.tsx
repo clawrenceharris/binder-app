@@ -14,7 +14,7 @@ import Users from '../constants/data/Users'
 export default function Chats({ route }) {
     const colorScheme = useColorScheme()
     return (
-        <View style={{ backgroundColor: Colors[colorScheme].background, height: '100%' }}>
+        <View style={{ backgroundColor: '#333', height: '100%' }}>
 
 
 

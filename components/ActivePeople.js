@@ -4,6 +4,7 @@ import { Image } from 'react-native'
 import { assets, Colors } from '../constants'
 import useColorScheme from '../hooks/useColorScheme'
 import { StyleSheet } from 'react-native'
+
 const ICON_SIZE = 25;
 
 const ActivePeople = ({ userCount, activeCount }) => {

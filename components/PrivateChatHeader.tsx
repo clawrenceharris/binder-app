@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet } from 'react-native'
 import React from 'react'
 import CircleButton from './CircleButton';
 import { FontAwesome, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
-import { assets, Colors } from '../constants/index.ts';
+import { assets, Colors } from '../constants';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ClassProfileImage from './ClassProfileImage';
 import useColorScheme from '../hooks/useColorScheme';

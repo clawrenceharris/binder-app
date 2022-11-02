@@ -2,7 +2,6 @@ import assets from "../assets";
 
 export default [
     {
-        id: 0,
         displayName: 'Sarah',
         lastName: 'Parker',
         username: 'sarah123_',

@@ -21,7 +21,7 @@ const ProfileTag = ({ icon, title, onPress, ...props }) => {
                 justifyContent: 'center'
             }}>
                 {icon}
-                <Text style={{ color: colorScheme === 'light' ? 'gray' : '#9BA0A6', marginLeft: 4 }}>{title}</Text>
+                <Text style={{ color: '#333', marginLeft: 4 }}>{title}</Text>
             </View>
         </TouchableWithoutFeedback>
 

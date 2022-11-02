@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Svg, { Circle } from 'react-native-svg'
 import { Colors } from '../constants'
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
+
 const CIRCLE_LENGTH = 300
 const BIG_CIRLCE_LENGTH = CIRCLE_LENGTH + 60
 const STROKE_WIDTH = 10

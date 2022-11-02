@@ -5,7 +5,7 @@ import { assets } from '../../constants'
 import { SHADOWS, SIZES } from '../../constants/Theme'
 import { useNavigation } from '@react-navigation/native'
 
-const SchoolSettings = ({ route }) => {
+const GPASetttings = ({ route }) => {
     const navigation = useNavigation()
     const { value, fieldName, title, description, onSubmit } = route.params
     return (
@@ -31,4 +31,4 @@ const SchoolSettings = ({ route }) => {
     )
 }
 
-export default SchoolSettings
+export default GPASetttings

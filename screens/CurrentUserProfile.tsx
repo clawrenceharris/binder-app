@@ -10,7 +10,6 @@ import CircleButton from '../components/CircleButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SHADOWS, SIZES } from '../constants/Theme'
 import { useNavigation } from '@react-navigation/native'
-import ProfileHeader from '../components/ProfileHeader'
 import ProfileTag from '../components/ProfileTag'
 import ModalComponent from '../components/Modal'
 import moment from 'moment'
@@ -35,15 +34,11 @@ const CurrentUserProfile = ({ route }) => {
     const [image, setImage] = useState(null)
     const [showImageOptionsModal, setShowImageOptionsModal] = useState(false)
     const [showEditNameModal, setShowEditNameModal] = useState(false)
-
-    const user = route.params.user
-
-
     const [showMore, setShowMore] = useState(false)
 
-    const isCurrentUser = () => {
-        return user.uid == auth.currentUser.uid
-    }
+    const { user } = route.params.user
+
+
     const studyBuddyModal = () => (
         <View style={{ alignItems: 'center', justifyContent: 'center', padding: 12 }}>
             <View style={{ backgroundColor: colorScheme === 'light' ? '#F8F8F8' : '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>

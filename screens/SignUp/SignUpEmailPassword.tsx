@@ -108,6 +108,8 @@ const SignUpEmailPassword = ({ navigation }) => {
                             placeholder=""
                             secureTextEntry
                             rules={{ required: 'Username is required' }}
+                            keyboardType=''
+
 
                         />
                     </View>

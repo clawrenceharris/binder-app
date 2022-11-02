@@ -9,7 +9,7 @@ import { useFonts } from 'expo-font';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth'
 // import AsyncStorage from '@react-native-community/async-storage'
-import { Text, View } from 'react-native';
+import { LogBox, Text, View } from 'react-native';
 import { auth } from './Firebase/firebase';
 export default function App() {
   const [user, setUser] = useState(null)
@@ -18,6 +18,10 @@ export default function App() {
 
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+
+  LogBox.ignoreLogs([
+    "Require cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."
+  ])
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(function (user) {

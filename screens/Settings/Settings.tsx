@@ -28,9 +28,16 @@ const Settings = () => {
         })
     }
     useEffect(() => {
-        const unsubscribe = getUserData()
-        setUserData(unsubscribe)
-        return () => unsubscribe
+        const subcriber =
+            db.collection('users').onSnapshot(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
+                    if (documentSnapshot.data().uid == auth.currentUser.uid) {
+                        setUserData(documentSnapshot.data())
+                    }
+
+                })
+            })
+        return () => subcriber()
 
     }, [])
 

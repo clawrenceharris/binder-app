@@ -1,4 +1,7 @@
 import { faker } from "@faker-js/faker"
+import Announcements from "./Announcements";
+import ChatRooms from "./ChatRooms";
+import Users from "./Users";
 
 const getRandomLocation = () => {
     const streetAddress = faker.address.streetAddress();
@@ -14,43 +17,821 @@ export default [
 
 
     {
-        id: 1,
         name: 'Annapolis High School',
-        type: '',
+        scheduleType: 'Periods',
         logo: '',
         location: getRandomLocation(),
         users: [],
-        active: []
+        active: [],
+        classes: [
+            {
+
+                name: 'Algebra I',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[0],
+
+
+            },
+            {
+
+                name: 'Chemistry',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+
+                announcements: Announcements[1],
+
+            },
+            {
+
+                name: 'Physical Education',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Foundations of Technology',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+            },
+
+            {
+
+                name: 'Gender & Sexuality Studies',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Religion',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Music Theory',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Fine Art I',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Graphic Design',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Literature and Composition',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+
+
+        ]
 
 
     }, {
-        id: 2,
         name: 'Chesapeake Middle School',
-        type: '',
+        scheduleType: 'Periods',
         logo: '',
         location: getRandomLocation(),
         users: [],
-        active: []
+        active: [],
+        classes: [
+            {
+
+                name: 'Algebra I',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[0],
+
+
+            },
+            {
+
+                name: 'Chemistry',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+
+                announcements: Announcements[1],
+
+            },
+            {
+
+                name: 'Physical Education',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Foundations of Technology',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+            },
+
+            {
+
+                name: 'Gender & Sexuality Studies',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Religion',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Music Theory',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Fine Art I',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Graphic Design',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Literature and Composition',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2],
+                    Users[3],
+                    Users[4],
+
+
+                ],
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+
+            },
+
+
+
+        ]
 
 
     }, {
-        id: 3,
         name: 'Berry High School',
         type: '',
         logo: '',
         location: getRandomLocation(),
         users: [],
-        active: []
+        active: [],
+        classes: [
+            {
+
+                name: 'Algebra I',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[0],
+
+
+            },
+            {
+
+                name: 'Chemistry',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                users: [
+                    Users[0],
+                    Users[1],
+                    Users[2]
+                ],
+
+                chatRooms: ChatRooms,
+
+
+                announcements: Announcements[1],
+
+            },
+            {
+
+                name: 'Physical Education',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: {},
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Foundations of Technology',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+
+            },
+
+            {
+
+                name: 'Gender & Sexuality Studies',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+
+            {
+
+                name: 'Religion',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+
+            {
+
+                name: 'Music Theory',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+
+            {
+
+                name: 'Fine Art I',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2]
+
+            },
+
+            {
+
+                name: 'Graphic Design',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+
+            {
+
+                name: 'Literature and Composition',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+
+            },
+        ]
 
 
     }, {
-        id: 4,
         name: 'Towson University',
-        type: '',
+        scheduleType: 'Date',
         logo: '',
         location: getRandomLocation(),
         users: [],
-        active: []
+        active: [],
+        classes: [
+            {
 
+                name: 'Algebra I',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[0],
+
+
+            },
+            {
+
+                name: 'Chemistry',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[1],
+
+            },
+            {
+
+                name: 'Physical Education',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Foundations of Technology',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+
+                announcements: Announcements[2],
+
+            },
+
+            {
+
+                name: 'Gender & Sexuality Studies',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+
+            {
+
+                name: 'Religion',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+
+
+            },
+
+            {
+
+                name: 'Music Theory',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+
+            {
+
+                name: 'Fine Art I',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+
+            {
+
+                name: 'Graphic Design',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+
+            {
+
+                name: 'Literature and Composition',
+                description: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                building: '',
+                room: '',
+                teacher: '',
+                chatRooms: ChatRooms,
+                announcements: Announcements[2],
+            },
+        ]
     },
 ]

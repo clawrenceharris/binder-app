@@ -1,7 +1,6 @@
-import { View, Text, Button, SafeAreaView, Image } from 'react-native'
+import { View, Text, Button, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { assets, Colors } from '../constants'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
 
 const StartScreen = ({ navigation }) => {
     return (

@@ -1,11 +1,10 @@
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import React, { useState } from 'react'
 import BackButton from '../../components/BackButton'
 import { assets, Colors } from '../../constants'
 import { SHADOWS, SIZES } from '../../constants/Theme'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { descriptions, styles } from '.'
-import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet'
 
 const SchoolSettings = ({ route }) => {
     const navigation = useNavigation()

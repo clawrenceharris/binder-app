@@ -6,11 +6,21 @@ import ChatRoom from './ChatRoom'
 import SignIn from './SignIn'
 import Profile from './Profile'
 import CameraScreen from './CameraScreen'
-import SignUpName from './SignUp/SignUpName'
-import SignUpPhoto from './SignUp/SignUpPhoto'
+
+
+
+import SchoolSettings from './Settings/SchoolSettings'
+import EmailSettings from './Settings/EmailSettings'
+import NameSettings from './Settings/NameSettings'
+import BirthdaySettings from './Settings/BirthdaySettings'
+import GPASetttings from './Settings/GPASettings'
+import PasswordSettings from './Settings/PasswordSettings'
+
 import SignUpBirthday from './SignUp/SignUpBirthday'
 import SignUpEmailPassword from './SignUp/SignUpEmailPassword'
+import SignUpName from './SignUp/SignUpName'
 import SignUpSchool from './SignUp/SignUpSchool'
+import SignUpPhoto from './SignUp/SignUpPhoto'
 
 export {
     ClassesScreen,
@@ -21,11 +31,19 @@ export {
     SignIn,
     Profile,
     CameraScreen,
-    SignUpName,
+    SchoolSettings,
+    EmailSettings,
+    NameSettings,
+    BirthdaySettings,
+    GPASetttings,
+    PasswordSettings,
+
     SignUpBirthday,
-    SignUpSchool,
     SignUpEmailPassword,
-    SignUpPhoto
+    SignUpName,
+    SignUpPhoto,
+    SignUpSchool,
+
 
 }
 

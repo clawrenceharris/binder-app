@@ -16,6 +16,13 @@ const EditProfile = ({ route }) => {
             </View>
 
             }
+
+
+            <View>
+
+                <Text>Name</Text>
+
+            </View>
         </View>
     )
 }

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, FlatList, ScrollView, Image } from 'react-native'
+import { View, Text, SafeAreaView, FlatList, ScrollView, Image, TouchableWithoutFeedback } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import BackButton from '../components/BackButton'
 import AchievementListItem from '../components/AchievementListItem'
@@ -7,7 +7,6 @@ import { SHADOWS, SIZES } from '../constants/Theme'
 import Header from '../components/Header'
 import { db } from '../Firebase/firebase'
 import Achievements from '../constants/data/Achievements'
-import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet'
 
 const AchievementsScreen = ({ navigation }) => {
     const [achievements, setAchievements] = useState([])

@@ -66,6 +66,9 @@ export function changeEmail(currentPassword, newEmail) {
 
 }
 
+
+
+
 export function signUp(email, password, name, photoURL, school) {
     return createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
@@ -95,17 +98,7 @@ export function signUp(email, password, name, photoURL, school) {
 
 }
 
-function getUserData() {
-    db.collection('users').get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(documentSnapshot => {
-                if (documentSnapshot.data().uid == auth.currentUser.uid) {
-                    return documentSnapshot.data()
-                }
-            })
-        })
-}
-const userData = getUserData()
 
-export { db, auth, userData }
+
+export { db, auth }
 
