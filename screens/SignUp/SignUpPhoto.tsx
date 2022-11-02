@@ -27,7 +27,6 @@ const SignUpPhoto = ({ navigation }) => {
 
         const doc = db.collection('users').doc()
         doc.set({
-            uid: auth.currentUser.uid,
             firstName: firstName,
             lastName: lastName,
             birthday: birthday,
@@ -44,14 +43,18 @@ const SignUpPhoto = ({ navigation }) => {
 
     const onSkipPressed = () => {
         setImage('')
+        const doc = db.collection('users').doc()
+        doc.set({
+            firstName: firstName,
+            lastName: lastName,
+            birthday: birthday,
+            gpa: gpa,
+            grayYear: gradYear,
+            school: school,
+            secondSchool: secondSchool
+        })
         updateUserProfile(firstName + " " + lastName, image)
     }
-
-
-
-    LogBox.ignoreLogs([
-        "Possible Unhandled Promise Rejection"
-    ])
 
 
     function onProfilePicturePress() {

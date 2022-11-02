@@ -45,15 +45,14 @@ const Settings = () => {
         db.collection('users').doc(docId).update({ ...userData, ...newData })
     }
     function getUserData() {
-        db.collection('users').get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                    if (documentSnapshot.data().uid == auth.currentUser.uid) {
-                        setUserData(documentSnapshot.data())
-                        setdocId(documentSnapshot.id)
-                    }
-                })
+        db.collection('users').onSnapshot(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+                if (documentSnapshot.data().uid == auth.currentUser.uid) {
+                    setUserData(documentSnapshot.data())
+                    setdocId(documentSnapshot.id)
+                }
             })
+        })
     }
 
 
@@ -76,7 +75,7 @@ const Settings = () => {
 
                     <SettingsListItem
                         title='Name'
-                        value={auth.currentUser.displayName}
+                        value={auth.currentUser?.displayName}
                         onPress={() => { navigation.navigate('NameSettings', { firstName: userData?.firstName, lastName: userData?.lastName }) }}
                     />
 

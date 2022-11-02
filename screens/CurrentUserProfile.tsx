@@ -36,7 +36,7 @@ const CurrentUserProfile = ({ route }) => {
     const [showEditNameModal, setShowEditNameModal] = useState(false)
     const [showMore, setShowMore] = useState(false)
 
-    const { user } = route.params.user
+    const user = route.params.user
 
 
     const studyBuddyModal = () => (

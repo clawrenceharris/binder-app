@@ -38,8 +38,6 @@ import CurrentUserProfile from '../screens/CurrentUserProfile';
 import Achievements from '../screens/Achievements';
 import AchievementsScreen from '../screens/Achievements';
 import SchoolSettings from '../screens/Settings/SchoolSettings';
-import SignInNavigator from './SignInNavigator';
-// import { createDrawerNavigator } from '@react-navigation/drawer'
 
 
 
@@ -131,10 +129,7 @@ function RootNavigator({ currentUser }) {
 
       />
 
-      <Stack.Screen
-        name='SignInRoot'
-        component={SignInNavigator}
-      />
+
 
       <Stack.Screen
         name="Chats"
