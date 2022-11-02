@@ -1,0 +1,34 @@
+import { View, Text, Button, SafeAreaView, Image } from 'react-native'
+import React from 'react'
+import { assets, Colors } from '../constants'
+import { TouchableOpacity } from '@gorhom/bottom-sheet'
+
+const StartScreen = ({ navigation }) => {
+    return (
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#333', alignItems: 'center' }}>
+
+            <Image source={assets.logo_light} style={{ width: 200, height: 200 }} />
+
+
+            <View style={{ marginTop: '30%', width: '100%', alignItems: 'center' }}>
+
+                <TouchableOpacity
+                    onPress={() => { navigation.navigate('SignIn') }}
+                    style={{ width: '50%', backgroundColor: Colors.light.primary, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 25 }}>
+                    <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white' }}>Log In</Text>
+
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => { navigation.navigate('SignUpEmailPassword') }}
+                    style={{ marginTop: 20, width: '50%', backgroundColor: Colors.light.primary, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 25 }}>
+                    <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white' }}>Sign Up</Text>
+
+                </TouchableOpacity>
+            </View>
+
+        </SafeAreaView>
+    )
+}
+
+export default StartScreen

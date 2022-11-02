@@ -1,0 +1,131 @@
+import more from "../assets/icons/more.png";
+import person01 from "../assets/images/person01.png";
+import person02 from "../assets/images/person02.png";
+import person03 from "../assets/images/person03.png";
+import person04 from "../assets/images/person04.png";
+import book from '../assets/icons/book.png'
+import add_class from '../assets/icons/add_class.png'
+import grad_cap from '../assets/icons/grad_cap.png'
+import school from '../assets/icons/school.png'
+import school_outlined from '../assets/icons/school_outlined.png'
+import logo from '../assets/icons/logo.png'
+import desk from '../assets/icons/desk.png'
+import profile from '../assets/icons/profile.png'
+import left_arrow from '../assets/icons/left_arrow.png'
+import settings from '../assets/icons/settings.png'
+import create from '../assets/icons/create.png'
+import right_arrow from '../assets/icons/right_arrow.png'
+import down_arrow from '../assets/icons/down_arrow.png'
+import crowd from '../assets/icons/crowd.png'
+import search from '../assets/icons/search.png'
+import private_chat from '../assets/icons/private_chat.png'
+import chat from '../assets/icons/chat.png'
+import triangle from '../assets/icons/triangle.png'
+import font from '../assets/icons/font.png'
+import playground from '../assets/icons/playground.png'
+import list from '../assets/icons/list.png'
+import add_image from '../assets/icons/add-image.png'
+import notes from '../assets/icons/notes.png'
+import chat_o from '../assets/icons/chat-o.png'
+import camera_o from '../assets/icons/camera-o.png'
+import camera from '../assets/icons/camera.png'
+import person from '../assets/icons/person.png'
+import loading from '../assets/icons/loading.png'
+import image01 from '../assets/images/image01.jpeg'
+
+import group01 from '../assets/images/group01.jpg'
+import notes01 from '../assets/images/notes01.jpg'
+import chat_search from '../assets/icons/chat_search.png'
+import horn from '../assets/icons/horn.png'
+import poll from '../assets/icons/poll.png'
+import fire from '../assets/icons/fire.png'
+import phone from '../assets/icons/phone.png'
+import video_call from '../assets/icons/video_call.png'
+import close from '../assets/icons/close.png'
+import flash from '../assets/icons/flash.png'
+import flash_off from '../assets/icons/flash-off.png'
+import send from '../assets/icons/send.png'
+import flip from '../assets/icons/flip.png'
+
+import chat_background from '../assets/images/chat_background.jpg'
+import chat_background_dark from '../assets/images/chat_background_dark.jpg'
+import logo_light from '../assets/images/logo-light.png'
+
+import chat_bubble from '../assets/icons/chat_bubble.png'
+import new_chat from '../assets/icons/new-chat.png'
+
+import profile_filled from '../assets/icons/profile_filled.png'
+import pin from '../assets/icons/pin.png'
+import pencil from '../assets/icons/pencil.png'
+import badge from '../assets/icons/badge.png'
+import star from '../assets/icons/star.png'
+import question_mark from '../assets/icons/question-mark.png'
+import check from '../assets/icons/check.png'
+import info from '../assets/icons/info.png'
+import shines from '../assets/icons/shines.png'
+
+
+export default {
+    shines,
+    info,
+    check,
+    question_mark,
+    star,
+    badge,
+    pencil,
+    pin,
+    logo_light,
+    more,
+    person01,
+    person02,
+    person03,
+    person04,
+    book,
+    add_class,
+    grad_cap,
+    logo,
+    loading,
+    school_outlined,
+    school,
+    desk,
+    profile,
+    crowd,
+    person,
+    down_arrow,
+    right_arrow,
+    left_arrow,
+    settings,
+    search,
+    create,
+    private_chat,
+    horn,
+    chat,
+    chat_o,
+    notes,
+    fire,
+    poll,
+    group01,
+    notes01,
+    chat_search,
+    video_call,
+    phone,
+    chat_background,
+    chat_bubble,
+    profile_filled,
+    new_chat,
+    chat_background_dark,
+    close,
+    flash,
+    flash_off,
+    send,
+    camera,
+    camera_o,
+    image01,
+    flip,
+    triangle,
+    font,
+    list,
+    playground,
+    add_image
+
+};
