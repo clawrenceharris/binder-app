@@ -107,7 +107,7 @@ const SignIn = ({ navigation }) => {
           <Text style={{ color: 'white' }}>Don't have an account?</Text>
           <Text
             style={{ color: Colors.light.primary, fontWeight: 'bold', marginLeft: 5 }}
-            onPress={() => { navigation.navigate('SignUp') }}
+            onPress={() => { navigation.navigate('SignUpEmailPassword') }}
           >Sign Up</Text>
 
         </View>

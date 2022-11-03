@@ -28,18 +28,19 @@ const Settings = () => {
         })
     }
     useEffect(() => {
-        const subcriber =
-            db.collection('users').onSnapshot(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                    if (documentSnapshot.data().uid == auth.currentUser.uid) {
-                        setUserData(documentSnapshot.data())
-                    }
+        console.log("USE EFFECT")
+        const subscriber = db.collection('users')
+            .doc(auth.currentUser.uid)
+            .onSnapshot(doc => {
+                setUserData(doc.data())
 
-                })
             })
-        return () => subcriber()
 
-    }, [])
+
+
+        return () => subscriber()
+
+    }, [userData])
 
     function onSubmit(newData) {
         db.collection('users').doc(docId).update({ ...userData, ...newData })

@@ -1,17 +1,30 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { assets, Colors } from '../constants'
 import { Image } from 'react-native'
 import useColorScheme from '../hooks/useColorScheme'
 import { useNavigation } from '@react-navigation/native'
-import { auth } from '../Firebase/firebase'
+import { auth, db } from '../Firebase/firebase'
 
 const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStudyBuddy, showActive, ...props }) => {
     const colorScheme = useColorScheme();
     const navigation = useNavigation()
-    console.log("USER", user)
+    const [image, setImage] = useState(null)
+    const [studyBuddies, setStudyBuddies] = useState([])
+    const [friends, setFriends] = useState([])
+
+    useEffect(() => {
+        const subscriber = db.collection('users').doc(auth.currentUser.uid)
+            .onSnapshot(doc => {
+                setImage(doc.data().photoURL);
+                setFriends(doc.data().friends)
+            })
+
+        return () => subscriber()
+    }, [])
+
 
     const showStory = () => {
 
@@ -26,6 +39,8 @@ const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStu
         }
     }
 
+
+
     const hasStory = () => {
         return false
     }
@@ -36,11 +51,11 @@ const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStu
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
 
-                    <View style={{ position: 'absolute', width: size, height: size, backgroundColor: colorScheme === 'light' ? '#f2f2f2' : 'darkgray', borderRadius: 100, justifyContent: 'center', alignItems: 'center', zIndex: 0 }} />
+                    <View style={{ position: 'absolute', width: size, height: size, backgroundColor: 'gray', borderRadius: 100, justifyContent: 'center', alignItems: 'center', zIndex: 0 }} />
 
                     {showActive &&
 
-                        <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: colorScheme === 'light' ? '#333333' : 'white', width: 15, height: 15, borderRadius: 100, position: 'absolute', left: 7, top: '60%' }}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#333333', width: 15, height: 15, borderRadius: 100, position: 'absolute', left: 7, top: '60%' }}>
                             <View style={{ backgroundColor: '#7FF449', width: 10, height: 10, borderRadius: 100 }} />
 
                         </View>
@@ -52,19 +67,19 @@ const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStu
 
 
 
-                    <View style={{ borderRadius: 100, alignItems: 'center', overflow: 'hidden' }}>
-                        {user?.photoURL && <Image source={{ uri: user.photoURL }} style={[styles.image, { width: size, height: size }]} />}
+                    <View style={{ borderRadius: 100, alignItems: 'center', overflow: 'hidden', width: size, height: size, justifyContent: 'center' }}>
+                        {image && <Image source={{ uri: image }} style={[styles.image, { width: size, height: size }]} />}
+                        {!image && <Image source={assets.person} style={[styles.defaultImage, { width: size - (size / 3), height: size - (size / 3) }]} />}
 
                     </View>
 
 
-                    {/* {!user.photoURL && <Image source={assets.grad_cap} style={[styles.defaultImage, { width: size - (size / 3), height: size - (size / 3) }]} />} */}
 
 
-                    {/* {user.studyBuddy && showStudyBuddy && <View style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', padding: 4, backgroundColor: Colors[colorScheme].background, borderRadius: 50, right: -15, top: 20 }}>
+                    {studyBuddies.includes(user) && <View style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', padding: 4, backgroundColor: Colors[colorScheme].background, borderRadius: 50, right: -15, top: 20 }}>
                         <Text style={{ fontSize: (size / 3) }}>🤓</Text>
 
-                    </View>} */}
+                    </View>}
 
                 </View>
 
@@ -80,8 +95,7 @@ const styles = StyleSheet.create({
 
 
     defaultImage: {
-        resizeMode: 'contain',
-        position: 'absolute',
+        resizeMode: 'cover',
         tintColor: '#D4D4D4',
     },
 

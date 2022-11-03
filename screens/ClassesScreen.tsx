@@ -12,11 +12,10 @@ import { auth } from '../Firebase/firebase';
 import { UserProfileCircle } from '../components';
 import Header from '../components/Header';
 
-export default function ClassesScreen() {
+export default function ClassesScreen({ currentUser }) {
     const colorScheme = useColorScheme();
     const navigation = useNavigation()
     const [open, setOpen] = useState(false)
-
     const modal = () => (
         <View>
             <Text>Modal</Text>
@@ -24,7 +23,7 @@ export default function ClassesScreen() {
     )
 
     const headerRight = () => (
-        <UserProfileCircle user={auth.currentUser} size={40} showName={false} showStoryBoder bold={false} showStudyBuddy={false} showActive />
+        <UserProfileCircle user={currentUser} size={40} showName={false} showStoryBoder bold={false} showStudyBuddy={false} showActive />
 
     )
     const headerLeft = () => (

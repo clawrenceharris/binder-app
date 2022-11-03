@@ -1,11 +1,11 @@
 import { View, Text, TextInput, TouchableOpacity, Animated, Modal, useWindowDimensions } from 'react-native'
 import React, { useRef, useState } from 'react'
-import { auth, updateUserProfile } from '../Firebase/firebase';
+import { auth, db, updateName, updateUserProfile } from '../Firebase/firebase';
 import { Colors } from '../constants';
 
 const EditNameModal = (props) => {
-    const [firstName, setFirstName] = useState(auth.currentUser.displayName)
-    const [lastName, setLastName] = useState('')
+    const [firstName, setFirstName] = useState(props.firstName)
+    const [lastName, setLastName] = useState(props.lastName)
     const { width, height } = useWindowDimensions()
     const translateValue = useRef(new Animated.Value(0)).current
     function slideIn() {
@@ -19,6 +19,8 @@ const EditNameModal = (props) => {
 
             }).start();
     }
+
+
 
 
     function slideOut() {
@@ -75,7 +77,11 @@ const EditNameModal = (props) => {
 
 
                         <TouchableOpacity
-                            onPress={() => { updateUserProfile(firstName + " " + lastName, auth.currentUser.photoURL); props.onSavePress() }}
+                            onPress={() => {
+                                updateUserProfile(firstName + " " + lastName, auth.currentUser.photoURL);
+                                updateName(firstName, lastName);
+                                props.onSavePress()
+                            }}
                             style={{ borderRadius: 50, width: '100%', backgroundColor: Colors.light.accent, padding: 10, alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={{ color: 'white', fontFamily: "Kanit", fontSize: 20 }}>Save</Text>
                         </TouchableOpacity>

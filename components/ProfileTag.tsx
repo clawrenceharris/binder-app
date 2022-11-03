@@ -10,9 +10,9 @@ const ProfileTag = ({ icon, title, onPress, ...props }) => {
     return (
         <TouchableWithoutFeedback onPress={onPress}>
             <View style={{
-                backgroundColor: colorScheme === 'light' ? '#333' : '#121212',
+                backgroundColor: '#333',
                 borderWidth: 1,
-                borderColor: colorScheme === 'light' ? 'gray' : '#303030',
+                borderColor: 'lightgray',
                 borderRadius: 50,
                 height: 35,
                 width: props.width,
@@ -21,7 +21,7 @@ const ProfileTag = ({ icon, title, onPress, ...props }) => {
                 justifyContent: 'center'
             }}>
                 {icon}
-                <Text style={{ color: '#333', marginLeft: 4 }}>{title}</Text>
+                <Text style={{ color: '#9BA0A6', marginLeft: 4 }}>{title}</Text>
             </View>
         </TouchableWithoutFeedback>
 

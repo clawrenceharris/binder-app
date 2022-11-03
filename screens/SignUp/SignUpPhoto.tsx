@@ -20,40 +20,74 @@ const SignUpPhoto = ({ navigation }) => {
     const [galleryItems, setGalleryItems] = useState([])
     const route = useRoute();
     const [showModal, setShowModal] = useState(false)
-    const { firstName, lastName, birthday, gpa, gradYear, school, secondSchool } = route.params
-    // console.log(route.params)
+    const { firstName, lastName, birthday, gpa, gradYear, school, secondSchool, uid } = route.params
+    console.log("AUTH UID ", auth.currentUser.uid)
     const onFinishedPressed = () => {
-        updateUserProfile(firstName + " " + lastName, image)
 
-        const doc = db.collection('users').doc()
-        doc.set({
-            firstName: firstName,
-            lastName: lastName,
-            birthday: birthday,
-            gpa: gpa,
-            grayYear: gradYear,
-            school: school,
-            secondSchool: secondSchool
+        db.collection('users')
+            .doc(auth.currentUser.uid)
+            .set({
+                firstName: firstName,
+                lastName: lastName,
+                photoUrl: image,
+                birthday: birthday,
+                gpa: gpa,
+                gradYear: gradYear,
+                school: school,
+                secondSchool: secondSchool,
+                lastActive: new Date()
+            })
 
 
 
-        })
+        let displayName = ""
+        if (!firstName)
+            displayName = lastName
+
+        else if (!lastName)
+            displayName = firstName
+        else
+            displayName = firstName + " " + lastName
+
+
+        updateUserProfile(displayName, image)
         navigation.replace('Root')
     }
 
     const onSkipPressed = () => {
         setImage('')
-        const doc = db.collection('users').doc()
-        doc.set({
-            firstName: firstName,
-            lastName: lastName,
-            birthday: birthday,
-            gpa: gpa,
-            grayYear: gradYear,
-            school: school,
-            secondSchool: secondSchool
-        })
-        updateUserProfile(firstName + " " + lastName, image)
+        console.log("UID: ", uid)
+
+        db.collection('users')
+            .doc(auth.currentUser.uid)
+            .set({
+                firstName: firstName,
+                lastName: lastName,
+                photoUrl: image,
+                birthday: birthday,
+                gpa: gpa,
+                gradYear: gradYear,
+                school: school,
+                secondSchool: secondSchool,
+                lastActive: new Date()
+
+
+
+            })
+
+
+
+        let displayName = ""
+        if (!firstName)
+            displayName = lastName
+
+        else if (!lastName)
+            displayName = firstName
+        else
+            displayName = firstName + " " + lastName
+
+
+        updateUserProfile(displayName, image)
     }
 
 

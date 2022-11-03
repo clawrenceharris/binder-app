@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ImageBackground, Image, Modal, FlatList, Button, AsyncStorage, TouchableOpacity, TouchableWithoutFeedback, TextInput } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { assets, Colors } from '../constants'
 import useColorScheme from '../hooks/useColorScheme'
@@ -19,7 +19,7 @@ import Classes from '../constants/data/Classes'
 import ProfileListBox from '../components/ProfileListBox'
 import ClassChatListItem from '../components/ClassChatListItem'
 import ChatRooms from '../constants/data/ChatRooms'
-import { auth, updateUserProfile } from '../Firebase/firebase'
+import { auth, db, updateUserProfile } from '../Firebase/firebase'
 import { openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
 import ImageOptionsModal from '../components/ImageOptionsModal'
@@ -35,54 +35,55 @@ const CurrentUserProfile = ({ route }) => {
     const [showImageOptionsModal, setShowImageOptionsModal] = useState(false)
     const [showEditNameModal, setShowEditNameModal] = useState(false)
     const [showMore, setShowMore] = useState(false)
+    const [userData, setUserData] = useState(null)
+
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const user = route.params.user
 
+    useEffect(() => {
+        const subscriber = db.collection('users').doc(auth.currentUser.uid).onSnapshot(doc => {
+            setUserData(doc.data())
 
-    const studyBuddyModal = () => (
-        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 12 }}>
-            <View style={{ backgroundColor: colorScheme === 'light' ? '#F8F8F8' : '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
-                <Text style={{ fontSize: 36 }}>🤓</Text>
-            </View>
+            setFirstName(doc.data().firstName)
+            setLastName(doc.data().lastName)
 
-            <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: colorScheme === 'light' ? '#2D3035' : '#DEDEDE' }}>Study Buddies</Text>
+        })
 
-            </View>
-            <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: colorScheme === 'light' ? '#666D77' : '#999999' }}>You and {user.displayName} are both Study Buddies!</Text>
-
-            </View>
-
-            <TouchableOpacity
-                onPress={() => { setShowModal(false) }}
-                style={{ height: 50, backgroundColor: colorScheme === 'light' ? '#EDEEF0' : '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
-                <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>Close</Text>
-            </TouchableOpacity>
+        return () => subscriber()
+    }, [])
 
 
-        </View>
-    );
+    const updatePhotoURL = (photoURL) => {
+        db.collection('users').doc(auth.currentUser.uid).update({
+            photoURL: photoURL,
+        })
+
+    }
+
+
 
 
     const birthdayModal = () => (
         <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-            <View style={{ backgroundColor: colorScheme === 'light' ? '#F8F8F8' : '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
+            <View style={{ backgroundColor: '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
                 <Text style={{ fontSize: 36 }}>🎂</Text>
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: colorScheme === 'light' ? '#2D3035' : '#DEDEDE' }}>Birthday</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Birthday</Text>
 
             </View>
             <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: colorScheme === 'light' ? '#666D77' : '#999999' }}>{'user.uid' != auth?.currentUser?.uid ? `${user.displayName}'s` : 'Your'} birthday is on {moment(route.params.user.birthday).format("MMM DD, YYYY")}</Text>
+                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>{`Your birthday is on ${moment(route.params.user.birthday).format("MMM DD, YYYY")}`}</Text>
 
             </View>
 
             <TouchableOpacity
                 onPress={() => { setShowModal(false) }}
-                style={{ height: 50, backgroundColor: colorScheme === 'light' ? '#EDEEF0' : '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
+                style={{ height: 50, backgroundColor: '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
                 <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>Close</Text>
             </TouchableOpacity>
 
@@ -94,22 +95,22 @@ const CurrentUserProfile = ({ route }) => {
 
     const zodiacSignModal = () => (
         <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-            <View style={{ backgroundColor: colorScheme === 'light' ? '#F8F8F8' : '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
+            <View style={{ backgroundColor: '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
                 <Text style={{ fontSize: 36 }}>♏️</Text>
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: colorScheme === 'light' ? '#2D3035' : '#DEDEDE' }}>Zodiac</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Zodiac</Text>
 
             </View>
             <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: colorScheme === 'light' ? '#666D77' : '#999999' }}>{user.displayName} is a Scorpio</Text>
+                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>{'You are is a Scorpio'}</Text>
 
             </View>
 
             <TouchableOpacity
                 onPress={() => { setShowModal(false) }}
-                style={{ height: 50, backgroundColor: colorScheme === 'light' ? '#EDEEF0' : '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
+                style={{ height: 50, backgroundColor: '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
                 <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>Close</Text>
             </TouchableOpacity>
 
@@ -118,71 +119,26 @@ const CurrentUserProfile = ({ route }) => {
 
 
     );
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    function editNameModal() {
 
-
-        return (
-            <View style={{ justifyContent: 'center', alignItems: 'center', padding: 10, flex: 1 }}>
-                <Text style={{ color: 'white', fontSize: 18, fontFamily: 'Kanit' }}>Edit Name</Text>
-                <Text style={{ color: 'gray', fontFamily: "Kanit", textAlign: 'center' }}>This is how you appear on Binder, so pick a name your classmates know you by</Text>
-
-
-                <View style={{ margin: 20, width: '100%' }}>
-
-                    <TextInput
-                        placeholder='First Name'
-                        style={{ color: 'white', padding: 15, fontSize: 18, width: '100%', backgroundColor: '#474747', borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomColor: '#6F6F6F', borderBottomWidth: 1 }}
-                        onChangeText={setFirstName}
-                        value={firstName}
-                        placeholderTextColor={'#6F6F6F'}
-
-                    />
-
-                    <TextInput
-                        placeholder='Last Name'
-                        placeholderTextColor={'#6F6F6F'}
-                        style={{ color: 'white', padding: 15, fontSize: 18, paddingHorizontal: 10, width: '100%', backgroundColor: '#474747', borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
-                        onChangeText={setLastName}
-                        value={lastName}
-
-                    />
-                </View>
-
-
-
-                <TouchableOpacity
-                    onPress={() => { updateUserProfile(firstName + " " + lastName, user.photoURL); setShowModal(false); }}
-                    style={{ borderRadius: 50, width: '100%', backgroundColor: Colors.light.accent, padding: 10, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: 'white', fontFamily: "Kanit", fontSize: 20 }}>Save</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => { setShowModal(false) }}>
-                    <Text style={{ color: 'white', fontFamily: "Kanit", marginTop: 20 }}>Cancel</Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
 
     const classModal = () => (
         <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-            <View style={{ backgroundColor: colorScheme === 'light' ? '#F8F8F8' : '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
+            <View style={{ backgroundColor: '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
                 <Text style={{ fontSize: 36 }}>🎓</Text>
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: colorScheme === 'light' ? '#2D3035' : '#DEDEDE' }}>Class</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Class</Text>
 
             </View>
             <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: colorScheme === 'light' ? '#666D77' : '#999999' }}>{user.displayName} graduates in {route.params.user.class}</Text>
+                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>You graduate in {userData.gradYear}</Text>
 
             </View>
 
             <TouchableOpacity
                 onPress={() => { setShowModal(false) }}
-                style={{ height: 50, backgroundColor: colorScheme === 'light' ? '#EDEEF0' : '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
+                style={{ height: 50, backgroundColor: '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
                 <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>Close</Text>
             </TouchableOpacity>
 
@@ -220,19 +176,18 @@ const CurrentUserProfile = ({ route }) => {
 
             <View style={{ paddingHorizontal: 20 }}>
 
-                {/* <ModalComponent renderContent={modal} showModal={false} toValue={-1200} height={290} /> */}
+                <ModalComponent renderContent={modal} showModal={showModal} toValue={-900} animated height={300} width={250} />
 
                 <EditNameModal
-                    setFirstName={setFirstName}
-                    setLastName={setLastName}
+                    firstName={firstName}
+                    lastName={lastName}
                     onCancelPress={() => {
                         setShowEditNameModal(false)
                     }}
                     showModal={showEditNameModal}
                     onSavePress={() => {
-
-
                         setShowEditNameModal(false)
+
                     }}
                 />
 
@@ -243,7 +198,7 @@ const CurrentUserProfile = ({ route }) => {
                         const result = await openMediaLibrary('photo', 1);
                         if (result != null)
                             updateUserProfile(auth.currentUser.displayName, result)
-
+                        updatePhotoURL(result)
                     }}
 
                     onTakePicturePress={() => { }}
@@ -281,7 +236,7 @@ const CurrentUserProfile = ({ route }) => {
                     <View style={{ alignItems: 'center', marginTop: 10, flexDirection: 'row', justifyContent: 'center' }}>
                         <Text
                             onPress={() => { setShowEditNameModal(true) }}
-                            style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>{user.displayName}</Text>
+                            style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>{firstName + " " + lastName}</Text>
                         <TouchableWithoutFeedback
                             onPress={() => { setShowEditNameModal(true) }} >
 
@@ -299,20 +254,20 @@ const CurrentUserProfile = ({ route }) => {
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingVertical: 20, flexDirection: 'row', marginTop: 20 }}>
 
-                        {user && user.studyBuddy && <ProfileTag icon={<Text>🤓</Text>} title={'Study Buddies'} width={135} onPress={() => { setShowModal(true); setModal(studyBuddyModal()); }} />}
+                        {user && user.studyBuddy && <ProfileTag icon={<Text>🤓</Text>} title={'Study Buddies'} width={135} onPress={() => { setModal(studyBuddyModal()); setShowModal(true); }} />}
 
 
                         <View style={{ marginLeft: 10 }}>
-                            {user && <ProfileTag icon={<Text>🎓</Text>} title={route.params.user.class} width={90} onPress={() => { setShowModal(true); setModal(classModal()); }} />}
+                            {user && <ProfileTag icon={<Text>🎓</Text>} title={route.params.user.class} width={90} onPress={() => { setModal(classModal()); setShowModal(true); }} />}
 
                         </View>
                         <View style={{ marginLeft: 10 }}>
-                            {user && <ProfileTag icon={<Text>🎂</Text>} title={moment(route.params.user.birthday).format("MMM DD, YYYY")} width={135} onPress={() => { setShowModal(true); setModal(birthdayModal()); }} />}
+                            {user && <ProfileTag icon={<Text>🎂</Text>} title={moment(route.params.user.birthday).format("MMM DD, YYYY")} width={135} onPress={() => { console.log("press"); setModal(birthdayModal()); setShowModal(true); }} />}
 
                         </View>
 
                         <View style={{ marginLeft: 10 }}>
-                            {user && <ProfileTag icon={<Text>♏️</Text>} title={'Scorpio'} width={100} onPress={() => { setShowModal(true); setModal(zodiacSignModal()); }} />}
+                            {user && <ProfileTag icon={<Text>♏️</Text>} title={'Scorpio'} width={100} onPress={() => { setModal(zodiacSignModal()); setShowModal(true); }} />}
 
                         </View>
 

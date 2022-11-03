@@ -85,22 +85,30 @@ function RootNavigator({ currentUser }) {
       />
 
 
-      <Stack.Group>
+      <Stack.Group
+
+      >
         <Stack.Screen
           name="StartScreen"
           component={StartScreen} />
 
         <Stack.Screen
           name="SignUpEmailPassword"
-          component={SignUpEmailPassword} />
+          component={SignUpEmailPassword}
+
+        />
 
         <Stack.Screen
           name="SignIn"
-          component={SignIn} />
+          component={SignIn}
+
+        />
 
         <Stack.Screen
           name="SignUpName"
-          component={SignUpName} />
+          component={SignUpName}
+          options={{ gestureEnabled: false }}
+        />
 
         <Stack.Screen
           name="SignUpBirthday"
@@ -116,7 +124,9 @@ function RootNavigator({ currentUser }) {
 
         <Stack.Screen
           name="SchoolPicker"
-          component={SchoolPicker} />
+          component={SchoolPicker}
+          options={{ gestureDirection: 'vertical' }}
+        />
       </Stack.Group>
 
       <Stack.Screen

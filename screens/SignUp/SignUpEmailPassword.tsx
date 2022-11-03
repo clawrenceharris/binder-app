@@ -24,6 +24,8 @@ const SignUpEmailPassword = ({ navigation }) => {
     // const [email, setEmail] = useState('')
     // const [password, setPassword] = useState('')
 
+    const [uid, setUid] = useState('')
+
     const rewordError = (error) => {
         if (error.message == 'Firebase: The email address is already in use by another account. (auth/email-already-in-use).') {
             return 'Email address is already in use'
@@ -43,30 +45,44 @@ const SignUpEmailPassword = ({ navigation }) => {
             .createUserWithEmailAndPassword(data.email, data.password)
             .then(userCredentials => {
                 const user = userCredentials.user;
-                navigation.navigate('SignUpName', { user: user })
+
+                console.log("UID: ", user.uid)
+                setUid(user.uid)
+
                 user.updateProfile({
                     displayName: '',
                     photoURL: '',
 
                 })
-                db.collection("users")
-                    .add({
-                        uid: user.uid,
-                        school: null,
-                        gpa: null,
+
+
+                db.collection("users").doc(user.uid)
+                    .set({
+                        firstName: null,
+                        lastName: null,
+                        photoUrl: null,
                         birthday: null,
+                        gpa: null,
                         gradYear: null,
-                        studyBuddies: [],
-                        friends: [],
+                        school: null,
+                        secondSchool: null,
+                        lastActive: null
+
+
                     })
+
+                navigation.navigate('SignUpName', { uid: uid })
+
 
             })
             .catch(error => {
                 setError(rewordError(error))
 
 
-            })
-        // navigation.navigate('SignUpName', { email: data.email, password: data.password })
+
+            }).catch(error => setError(error.message))
+
+
 
     }
 
@@ -85,7 +101,7 @@ const SignUpEmailPassword = ({ navigation }) => {
 
             <View style={{ padding: 20, alignItems: 'center' }}>
 
-                <Text style={styles.screenTitle}>Enter your email and password</Text>
+                <Text style={styles.screenTitle}>Sign up with email and password</Text>
                 {error && <Text style={styles.errorMessage}>{error}</Text>}
                 <View style={{ alignItems: 'center', width: '100%', padding: 20, marginTop: 10 }}>
                     <View style={{ width: '100%' }}>
@@ -135,7 +151,7 @@ const SignUpEmailPassword = ({ navigation }) => {
                     <Text style={{ color: 'white' }}>Already have an account?</Text>
                     <Text
                         style={{ color: Colors.light.primary, fontWeight: 'bold', marginLeft: 5 }}
-                        onPress={() => { navigation.navigate('SignUp') }}
+                        onPress={() => { navigation.navigate('SignIn') }}
                     >Log In</Text>
 
                 </View>

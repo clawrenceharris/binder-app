@@ -39,7 +39,6 @@ export default [
                     Users[2]
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[0],
 
@@ -60,7 +59,6 @@ export default [
                     Users[2]
                 ],
 
-                chatRooms: ChatRooms,
 
 
                 announcements: Announcements[1],
@@ -81,7 +79,6 @@ export default [
                     Users[2]
                 ],
 
-                chatRooms: ChatRooms,
 
 
                 announcements: Announcements[2],
@@ -104,7 +101,6 @@ export default [
                     Users[2]
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -129,7 +125,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -155,7 +150,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -181,7 +175,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -207,7 +200,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -233,7 +225,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -259,7 +250,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -294,7 +284,6 @@ export default [
                     Users[2]
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[0],
 
@@ -315,7 +304,6 @@ export default [
                     Users[2]
                 ],
 
-                chatRooms: ChatRooms,
 
 
                 announcements: Announcements[1],
@@ -336,7 +324,6 @@ export default [
                     Users[2]
                 ],
 
-                chatRooms: ChatRooms,
 
 
                 announcements: Announcements[2],
@@ -359,7 +346,6 @@ export default [
                     Users[2]
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -384,7 +370,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -410,7 +395,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -436,7 +420,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -462,7 +445,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -488,7 +470,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -514,7 +495,6 @@ export default [
 
                 ],
 
-                chatRooms: ChatRooms,
 
                 announcements: Announcements[2],
 
@@ -543,15 +523,7 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                users: [
-                    Users[0],
-                    Users[1],
-                    Users[2]
-                ],
-
-
-                chatRooms: ChatRooms,
-
+                users: [],
                 announcements: Announcements[0],
 
 
@@ -565,15 +537,7 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                users: [
-                    Users[0],
-                    Users[1],
-                    Users[2]
-                ],
-
-                chatRooms: ChatRooms,
-
-
+                users: [],
                 announcements: Announcements[1],
 
             },
@@ -586,7 +550,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: {},
                 announcements: Announcements[2],
 
 
@@ -601,9 +564,7 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
-
             },
 
             {
@@ -615,12 +576,10 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
 
             {
-
                 name: 'Religion',
                 description: '',
                 startDate: new Date(),
@@ -628,12 +587,10 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
 
             {
-
                 name: 'Music Theory',
                 description: '',
                 startDate: new Date(),
@@ -641,12 +598,10 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
 
             {
-
                 name: 'Fine Art I',
                 description: '',
                 startDate: new Date(),
@@ -654,9 +609,7 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2]
-
             },
 
             {
@@ -668,7 +621,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
 
@@ -681,7 +633,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
 
             },
@@ -705,7 +656,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[0],
 
 
@@ -719,7 +669,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[1],
 
             },
@@ -732,7 +681,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
 
 
@@ -747,8 +695,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
-
                 announcements: Announcements[2],
 
             },
@@ -762,7 +708,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
 
@@ -775,7 +720,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
 
 
@@ -790,7 +734,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
 
@@ -803,7 +746,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
 
@@ -816,7 +758,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
 
@@ -829,7 +770,6 @@ export default [
                 building: '',
                 room: '',
                 teacher: '',
-                chatRooms: ChatRooms,
                 announcements: Announcements[2],
             },
         ]

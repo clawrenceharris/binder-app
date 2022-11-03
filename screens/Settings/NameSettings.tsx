@@ -5,7 +5,7 @@ import { assets, Colors } from '../../constants'
 import { SHADOWS, SIZES } from '../../constants/Theme'
 import { useNavigation } from '@react-navigation/native'
 import { descriptions, styles } from '.'
-import { auth, updateUserProfile } from '../../Firebase/firebase'
+import { auth, updateName, updateUserProfile } from '../../Firebase/firebase'
 import Header from '../../components/Header'
 
 const NameSettings = ({ route }) => {
@@ -53,7 +53,13 @@ const NameSettings = ({ route }) => {
 
 
                 <TouchableOpacity
-                    onPress={() => { updateUserProfile(firstName + " " + lastName, auth.currentUser.photoURL) }}
+                    onPress={() => {
+
+                        updateUserProfile(firstName + " " + lastName, auth.currentUser.photoURL);
+                        updateName(firstName, lastName);
+                        navigation.navigate('Settings');
+
+                    }}
                     style={{ marginTop: 30, borderRadius: 50, width: '100%', backgroundColor: Colors.light.accent, padding: 10, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ color: 'white', fontFamily: "Kanit", fontSize: 20 }}>Save</Text>
                 </TouchableOpacity>
