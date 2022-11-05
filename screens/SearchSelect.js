@@ -66,7 +66,7 @@ const SearchSelect = ({ navigation }) => {
 
   const headerRight = () => (
     <Text
-      onPress={() => {
+      onPress={selectedData.length > 0 ? () => {
         if (selectionLimit == 1) {
           update(selectedData[0])
         }
@@ -75,8 +75,9 @@ const SearchSelect = ({ navigation }) => {
           update(selectedData);
         }
         navigation.goBack()
-      }}
-      style={{ fontFamily: 'KanitMedium', color: Colors.light.primary, margin: 10, fontSize: 16 }}>Done
+      } : () => { }
+      }
+      style={{ fontFamily: 'KanitMedium', color: selectedData.length > 0 ? Colors.light.primary : 'gray', margin: 10, fontSize: 16 }}>Done
     </Text>
   )
 
