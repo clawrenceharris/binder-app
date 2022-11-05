@@ -1,8 +1,7 @@
 import { View, Text, Animated } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 const NotificationDrop = (props) => {
-  const colorScheme = useColorScheme()
   const translateValue = useRef(new Animated.Value(0)).current
   useEffect(() => {
     Animated.timing(
@@ -18,6 +17,7 @@ const NotificationDrop = (props) => {
 
 
   return (
+    //TODO: implement an animated view that slides in from the top and shows a notification/message 
     <View>
       <Text>DropDown</Text>
     </View>

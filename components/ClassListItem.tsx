@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { ChatRoom, Class } from '../types'
+import React, { useEffect, useRef, useState } from 'react'
+import { chatroom, Class } from '../types'
 import useColorScheme from '../hooks/useColorScheme'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
@@ -8,23 +8,43 @@ import ActivePeople from './ActivePeople'
 import ClassProfileCircle from './ClassProfileCircle'
 import ModalComponent from './Modal'
 import { SHADOWS } from '../constants/Theme'
+import { auth, db } from '../Firebase/firebase'
 
-export type ClassListItemProps = {
-    Class: Class;
-    chatRoom: ChatRoom;
-}
-const ClassListItem = (props: ClassListItemProps) => {
+
+const ClassListItem = ({ Class }) => {
     const colorScheme = useColorScheme()
     const navigation = useNavigation()
-    const { Class, chatRoom } = props;
     const [longPressed, setLongPressed] = useState(false)
     const snapPoints = ['40%', '15%', '100%']
+    const [totalUsers, setTotalUsers] = useState(0)
+
+
     const onPress = () => {
         navigation.navigate('Chats', { class: Class })
 
     }
 
 
+    useEffect(() => {
+        //if the users 
+        const subscriber = db.collection('users').doc(auth.currentUser.uid).onSnapshot(doc => {
+
+            db.collection('schools').doc(doc.data().schoolID)
+                .onSnapshot(doc =>
+                    doc.data().users.forEach(user => {
+                        //console.log(user.data().classes.filter(item => item === Class).length)
+
+                        console.log(user)
+                    }))
+
+
+
+
+        })
+        return () => {
+            subscriber()
+        }
+    }, [])
 
 
     return (
@@ -37,13 +57,13 @@ const ClassListItem = (props: ClassListItemProps) => {
                 <View style={{ backgroundColor: colorScheme === 'light' ? 'white' : 'white', borderTopRightRadius: 25, borderTopLeftRadius: 25, ...SHADOWS.light, shadowOpacity: 0.6, shadowRadius: 2 }}>
                     <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ margin: 10 }}>
-                            <ClassProfileCircle Class={Class} story={[]} showStoryBoder={false} size={40} showName bold chatRoom={chatRoom} />
+                            <ClassProfileCircle Class={Class} story={[]} showStoryBoder={false} size={40} showName bold chatroom={Class.chatroom} />
 
                         </View>
                         <View>
-                            <Text style={[styles.className, { color: Colors[colorScheme].accent }]}>{Class.name} </Text>
+                            <Text style={[styles.className, { color: Colors.light.accent }]}>{Class.name}</Text>
 
-                            <ActivePeople userCount={Class.users.length} activeCount={3} />
+                            <ActivePeople userCount={totalUsers} activeCount={3} />
 
                         </View>
 
@@ -51,7 +71,7 @@ const ClassListItem = (props: ClassListItemProps) => {
 
                 </View>
 
-                <View style={[styles.container, { ...SHADOWS[colorScheme], backgroundColor: colorScheme === 'light' ? '#F2F2F2' : '#F2F2F2', shadowColor: '#272727' }]}>
+                <View style={[styles.container, { ...SHADOWS.dark, backgroundColor: colorScheme === 'light' ? '#F2F2F2' : '#F2F2F2', shadowColor: '#272727' }]}>
 
                     <Text style={{ fontFamily: 'KanitMedium', fontSize: 20, color: 'lightgray' }}>No Recent Activity</Text>
 

@@ -3,37 +3,14 @@ import Classes from "./Classes.js";
 import Notes from "./Notes";
 import PrivateChatRooms from "./PrivateChatRooms";
 import Users from "./Users";
-const User = {
-    firstName: 'Sarah',
-    lastName: 'Parker',
-    images: [],
-    studyBuddies: [],
-    gpa: 0,
-    birthday: new Date(2002, 11, 24),
-    props: 0,
-    clips: [],
-    gradYear: 0
-}
+
 export default [
     {
 
-        name: 'Algebra I',
-        type: 'group',
-        users: [Users[0], Users[1], Users[2], Users[3], Users[4], Users[5], Users[6]],
-        messages: [
-            {
-                user: User,
-                content: '',
-                contentType: '',
-                timestamp: new Date(),
-                icon: '',
-                status: ''
-
-            },
-
-
-
-        ]
+        name: null,
+        type: null,
+        users: null,
+        chats: null
 
     },
     {

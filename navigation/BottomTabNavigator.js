@@ -14,14 +14,13 @@ import { UserProfileCircle } from '../components';
 
 export default function BottomTabNavigator({ currentUser }) {
     const colorScheme = useColorScheme();
-    const BottomTab = createBottomTabNavigator<BottomTabParamList>();
-    const ICON_SIZE = 20
+    const BottomTab = createBottomTabNavigator();
+    const ICON_SIZE = 28
     return (
 
 
         <BottomTab.Navigator
             initialRouteName="Home"
-
             screenOptions={{
                 tabBarStyle: { backgroundColor: '#1F1F1F', borderTopWidth: 0, height: 90, ...SHADOWS[colorScheme], shadowOffset: { height: -3, width: 0 }, shadowColor: colorScheme === 'light' ? '#272727' : 'black', shadowRadius: 1 },
                 tabBarActiveTintColor: Colors[colorScheme].primary,
@@ -45,15 +44,15 @@ export default function BottomTabNavigator({ currentUser }) {
             <BottomTab.Screen
                 name="Home"
 
-                children={() => { return <ClassesScreen currentUser={currentUser} /> }}
-                options={({ navigation }) => ({
+                component={ClassesScreen}
+                options={{
 
                     headerShown: false,
-                    title: 'Classes',
+                    title: 'Home',
                     tabBarIcon: ({ color }) => <Image source={assets.school} style={{ tintColor: color, width: ICON_SIZE, height: ICON_SIZE }} />
 
 
-                })}
+                }}
 
             />
 

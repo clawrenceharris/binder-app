@@ -14,6 +14,7 @@ import useColorScheme from '../../hooks/useColorScheme'
 import ModalComponent from '../../components/Modal'
 import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet'
 import { styles } from '.'
+import Button from '../../components/Button'
 
 const SignUpEmailPassword = ({ navigation }) => {
     const { control, handleSubmit, watch } = useForm();
@@ -46,8 +47,6 @@ const SignUpEmailPassword = ({ navigation }) => {
             .then(userCredentials => {
                 const user = userCredentials.user;
 
-                console.log("UID: ", user.uid)
-                setUid(user.uid)
 
                 user.updateProfile({
                     displayName: '',
@@ -58,15 +57,19 @@ const SignUpEmailPassword = ({ navigation }) => {
 
                 db.collection("users").doc(user.uid)
                     .set({
+                        uid: user.uid,
                         firstName: null,
                         lastName: null,
-                        photoUrl: null,
+                        photoURL: null,
                         birthday: null,
                         gpa: null,
                         gradYear: null,
                         school: null,
-                        secondSchool: null,
-                        lastActive: null
+                        lastActive: null,
+                        studyBuddies: null,
+                        friends: null,
+                        classes: null
+
 
 
                     })
@@ -136,18 +139,19 @@ const SignUpEmailPassword = ({ navigation }) => {
 
 
 
-                <TouchableOpacity
-                    activeOpacity={email && password ? 0.3 : 1}
-                    style={[styles.continueBtn, { backgroundColor: email && password ? Colors.light.primary : 'lightgray' }]}
-                    onPress={email && password ? handleSubmit(onSignUpPressed) : () => { }}
-                >
-                    <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>{'Accept & Continue'}</Text>
-                </TouchableOpacity>
 
 
+                <Button
+                    title={'Accept & Continue'}
+                    background={styles.continueBtn.backgroundColor}
+                    tint={'white'}
+                    margin={styles.continueBtn.marginTop}
+                    onPress={handleSubmit(onSignUpPressed)}
+                    condition={email && password}
+                    width={styles.continueBtn.width}
+                />
 
-
-                <View style={{ flexDirection: 'row', margin: 20, alignSelf: 'center' }}>
+                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                     <Text style={{ color: 'white' }}>Already have an account?</Text>
                     <Text
                         style={{ color: Colors.light.primary, fontWeight: 'bold', marginLeft: 5 }}

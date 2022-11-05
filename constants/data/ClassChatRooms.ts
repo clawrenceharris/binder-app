@@ -8,56 +8,7 @@ export default [
         id: 0,
         name: 'Algeba I',
         users: [Users[0], Users[1], Users[2], Users[3], Users[4], Users[5]],
-        messages: [
-            {
-                user: Users[0],
-                id: 0,
-                content: 'Hey',
-                contentType: 'message',
-
-                timestamp: new Date(2022, 9, 12),
-                icon: assets.chat,
-                status: 'sent'
-
-            },
-            {
-                user: Users[1],
-                id: 1,
-                content: 'Anyone do the hw?',
-                contentType: 'message',
-
-                timestamp: new Date(2022, 9, 13),
-                icon: assets.chat,
-                status: 'sent'
-
-
-            },
-            {
-                user: Users[5],
-                id: 2,
-                content: 'notes',
-                contentType: 'notes',
-
-                timestamp: new Date(2022, 9, 13),
-                icon: assets.notes,
-                status: 'sent'
-
-            },
-
-            {
-                user: Users[5],
-                id: 3,
-                content: 'Heres the notes for section 1.1',
-                contentType: 'message',
-
-                timestamp: new Date(2022, 9, 13),
-                icon: assets.notes,
-                status: 'sent'
-
-            }
-
-
-        ]
+        messages: []
 
     },
     {

@@ -5,7 +5,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 const IMAGE_SIZE = 35;
-const ClassProfileCircle = ({ Class, showStoryBoder, story, size, showName, bold, chatRoom }) => {
+const ClassProfileCircle = ({ Class, showStoryBoder, story, size, showName, bold, chatroom }) => {
     const colorScheme = useColorScheme()
     const navigation = useNavigation()
 
@@ -18,7 +18,7 @@ const ClassProfileCircle = ({ Class, showStoryBoder, story, size, showName, bold
     }
 
     const goToProfile = () => {
-        navigation.navigate('Profile', { user: undefined, class: Class, chatRoom: chatRoom })
+        navigation.navigate('Profile', { user: undefined, class: Class })
 
     }
     return (
@@ -27,7 +27,7 @@ const ClassProfileCircle = ({ Class, showStoryBoder, story, size, showName, bold
                 {showStoryBoder && <View style={{ position: 'absolute', width: size + 10, height: size + 10, backgroundColor: 'white', borderRadius: 50, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: Colors.light.primary, zIndex: 0 }}>
                 </View>}
 
-                <View style={{ width: size + 10, height: size + 10, backgroundColor: colorScheme === 'light' ? '#f2f2f2' : '#1E1E1E', borderRadius: 50, justifyContent: 'center', alignItems: 'center', }}>
+                <View style={{ width: size + 10, height: size + 10, backgroundColor: '#f4f4f4', borderRadius: 50, justifyContent: 'center', alignItems: 'center', }}>
                     {Class.image && <Image source={Class.image} style={[styles.image, { width: size, height: size }]} />}
                     {!Class.image && <Image source={assets.book} style={[styles.defaultImage, { width: size - (size / 3), height: size - (size / 3) }]} />}
 
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     defaultImage: {
         resizeMode: 'contain',
         position: 'absolute',
-        tintColor: '#D4D4D4',
+        tintColor: 'lightgray',
     },
 
     image: {

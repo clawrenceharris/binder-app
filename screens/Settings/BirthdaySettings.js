@@ -6,12 +6,44 @@ import { SHADOWS, SIZES } from '../../constants/Theme'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../components/Header'
 import { descriptions, styles } from '.'
+import Button from '../../components/Button'
+import { auth, updateCollection } from '../../Firebase/firebase'
 const BirthdaySettings = ({ route }) => {
     const navigation = useNavigation()
-    const { value, fieldName, title, description, onSubmit } = route.params
+    const { value } = route.params
     const [month, setMonth] = useState('')
-    const [day, setDay] = useState('')
-    const [year, setYear] = useState('')
+    const [day, setDay] = useState(value.day)
+    const [year, setYear] = useState(value)
+    console.log(route.params.value)
+    const isValidDay = (data) => {
+        if (+data >= 1 && +data <= 31) {
+            return true
+        }
+        return false
+    }
+
+    const isValidMonth = (data) => {
+        if (+data >= 1 && +data <= 12) {
+            return true
+        }
+        return false
+    }
+
+    const isValidYear = (data) => {
+        if (+data >= 1898 && +data <= 2011) {
+            return true
+        }
+        return false
+    }
+
+    const onSavePress = () => {
+        const date = new Date(+year, +day, +month)
+
+        updateCollection('users', auth.currentUser.uid, { birthday: date });
+        navigation.goBack();
+    }
+
+
     return (
         <View style={{ flex: 1, backgroundColor: '#333' }}>
             <Header
@@ -73,7 +105,22 @@ const BirthdaySettings = ({ route }) => {
 
 
                 </View>
+                <Text style={styles.finePrint}>You must be at least 12 years old to use Binder</Text>
+
+                <Button
+                    title={'Save'}
+                    background={Colors.light.primary}
+                    tint={'white'}
+                    margin={40}
+                    onPress={onSavePress}
+                    condition={isValidMonth(month) && isValidDay(day) && isValidYear(year)}
+                    width={'100%'}
+
+                />
+
             </View>
+
+
 
 
 

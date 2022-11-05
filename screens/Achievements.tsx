@@ -15,7 +15,7 @@ const AchievementsScreen = ({ navigation }) => {
     //console.log("START: ", achievements[0].levelGoals[0], "- END")
 
 
-
+    //returns the progress of a given achievement object 
     const getProgress = (item) => {
 
         return item.amountDone / item.levelGoals[item.index]
@@ -31,27 +31,31 @@ const AchievementsScreen = ({ navigation }) => {
             index,
         };
     };
+
+
+    //we will use this to determine if at least the first level goal (at index 0) is complete
     const isSomeComplete = (item) => {
         return item.amountDone / item.levelGoals[0] >= 1
     }
 
     useEffect(() => {
-        // Achievements.forEach(element => db.collection('achievements').add(element))
+
+        // Achievements.forEach(element => db.collection('achievements').doc(element.id)(element))
         const subscriber = db.collection('achievements')
 
             .onSnapshot(querySnapshot => {
                 const array = []
 
                 querySnapshot.forEach(documentSnapshot => {
+
                     array.push(
                         {
                             ...documentSnapshot.data(),
                             key: documentSnapshot.id
                         })//end push
 
-
-
                 })//end forEach
+
                 setAchievements(array)
                 setLoading(false)
             })
@@ -98,7 +102,7 @@ const AchievementsScreen = ({ navigation }) => {
             />
 
             <ScrollView style={{ padding: 10 }}>
-                {/* Data is sorted by current index(or level number) decresing */}
+                {/* Data is sorted by current index(or level number) increasing from top to bottom */}
 
                 {/* Completed */}
 

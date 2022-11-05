@@ -1,4 +1,4 @@
-import { View, Text, Modal, Animated, TouchableOpacity, TouchableWithoutFeedback, } from 'react-native'
+import { View, Text, Modal, Animated, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { Colors } from '../constants'
 import useColorScheme from '../hooks/useColorScheme'
@@ -6,6 +6,7 @@ import useColorScheme from '../hooks/useColorScheme'
 const ModalComponent = (props) => {
     const colorScheme = useColorScheme()
     const translateValue = useRef(new Animated.Value(0)).current
+    const { width, height } = useWindowDimensions();
 
 
 
@@ -15,7 +16,7 @@ const ModalComponent = (props) => {
             translateValue,
             {
 
-                toValue: props.toValue,
+                toValue: props.position == 'bottom' ? -1 * (props.height * 2) : props.toValue,
                 duration: 500,
                 useNativeDriver: true,
 

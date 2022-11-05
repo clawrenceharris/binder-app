@@ -6,6 +6,7 @@ import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet'
 import { useRoute } from '@react-navigation/native'
 import { assets, Colors } from '../../constants'
 import { styles } from '.'
+import Button from '../../components/Button'
 
 const SignUpBirthday = ({ navigation }) => {
     const route = useRoute()
@@ -116,13 +117,19 @@ const SignUpBirthday = ({ navigation }) => {
                 <Text style={styles.finePrint}>You must be at least 12 years old to use Binder</Text>
 
 
-                <TouchableOpacity
-                    activeOpacity={isValidMonth(month) && isValidDay(day) && isValidYear(year) ? 0.3 : 1}
-                    style={[styles.continueBtn, { backgroundColor: isValidMonth(month) && isValidDay(day) && isValidYear(year) ? Colors.light.primary : 'lightgray' }]}
-                    onPress={isValidMonth(month) && isValidDay(day) && isValidYear(year) ? onNextPressed : () => { }}
-                >
-                    <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>Continue</Text>
-                </TouchableOpacity>
+                <View style={{ alignItems: 'center' }}>
+
+                    <Button
+                        title={'Continue'}
+                        background={styles.continueBtn.backgroundColor}
+                        tint={'white'}
+                        margin={40}
+                        onPress={onNextPressed}
+                        condition={isValidMonth(month) && isValidDay(day) && isValidYear(year)}
+                        width={styles.continueBtn.width}
+
+                    />
+                </View>
 
             </View>
         </SafeAreaView>

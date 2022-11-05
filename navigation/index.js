@@ -31,9 +31,7 @@ import NotesHeader from '../components/NotesHeader';
 import { CameraScreen } from '../screens';
 import EditPictureToSend from '../screens/EditPictureToSend';
 import EditVideoToSend from '../screens/EditVideoToSend';
-import AddClasses from '../screens/AddClasses';
 import EditProfile from '../screens/EditProfile';
-import SchoolPicker from '../screens/SchoolPicker';
 import StartScreen from '../screens/StartScreen';
 import Settings from '../screens/Settings/Settings';
 import CurrentUserProfile from '../screens/CurrentUserProfile';
@@ -41,29 +39,40 @@ import Achievements from '../screens/Achievements';
 import AchievementsScreen from '../screens/Achievements';
 import SchoolSettings from '../screens/Settings/SchoolSettings';
 import DeskPrivacy from '../screens/Settings/DeskPrivacy';
+import SearchSelect from '../screens/SearchSelect';
+import { auth } from '../Firebase/firebase';
 
 
 
 const Stack = createNativeStackNavigator();
+
+// const Drawer = createDrawerNavigator();
+
 
 export default function Navigation({ currentUser, colorScheme }) {
   return (
 
     <NavigationContainer
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-
       <RootNavigator currentUser={currentUser} />
+
+
+
 
     </NavigationContainer>
   );
 }
 
 
-// const Drawer = createDrawerNavigator();
+
+
+
 
 function RootNavigator({ currentUser }) {
   const colorScheme = useColorScheme();
   return (
+
+
     <Stack.Navigator
       initialRouteName='StartScreen'
       screenOptions={{
@@ -82,30 +91,13 @@ function RootNavigator({ currentUser }) {
       }} >
 
 
-      <Stack.Screen
-        name="Root"
-        children={() => { return <BottomTabNavigator currentUser={currentUser} /> }}
-      />
-
-
       <Stack.Group
+        initialRouteName="StartScreen"
+        screenOptions={{ headerShown: false }}>
 
-      >
         <Stack.Screen
           name="StartScreen"
           component={StartScreen} />
-
-        <Stack.Screen
-          name="SignUpEmailPassword"
-          component={SignUpEmailPassword}
-
-        />
-
-        <Stack.Screen
-          name="SignIn"
-          component={SignIn}
-
-        />
 
         <Stack.Screen
           name="SignUpName"
@@ -126,11 +118,29 @@ function RootNavigator({ currentUser }) {
           component={SignUpPhoto} />
 
         <Stack.Screen
-          name="SchoolPicker"
-          component={SchoolPicker}
+          name="SearchSelect"
+          component={SearchSelect}
           options={{ gestureDirection: 'vertical' }}
         />
-      </Stack.Group>
+        <Stack.Screen
+          name="SignUpEmailPassword"
+          component={SignUpEmailPassword}
+
+        />
+
+        <Stack.Screen
+          name="SignIn"
+          component={SignIn}
+
+        />
+
+      </Stack.Group >
+      <Stack.Screen
+        name="Root"
+        children={() => { return <BottomTabNavigator currentUser={currentUser} /> }}
+      />
+
+
 
       <Stack.Screen
         name="Achievements"
@@ -151,14 +161,7 @@ function RootNavigator({ currentUser }) {
 
 
 
-      <Stack.Screen
-        name="AddClasses"
-        component={AddClasses}
-        options={{
-          gestureDirection: 'vertical',
-        }}
 
-      />
       <Stack.Group>
 
         <Stack.Screen

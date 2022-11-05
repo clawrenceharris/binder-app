@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import assets from "../assets";
 import Announcements from "./Announcements";
 import ChatRooms from "./ChatRooms";
@@ -10,49 +11,46 @@ export default [
     {
 
         name: 'Algebra I',
-        id: 0,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2]
-        ],
+        id: '0',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
+        
 
-        chatRooms: ChatRooms,
-
-        announcements: Announcements[0],
 
 
     },
     {
 
         name: 'Chemistry',
-        id: 1,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2]
-        ],
-
-        chatRooms: ChatRooms,
-
-
-        announcements: Announcements[1],
+        id: '1',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
     },
     {
 
         name: 'Physical Education',
-        id: 2,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2]
-        ],
-
-        chatRooms: ChatRooms,
-
-
-        announcements: Announcements[2],
+        id: '2',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
 
     },
@@ -60,36 +58,31 @@ export default [
     {
 
         name: 'Foundations of Technology',
-        id: 3,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2]
-        ],
+        id: '3',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
-        chatRooms: ChatRooms,
-
-        announcements: Announcements[2],
 
     },
 
     {
 
         name: 'Gender & Sexuality Studies',
-        id: 4,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2],
-            Users[3],
-            Users[4],
-
-
-        ],
-
-        chatRooms: ChatRooms,
-
-        announcements: Announcements[2],
+        id: '4',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
 
     },
@@ -97,20 +90,15 @@ export default [
     {
 
         name: 'Religion',
-        id: 5,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2],
-            Users[3],
-            Users[4],
-
-
-        ],
-
-        chatRooms: ChatRooms,
-
-        announcements: Announcements[2],
+        id: '5',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
 
     },
@@ -118,20 +106,15 @@ export default [
     {
 
         name: 'Music Theory',
-        id: 6,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2],
-            Users[3],
-            Users[4],
-
-
-        ],
-
-        chatRooms: ChatRooms,
-
-        announcements: Announcements[2],
+        id: '6',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
 
     },
@@ -139,62 +122,46 @@ export default [
     {
 
         name: 'Fine Art I',
-        id: 7,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2],
-            Users[3],
-            Users[4],
+        id: '7',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
-
-        ],
-
-        chatRooms: ChatRooms,
-
-        announcements: Announcements[2],
 
 
     },
 
     {
-
+        id: '8',
         name: 'Graphic Design',
-        id: 8,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2],
-            Users[3],
-            Users[4],
-
-
-        ],
-
-        chatRooms: ChatRooms,
-
-        announcements: Announcements[2],
-
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
     },
 
     {
 
-        name: 'Literature and Composition',
-        id: 9,
-        users: [
-            Users[0],
-            Users[1],
-            Users[2],
-            Users[3],
-            Users[4],
-
-
-        ],
-
-        chatRooms: ChatRooms,
-
-        announcements: Announcements[2],
+        name: 'Literature & Composition',
+        id: '9',
+        description: null,
+        startDate: new Date(),
+        endDate: new Date(),
+        building: null,
+        room: '102A',
+        teacher: faker.name.fullName(),
+        users: null,
+        announcements: null,
 
 
     },

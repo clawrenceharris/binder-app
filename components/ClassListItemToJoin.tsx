@@ -1,57 +1,69 @@
-import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
+import React, { useRef, useState } from 'react'
 import useColorScheme from '../hooks/useColorScheme'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 import ActivePeople from './ActivePeople'
 import ClassProfileCircle from './ClassProfileCircle'
+import ModalComponent from './Modal'
 import { SHADOWS } from '../constants/Theme'
 import { assets } from '../constants'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
 
 
-const SchoolListItemToJoin = ({ school, isSelected, onSelect, buttonTitle = 'Add' }) => {
+const ClassListItemToJoin = ({ Class, isSelected, onSelect }) => {
+    const colorScheme = useColorScheme()
+    const navigation = useNavigation()
+
+
+    const onPress = () => {
+
+
+    }
+
+
+
 
     return (
-        <View style={styles.mainContainer}>
-            <View style={styles.headerContainer}>
-
-                <View style={styles.headerLeft}>
-                    <Image source={assets.school} style={{ width: 28, height: 28, tintColor: Colors.light.primary, marginBottom: 5 }} />
-                    <Text style={[styles.className, { color: Colors.light.primary, marginLeft: 10, width: '72%' }]}>{school.name} </Text>
-                </View>
 
 
-                <TouchableOpacity onPress={onSelect} style={{ position: 'absolute', right: 10 }}>
+        <TouchableWithoutFeedback onPress={onPress}>
+            <View style={styles.mainContainer}>
 
-                    <View style={!isSelected && styles.addBtn}>
-                        {!isSelected ? <Text style={{ color: 'white', fontFamily: 'KanitMedium' }}>{buttonTitle}</Text>
-                            :
-                            <View style={styles.selected}>
 
-                                <Image source={assets.check} style={{ width: 28, height: 28, tintColor: Colors.light.accent }} />
-                            </View>
+                <View style={styles.headerContainer}>
 
-                        }
+
+                    <View style={styles.headerLeft}>
+                        <ClassProfileCircle Class={Class} story={[]} showStoryBoder={false} size={40} showName bold />
+                        <Text style={[styles.className, { color: Colors.light.accent, marginLeft: 10, width: '72%' }]}>{Class.name} </Text>
                     </View>
-                </TouchableOpacity>
-
-            </View>
 
 
-            <View style={styles.bottomContainer}>
-                {school.location && <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={onSelect} style={{ position: 'absolute', right: 10 }}>
 
-                    <Image source={assets.pin} style={{ width: 15, height: 15, tintColor: 'gray' }} />
-                    <Text style={{ fontFamily: 'Kanit', fontSize: 12, color: 'gray', marginLeft: 5 }}>{school.location}</Text>
+                        <View style={!isSelected && styles.addBtn}>
+                            {!isSelected ? <Text style={{ color: 'white', fontFamily: 'KanitMedium' }}>Add</Text>
+                                :
+                                <View style={styles.selected}>
+
+                                    <Image source={assets.check} style={{ width: 28, height: 28, tintColor: Colors.light.accent }} />
+                                </View>
+
+                            }
+                        </View>
+                    </TouchableOpacity>
+
                 </View>
 
-                }
+                <View style={styles.bottomContainer}>
 
+                    <Text style={{ fontFamily: 'KanitMedium', fontSize: 20, color: 'lightgray' }}></Text>
+
+                </View>
             </View>
-        </View>
 
 
+        </TouchableWithoutFeedback>
 
     )
 }
@@ -83,7 +95,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor:
             Colors.light.accent,
-        borderRadius: 50
+        borderRadius: 50,
+
 
     },
 
@@ -100,6 +113,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 25,
         borderBottomLeftRadius: 25,
         zIndex: -1,
+        ...SHADOWS.light,
         backgroundColor: '#F2F2F2',
         shadowColor: '#272727',
         shadowRadius: 2,
@@ -133,4 +147,4 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
-export default SchoolListItemToJoin
+export default ClassListItemToJoin

@@ -1,13 +1,17 @@
 import { View, Text, TextInput, TouchableOpacity, Animated, Modal, useWindowDimensions } from 'react-native'
 import React, { useRef, useState } from 'react'
-import { auth, db, updateName, updateUserProfile } from '../Firebase/firebase';
+import { auth, db, updateCollection, updateUserProfile } from '../Firebase/firebase';
 import { Colors } from '../constants';
+import { styles } from '../screens/SignUp';
+import Button from './Button';
 
 const EditNameModal = (props) => {
+
     const [firstName, setFirstName] = useState(props.firstName)
     const [lastName, setLastName] = useState(props.lastName)
     const { width, height } = useWindowDimensions()
     const translateValue = useRef(new Animated.Value(0)).current
+
     function slideIn() {
         Animated.timing(
             translateValue,
@@ -47,17 +51,17 @@ const EditNameModal = (props) => {
             <View style={{ backgroundColor: '#00000085', flex: 1, alignItems: 'center' }} >
 
 
-                <Animated.View style={{ alignSelf: 'center', height: 360, backgroundColor: '#333', width: 300, marginTop: height, borderRadius: 25, padding: 20, transform: [{ translateY: translateValue }], }}>
+                <Animated.View style={{ borderColor: 'gray', borderWidth: 1, alignSelf: 'center', height: 360, backgroundColor: '#333', width: 300, marginTop: height, borderRadius: 25, padding: 20, transform: [{ translateY: translateValue }], }}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', padding: 10, flex: 1 }}>
                         <Text style={{ color: 'white', fontSize: 18, fontFamily: 'Kanit' }}>Edit Name</Text>
-                        <Text style={{ color: 'gray', fontFamily: "Kanit", textAlign: 'center' }}>This is how you appear on Binder, so pick a name your classmates know you by</Text>
+                        <Text style={{ color: 'gray', fontFamily: "Kanit", textAlign: 'center' }}>This is how you appear and how people can find you on Binder, so choose a name your classmates know you by.</Text>
 
 
                         <View style={{ margin: 20, width: '100%' }}>
 
                             <TextInput
                                 placeholder='First Name'
-                                style={{ color: 'white', padding: 15, fontSize: 18, width: '100%', backgroundColor: '#474747', borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomColor: '#6F6F6F', borderBottomWidth: 1 }}
+                                style={{ color: 'white', padding: 15, fontSize: 18, paddingHorizontal: 10, width: '100%', backgroundColor: '#474747', borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomColor: 'gray', borderBottomWidth: 1 }}
                                 onChangeText={setFirstName}
                                 value={firstName}
                                 placeholderTextColor={'#6F6F6F'}
@@ -75,19 +79,24 @@ const EditNameModal = (props) => {
                         </View>
 
 
-
-                        <TouchableOpacity
+                        <Button
+                            title={'Save'}
+                            background={Colors.light.accent}
+                            tint={'white'}
+                            condition={true}
+                            width={'100%'}
                             onPress={() => {
                                 updateUserProfile(firstName + " " + lastName, auth.currentUser.photoURL);
-                                updateName(firstName, lastName);
+                                updateCollection('users', auth.currentUser.uid, { firstName: firstName, lastName: lastName });
                                 props.onSavePress()
                             }}
-                            style={{ borderRadius: 50, width: '100%', backgroundColor: Colors.light.accent, padding: 10, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ color: 'white', fontFamily: "Kanit", fontSize: 20 }}>Save</Text>
-                        </TouchableOpacity>
+
+
+
+                        />
 
                         <TouchableOpacity onPress={props.onCancelPress}>
-                            <Text style={{ color: 'white', fontFamily: "Kanit", marginTop: 20 }}>Cancel</Text>
+                            <Text style={{ color: 'white', fontFamily: "Kanit", marginTop: 10 }}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
                 </Animated.View>

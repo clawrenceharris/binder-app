@@ -42,10 +42,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         width: '100%',
         backgroundColor: '#474747',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        borderRadius: 10,
         borderBottomColor: '#6F6F6F',
-        borderBottomWidth: 1,
 
     },
 
@@ -54,9 +52,9 @@ const styles = StyleSheet.create({
 const descriptions = {
     password: 'To change your password, enter your existing password first.',
     email: 'This makes it easier for you to recover your account and for people to find you.',
-    gpa: 'Your GPA is your grade point average. We use you unweighted GPA to help pair you with recommended study partners. You can choose to leave this field blank',
+    gpa: 'Your GPA is your grade point average. We use your unweighted GPA to help pair you with recommended study partners. You can choose to leave this blank or manage who can see it.',
     name: "This is how you'll appear and how people can find you on Binder, so choose a name your classmates know you by.",
-    birthday: "You must be at least 12 years old to use Binder. We'll use this information to determine your age, Zodiac Sign, and let your classmates know when your special day arrives.",
+    birthday: "We'll use this to determine your age, Zodiac Sign, and let your classmates know when your special day arrives.",
     school: "This makes it easier for us to show you the right classes, recommend study partners, inform you about school events and more!"
 
 

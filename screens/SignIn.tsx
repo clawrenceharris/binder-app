@@ -10,15 +10,18 @@ import { StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import CustomInput from '../components/CustomInput'
 import { auth, signIn } from '../Firebase/firebase'
+import Button from '../components/Button'
 const SignIn = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm();
   const password = watch('password')
   const email = watch('email')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   // const [email, setEmail] = useState('')
   // const [password, setPassword] = useState('')
 
   const rewordError = (error) => {
+    console.log(error.message)
     if (error.message == 'Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).') {
       return 'Email or password is incorrect'
     }
@@ -28,20 +31,26 @@ const SignIn = ({ navigation }) => {
     else if (error.message == 'Firebase: The email address is badly formatted. (auth/invalid-email).') {
       return 'Email or password is incorrect'
     }
+    else if (error.message == 'Firebase: A network AuthError (such as timeout, interrupted connection or unreachable host) has occurred. (auth/network-request-failed).') {
+      return 'Failed to connect to network. Please make sure you are connected to the internet.'
+    }
+    else return 'Sorry, something went wrong. Please try agian later.'
   }
 
   const onSignInPressed = (data) => {
-    //validate user
-
+    setLoading(true)
     auth
       .signInWithEmailAndPassword(data.email, data.password)
       .then(userCredentials => {
-        const user = userCredentials.user;
+        setLoading(false)
         navigation.navigate('Root')
+
       })
 
       .catch(error => {
         setError(rewordError(error))
+        setLoading(false)
+
       }
 
       )
@@ -92,14 +101,16 @@ const SignIn = ({ navigation }) => {
 
 
 
-        <TouchableOpacity
-          activeOpacity={email && password ? 0.3 : 1}
-          style={[styles.continueBtn, { backgroundColor: email && password ? Colors.light.primary : 'lightgray' }]}
-          onPress={email && password ? handleSubmit(onSignInPressed) : () => { }}
-        >
-          <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>Log In</Text>
-        </TouchableOpacity>
-
+        <Button
+          title={'Log In'}
+          icon={loading ? <Image source={assets.loading} style={{ width: 20, height: 20, tintColor: 'white' }} /> : null}
+          background={styles.continueBtn.backgroundColor}
+          tint={'white'}
+          margin={styles.continueBtn.marginTop}
+          onPress={handleSubmit(onSignInPressed)}
+          condition={email && password}
+          width={styles.continueBtn.width}
+        />
 
 
 

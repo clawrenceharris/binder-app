@@ -19,7 +19,7 @@ import Classes from '../constants/data/Classes'
 import ProfileListBox from '../components/ProfileListBox'
 import ClassChatListItem from '../components/ClassChatListItem'
 import ChatRooms from '../constants/data/ChatRooms'
-import { auth, db, updateUserProfile } from '../Firebase/firebase'
+import { auth, db, updateCollection, updateUserProfile } from '../Firebase/firebase'
 import { openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
 import ImageOptionsModal from '../components/ImageOptionsModal'
@@ -37,18 +37,13 @@ const CurrentUserProfile = ({ route }) => {
     const [showMore, setShowMore] = useState(false)
     const [userData, setUserData] = useState(null)
 
+    const user = auth.currentUser
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-
-    const user = route.params.user
 
     useEffect(() => {
         const subscriber = db.collection('users').doc(auth.currentUser.uid).onSnapshot(doc => {
             setUserData(doc.data())
 
-            setFirstName(doc.data().firstName)
-            setLastName(doc.data().lastName)
 
         })
 
@@ -56,12 +51,7 @@ const CurrentUserProfile = ({ route }) => {
     }, [])
 
 
-    const updatePhotoURL = (photoURL) => {
-        db.collection('users').doc(auth.currentUser.uid).update({
-            photoURL: photoURL,
-        })
 
-    }
 
 
 
@@ -77,7 +67,7 @@ const CurrentUserProfile = ({ route }) => {
 
             </View>
             <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>{`Your birthday is on ${moment(route.params.user.birthday).format("MMM DD, YYYY")}`}</Text>
+                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>{`Your birthday is on ${moment(userData?.birthday).format("MMM DD, YYYY")}`}</Text>
 
             </View>
 
@@ -179,8 +169,8 @@ const CurrentUserProfile = ({ route }) => {
                 <ModalComponent renderContent={modal} showModal={showModal} toValue={-900} animated height={300} width={250} />
 
                 <EditNameModal
-                    firstName={firstName}
-                    lastName={lastName}
+                    firstName={userData?.firstName}
+                    lastName={userData?.lastName}
                     onCancelPress={() => {
                         setShowEditNameModal(false)
                     }}
@@ -196,9 +186,10 @@ const CurrentUserProfile = ({ route }) => {
                     onLibraryPress={async () => {
                         setShowImageOptionsModal(false);
                         const result = await openMediaLibrary('photo', 1);
-                        if (result != null)
+                        if (result) {
                             updateUserProfile(auth.currentUser.displayName, result)
-                        updatePhotoURL(result)
+                            updateCollection('users', auth.currentUser.uid, { photoURL: image });
+                        }
                     }}
 
                     onTakePicturePress={() => { }}
@@ -222,7 +213,7 @@ const CurrentUserProfile = ({ route }) => {
 
                                 </View>
 
-                                <UserProfileCircle user={user} showStudyBuddy={false} showStoryBoder size={120} showName bold showActive={false} />
+                                <UserProfileCircle user={auth.currentUser} showStudyBuddy={false} showStoryBoder size={120} showName bold showActive={false} />
 
                             </View>
 
@@ -236,7 +227,7 @@ const CurrentUserProfile = ({ route }) => {
                     <View style={{ alignItems: 'center', marginTop: 10, flexDirection: 'row', justifyContent: 'center' }}>
                         <Text
                             onPress={() => { setShowEditNameModal(true) }}
-                            style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>{firstName + " " + lastName}</Text>
+                            style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>{userData?.firstName + " " + userData?.lastName}</Text>
                         <TouchableWithoutFeedback
                             onPress={() => { setShowEditNameModal(true) }} >
 
@@ -254,20 +245,19 @@ const CurrentUserProfile = ({ route }) => {
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingVertical: 20, flexDirection: 'row', marginTop: 20 }}>
 
-                        {user && user.studyBuddy && <ProfileTag icon={<Text>🤓</Text>} title={'Study Buddies'} width={135} onPress={() => { setModal(studyBuddyModal()); setShowModal(true); }} />}
 
 
                         <View style={{ marginLeft: 10 }}>
-                            {user && <ProfileTag icon={<Text>🎓</Text>} title={route.params.user.class} width={90} onPress={() => { setModal(classModal()); setShowModal(true); }} />}
+                            {<ProfileTag icon={<Text>🎓</Text>} title={userData?.gradYear} width={90} onPress={() => { setModal(classModal()); setShowModal(true); }} />}
 
                         </View>
                         <View style={{ marginLeft: 10 }}>
-                            {user && <ProfileTag icon={<Text>🎂</Text>} title={moment(route.params.user.birthday).format("MMM DD, YYYY")} width={135} onPress={() => { console.log("press"); setModal(birthdayModal()); setShowModal(true); }} />}
+                            {<ProfileTag icon={<Text>🎂</Text>} title={moment(userData?.birthday.toDate()).format("MMM DD, YYYY")} width={135} onPress={() => { setModal(birthdayModal()); setShowModal(true); }} />}
 
                         </View>
 
                         <View style={{ marginLeft: 10 }}>
-                            {user && <ProfileTag icon={<Text>♏️</Text>} title={'Scorpio'} width={100} onPress={() => { setModal(zodiacSignModal()); setShowModal(true); }} />}
+                            {<ProfileTag icon={<Text>♏️</Text>} title={'Scorpio'} width={100} onPress={() => { setModal(zodiacSignModal()); setShowModal(true); }} />}
 
                         </View>
 
@@ -280,7 +270,7 @@ const CurrentUserProfile = ({ route }) => {
 
 
                     </View>
-                    <View style={{ alignItems: "center", flexDirection: 'row', padding: 20, width: '100%', backgroundColor: '#5B5B5B', ...SHADOWS[colorScheme], borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
+                    <View style={{ alignItems: "center", flexDirection: 'row', padding: 20, width: '100%', backgroundColor: '#5B5B5B', ...SHADOWS.dark, borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
 
                         <Image source={assets.shines} style={{ width: 28, height: 28, tintColor: 'white' }} />
                         <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>View Your Props</Text>
@@ -290,10 +280,10 @@ const CurrentUserProfile = ({ route }) => {
 
                     </View>
 
-                    <Text style={[styles.sectionTitle, { color: '#DEDEDE' }]}>Your Clips</Text>
-                    <View style={{ flexDirection: 'row', padding: 20, alignItems: 'center', width: '100%', backgroundColor: '#5B5B5B', ...SHADOWS[colorScheme], borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
+                    <Text style={[styles.sectionTitle, { color: '#DEDEDE' }]}>Your Posts</Text>
+                    <View style={{ flexDirection: 'row', padding: 20, alignItems: 'center', width: '100%', backgroundColor: '#5B5B5B', ...SHADOWS.dark, borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
                         <Image source={assets.camera_o} style={{ width: 28, height: 28, tintColor: Colors.light.primary }} />
-                        <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>Add to Your Clips</Text>
+                        <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>Add a New Post</Text>
                     </View>
 
 

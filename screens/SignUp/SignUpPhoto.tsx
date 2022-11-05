@@ -5,12 +5,13 @@ import { assets, Colors } from '../../constants'
 import { askForCameraPermission, openMediaLibrary, pickImage } from '../../utils'
 import * as ImagePicker from 'expo-image-picker'
 import { useRoute } from '@react-navigation/native'
-import { auth, db, updateUserProfile } from '../../Firebase/firebase'
+import { auth, db, updateCollection, updateUserProfile } from '../../Firebase/firebase'
 import Camera from 'expo-camera'
 import BottomSheet from '@gorhom/bottom-sheet'
 import ModalComponent from '../../components/Modal'
 import ImageOptionsModal from '../../components/ImageOptionsModal'
-
+import Button from '../../components/Button'
+import firebase from 'firebase/compat'
 
 //TODO: need to implement uploading picture using camera
 const SignUpPhoto = ({ navigation }) => {
@@ -19,23 +20,30 @@ const SignUpPhoto = ({ navigation }) => {
     const [hasGalleryPermission, setHasGalleryPermission] = useState(false)
     const [galleryItems, setGalleryItems] = useState([])
     const route = useRoute();
+    const [users, setUsers] = useState([])
+    const [user, setUser] = useState(null)
+
     const [showModal, setShowModal] = useState(false)
-    const { firstName, lastName, birthday, gpa, gradYear, school, secondSchool, uid } = route.params
-    console.log("AUTH UID ", auth.currentUser.uid)
+    const { firstName, lastName, birthday, schoolID, uid } = route.params
+
     const onFinishedPressed = () => {
 
         db.collection('users')
             .doc(auth.currentUser.uid)
             .set({
+                uid: auth.currentUser.uid,
                 firstName: firstName,
                 lastName: lastName,
-                photoUrl: image,
-                birthday: birthday,
-                gpa: gpa,
-                gradYear: gradYear,
-                school: school,
-                secondSchool: secondSchool,
-                lastActive: new Date()
+                photoURL: image,
+                birthday: null,
+                gpa: null,
+                gradYear: null,
+                schoolID: schoolID ? schoolID : ' ',
+                lastActive: new Date(),
+                studyBuddies: [],
+                friends: [],
+                classes: []
+
             })
 
 
@@ -51,25 +59,30 @@ const SignUpPhoto = ({ navigation }) => {
 
 
         updateUserProfile(displayName, image)
-        navigation.replace('Root')
+
+        //add user doc reference to school collection
+        updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(auth.currentUser.uid)) });
+        navigation.navigate('Root')
     }
 
     const onSkipPressed = () => {
-        setImage('')
-        console.log("UID: ", uid)
+        setImage(null)
 
         db.collection('users')
             .doc(auth.currentUser.uid)
             .set({
+                uid: auth.currentUser.uid,
                 firstName: firstName,
                 lastName: lastName,
-                photoUrl: image,
+                photoURL: image,
                 birthday: birthday,
-                gpa: gpa,
-                gradYear: gradYear,
-                school: school,
-                secondSchool: secondSchool,
-                lastActive: new Date()
+                gpa: null,
+                gradYear: null,
+                schoolID: schoolID ? schoolID : null,
+                lastActive: new Date(),
+                studyBuddies: [],
+                friends: [],
+                classes: []
 
 
 
@@ -88,6 +101,11 @@ const SignUpPhoto = ({ navigation }) => {
 
 
         updateUserProfile(displayName, image)
+
+        updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(auth.currentUser.uid)) });
+        navigation.navigate('Root')
+
+
     }
 
 
@@ -151,16 +169,22 @@ const SignUpPhoto = ({ navigation }) => {
 
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                    activeOpacity={image ? 0.3 : 1}
-                    style={[styles.continueBtn, { backgroundColor: image ? Colors.light.primary : 'lightgray', marginTop: 60 }]}
-                    onPress={image ? onFinishedPressed : () => { }}
-                >
-                    <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>Finish</Text>
-                </TouchableOpacity>
+
+
+                <Button
+                    title={'Finish'}
+                    background={styles.continueBtn.backgroundColor}
+                    tint={'white'}
+                    onPress={onFinishedPressed}
+                    condition={image != null}
+                    width={styles.continueBtn.width}
+                    margin={30}
+
+                />
+
 
                 <TouchableWithoutFeedback onPress={onSkipPressed}>
-                    <Text style={{ fontFamily: 'KanitMedium', color: Colors.light.primary, alignSelf: 'center', marginTop: 30 }}>Skip</Text>
+                    <Text style={{ fontFamily: 'KanitMedium', color: Colors.light.primary, alignSelf: 'center' }}>Skip</Text>
                 </TouchableWithoutFeedback>
 
             </View>

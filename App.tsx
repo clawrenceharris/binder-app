@@ -9,47 +9,43 @@ import { useFonts } from 'expo-font';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth'
 // import AsyncStorage from '@react-native-community/async-storage'
-import { LogBox, Text, View } from 'react-native';
-import { auth } from './Firebase/firebase';
+import { LogBox, StyleSheet, Text, View } from 'react-native';
+import { auth, db } from './Firebase/firebase';
+import Schools from './constants/data/Schools';
+import Classes from './constants/data/Classes';
+import { faker } from '@faker-js/faker';
 export default function App() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState(null)
 
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-
-  LogBox.ignoreLogs([
-    "Require cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."
-  ])
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(function (user) {
-      setLoading(false)
-      if (user) {
-        setCurrentUser(user)
-
-
-      }
-    })
-
-    return () => unsubscribe()
-
-  }, [])
-
+  const [schoolChatrooms, setSchoolChatrooms] = useState(null)
+  const [classChatRooms, setClassChatRooms] = useState(null)
+  const [classes, setClasses] = useState([])
 
   const [loaded] = useFonts({
     Kanit: require('./assets/fonts/Kanit-Regular.ttf'),
     KanitBold: require('./assets/fonts/Kanit-Bold.ttf'),
     KanitMedium: require('./assets/fonts/Kanit-Medium.ttf'),
     KanitSemiBold: require('./assets/fonts/Kanit-SemiBold.ttf'),
-
-
-
   });
 
+  useEffect(() => {
+    console.log(currentUser)
+
+    const unsubscribe = auth.onAuthStateChanged(function (user) {
+      if (user) {
+        setCurrentUser(user)
+      }
+    })
+
+    return () => unsubscribe()
+
+  }, [currentUser])
+
+
   if (!loaded) {
-    return <Text>Loading...</Text>
+    return <Text style={StyleSheet.absoluteFillObject}>Loading...</Text>
   }
   if (!isLoadingComplete) {
     return null;
@@ -57,7 +53,7 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <Navigation currentUser={currentUser} colorScheme={colorScheme} />
-        <StatusBar />
+        <StatusBar style='light' />
       </SafeAreaProvider>
     );
   }

@@ -1,17 +1,32 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, StyleSheet } from 'react-native'
 import React from 'react'
 import { assets } from '../constants'
 import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet'
 import { useNavigation } from '@react-navigation/native'
+import { SHADOWS } from '../constants/Theme'
 
-const SettingsListItem = ({ title, value, onPress, titleColor = 'white', background = '#272727', valueColor = 'white' }) => {
+const SettingsListItem = ({ title, value, onPress, titleColor = 'white', background = '#292929', valueColor = 'gray', isTop, isBottom }) => {
     const navigation = useNavigation()
-
+    const styles = StyleSheet.create({
+        mainContainer: {
+            backgroundColor: background,
+            borderTopLeftRadius: isTop ? 15 : 0,
+            borderTopRightRadius: isTop ? 15 : 0,
+            borderBottomLeftRadius: isBottom ? 15 : 0,
+            borderBottomRightRadius: isBottom ? 15 : 0,
+            flexDirection: 'row',
+            padding: 20,
+            borderBottomColor: '#505050',
+            borderBottomWidth: !isBottom && 1,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        }
+    })
     return (
         <TouchableWithoutFeedback onPress={onPress}>
 
             <View>
-                <View style={{ marginBottom: 10, backgroundColor: background, borderRadius: 15, flexDirection: 'row', padding: 20, justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={styles.mainContainer}>
                     <Text style={{ color: titleColor, fontFamily: 'KanitSemiBold', fontSize: 16 }}>{title}</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ color: valueColor }}>{value}</Text>

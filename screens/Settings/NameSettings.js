@@ -5,13 +5,21 @@ import { assets, Colors } from '../../constants'
 import { SHADOWS, SIZES } from '../../constants/Theme'
 import { useNavigation } from '@react-navigation/native'
 import { descriptions, styles } from '.'
-import { auth, updateName, updateUserProfile } from '../../Firebase/firebase'
+import { auth, updateCollection, updateName, updateUserProfile } from '../../Firebase/firebase'
 import Header from '../../components/Header'
+import Button from '../../components/Button'
 
 const NameSettings = ({ route }) => {
     const navigation = useNavigation()
     const [firstName, setFirstName] = useState(route.params.firstName ? route.params.firstName : '')
     const [lastName, setLastName] = useState(route.params.lastName ? route.params.lastName : '')
+
+    const onSavePress = () => {
+        updateUserProfile(firstName + " " + lastName, auth.currentUser.photoURL);
+        updateCollection('users', auth.currentUser.uid, { firstName: firstName, lastName: lastName });
+        navigation.goBack();
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: '#333' }}>
             <Header
@@ -21,14 +29,14 @@ const NameSettings = ({ route }) => {
                 shadow
 
             />
-            <View style={{ padding: 10 }}>
+            <View style={styles.mainContainer}>
 
                 <Text style={styles.description}>{descriptions.name}</Text>
                 <View style={{ marginTop: 30 }}>
 
                     <TextInput
                         placeholder='First Name'
-                        style={{ color: 'white', padding: 15, fontSize: 18, width: '100%', backgroundColor: '#474747', borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomColor: '#6F6F6F', borderBottomWidth: 1 }}
+                        style={[styles.input, { borderBottomWidth: 1, borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }]}
                         onChangeText={setFirstName}
                         value={firstName}
                         placeholderTextColor={'#6F6F6F'}
@@ -39,30 +47,27 @@ const NameSettings = ({ route }) => {
                     <TextInput
                         placeholder='Last Name'
                         placeholderTextColor={'#6F6F6F'}
-                        style={{ color: 'white', padding: 15, fontSize: 18, width: '100%', backgroundColor: '#474747', borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
+                        style={[styles.input, { borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0 }]}
                         onChangeText={setLastName}
                         value={lastName}
                         selectionColor={Colors.light.primary}
 
                     />
-
-
-
                 </View>
 
 
 
-                <TouchableOpacity
-                    onPress={() => {
+                <Button
+                    background={Colors.light.primary}
+                    tint={'white'}
+                    width={'100%'}
+                    margin={30}
+                    condition={firstName != route.params.firstName || lastName != route.params.lastName}
+                    onPress={onSavePress}
+                    title={'Save'}
+                />
 
-                        updateUserProfile(firstName + " " + lastName, auth.currentUser.photoURL);
-                        updateName(firstName, lastName);
-                        navigation.navigate('Settings');
 
-                    }}
-                    style={{ marginTop: 30, borderRadius: 50, width: '100%', backgroundColor: Colors.light.accent, padding: 10, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: 'white', fontFamily: "Kanit", fontSize: 20 }}>Save</Text>
-                </TouchableOpacity>
 
             </View>
         </View>

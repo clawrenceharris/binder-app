@@ -66,13 +66,17 @@ export function changeEmail(currentPassword, newEmail) {
 
 }
 
-export function updateName(firstName, lastName) {
-    db.collection('users').doc(auth.currentUser.uid).update({
-        firstName: firstName,
-        lastName: lastName
+export function updateCollection(collection, id, data) {
+    db.collection(collection).doc(id).update({
+        ...data
     })
 
 }
+
+
+
+
+
 
 
 export function signUp(email, password, name, photoURL, school) {

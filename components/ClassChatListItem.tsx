@@ -9,34 +9,33 @@ import UserProfileCircle from './UserProfileCircle'
 import ClassProfileCircle from './ClassProfileCircle';
 
 
-const ClassChatListItem = ({ Class, chatRoom }) => {
+const ClassChatListItem = ({ Class, chatroom }) => {
     const colorScheme = useColorScheme();
     const navigation = useNavigation();
     const isMyMessage = () => {
         return message.user.id === 5
     }
 
-    const message = chatRoom.messages[chatRoom.messages.length - 1];
+    const message = chatroom.messages[chatroom.messages.length - 1];
     const onClick = () => {
-        navigation.navigate("ChatRoom", {
-            class: Class, chatRoom: chatRoom
+        navigation.navigate("chatroom", {
+            class: Class, chatroom: chatroom
         })
     }
-
 
     return (
         <TouchableOpacity onPress={onClick}>
             <View style={[styles.chatContainer, { borderBottomColor: colorScheme === 'light' ? '#F4F4F4' : '#292929', margin: 10 }]} >
                 <View style={styles.leftContainer}>
-                    {chatRoom.type === 'group' && <ClassProfileCircle Class={Class} story={[]} showStoryBoder size={40} showName bold />}
-                    {chatRoom.type === 'private' && <UserProfileCircle user={chatRoom.users[0]} showStudyBuddy showStoryBoder={false} size={50} showName={false} bold />}
+                    {chatroom.type === 'group' && <ClassProfileCircle Class={Class} story={[]} showStoryBoder size={40} showName bold />}
+                    {chatroom.type === 'private' && <UserProfileCircle user={chatroom.users[0]} showStudyBuddy showStoryBoder={false} size={50} showName={false} bold />}
 
                     {/*class name and details*/}
                     <View style={styles.midContainer}>
-                        {chatRoom.name && chatRoom.type === 'group' && <Text style={[styles.className, { color: Colors[colorScheme].tint }]}>{chatRoom.name} </Text>}
-                        {!chatRoom.name && chatRoom.type === 'group' && <Text style={[styles.className, { color: Colors[colorScheme].tint }]}>{Class.name} </Text>}
+                        {chatroom.name && chatroom.type === 'group' && <Text style={[styles.className, { color: Colors[colorScheme].tint }]}>{chatroom.name} </Text>}
+                        {!chatroom.name && chatroom.type === 'group' && <Text style={[styles.className, { color: Colors[colorScheme].tint }]}>{Class.name} </Text>}
 
-                        {chatRoom.type === 'private' && <Text style={[styles.className, { color: Colors[colorScheme].tint }]}>{chatRoom.users[0].firstName} </Text>}
+                        {chatroom.type === 'private' && <Text style={[styles.className, { color: Colors[colorScheme].tint }]}>{chatroom.users[0].firstName} </Text>}
 
 
                         <View style={{ flexDirection: 'row', marginTop: 5 }}>

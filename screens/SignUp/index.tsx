@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
         width: '100%',
         fontSize: 20,
         padding: 5,
-        color: 'white'
+        color: 'white',
+        
     },
 
     description: {

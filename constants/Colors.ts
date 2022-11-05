@@ -16,10 +16,13 @@ export default {
     lightGray: '#EFEFEF',
     chatBackground: assets.chat_background,
     accent: accentColor,
+    red: '#FD6464',
+
 
     gray: '626262'
   },
   dark: {
+    red: '#FD6464',
     text: '#fff',
     background: 'darkgray',
     tint: 'white',

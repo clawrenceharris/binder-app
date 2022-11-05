@@ -1,19 +1,21 @@
-import { View, Text, ScrollView, Image, StyleSheet } from 'react-native'
+import { View, Text, ScrollView, Image, StyleSheet, LogBox } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { auth, db } from '../../Firebase/firebase'
 import { useNavigation } from '@react-navigation/native'
-import BackButton from '../../components/BackButton'
-import { assets } from '../../constants'
-import { SHADOWS, SIZES } from '../../constants/Theme'
 import SettingsListItem from '../../components/SettingsListItem'
-
 import moment from 'moment'
 import Header from '../../components/Header'
-import ToggleButton from '../../components/ToggleButton'
+import Button from '../../components/Button'
+import { Colors } from '../../constants'
+import { SHADOWS } from '../../constants/Theme'
+
 const Settings = () => {
     const [userData, setUserData] = useState(null)
-    const [docId, setdocId] = useState('')
+    const [schoolData, setSchoolData] = useState(null)
+    const [secondSchoolData, setSecondSchoolData] = useState(null)
+
     const navigation = useNavigation()
+
 
     const signOut = () => {
         auth.signOut().then(() => {
@@ -23,32 +25,27 @@ const Settings = () => {
         })
     }
     useEffect(() => {
+        //get and set the user data and the user's school data
         const subscriber = db.collection('users')
             .doc(auth.currentUser.uid)
             .onSnapshot(doc => {
                 setUserData(doc.data())
 
-            })
-
-
-
-        return () => subscriber()
-
-    }, [userData])
-
-    function onSubmit(newData) {
-        db.collection('users').doc(docId).update({ ...userData, ...newData })
-    }
-    function getUserData() {
-        db.collection('users').onSnapshot(querySnapshot => {
-            querySnapshot.forEach(documentSnapshot => {
-                if (documentSnapshot.data().uid == auth.currentUser.uid) {
-                    setUserData(documentSnapshot.data())
-                    setdocId(documentSnapshot.id)
+                if (userData?.schoolID != null) {
+                    db.collection('schools')
+                        .doc(userData.schoolID)
+                        .onSnapshot(doc => {
+                            setSchoolData(doc.data())
+                        })
                 }
+
             })
-        })
-    }
+
+        return () => {
+            subscriber()
+        }
+
+    }, [userData]);
 
 
 
@@ -62,55 +59,57 @@ const Settings = () => {
 
             />
 
-            <ScrollView style={{ paddingHorizontal: 10 }}>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={{ paddingHorizontal: 10 }}
+            >
 
-
-                <View style={styles.settingsSectionContainer}>
+                <View style={styles.sectionContainer}>
 
 
                     <Text style={styles.sectionTitle}>Account Settings</Text>
                     <SettingsListItem
+
                         title='Name'
                         value={auth.currentUser?.displayName}
-                        onPress={() => { navigation.navigate('NameSettings', { firstName: userData?.firstName, lastName: userData?.lastName }) }}
+                        isTop={true}
+                        onPress={() => { navigation.navigate('NameSettings', { firstName: userData.firstName, lastName: userData.lastName }) }}
                     />
 
 
                     <SettingsListItem
                         title='Birthday'
                         value={moment(userData?.birthday?.toDate())?.format('MMM DD, YYYY')}
-                        onPress={() => { navigation.navigate('BirthdaySettings', { value: userData?.birthday }) }}
+                        onPress={() => { navigation.navigate('BirthdaySettings', { value: userData.birthday }) }}
                     />
 
 
                     <SettingsListItem
                         title='Email'
                         value={auth.currentUser?.email}
-                        titleColor={!auth.currentUser.emailVerified ? 'red' : 'white'}
+                        titleColor={!auth.currentUser.emailVerified ? Colors.light.red : 'white'}
                         onPress={() => navigation.navigate('EmailSettings', { value: auth.currentUser.email })}
                     />
 
                     <SettingsListItem
                         title='Password'
-                        onPress={() => navigation.navigate('PasswordSettings', { value: '' })}
+                        isBottom={true}
+                        onPress={() => navigation.navigate('PasswordSettings')}
 
                     />
 
                 </View>
 
 
-
                 <View style={styles.sectionContainer}>
 
                     <Text style={styles.sectionTitle}>School Settings</Text>
 
-
-
                     <SettingsListItem
                         title='School'
-
-                        value={userData?.school?.name}
-                        onPress={() => navigation.navigate('SchoolSettings', { school: userData?.school, secondSchool: userData?.secondSchool })}
+                        value={schoolData?.name}
+                        onPress={() => navigation.navigate('SchoolSettings', { school: schoolData })}
+                        isTop={true}
 
                     />
 
@@ -124,7 +123,8 @@ const Settings = () => {
                     <SettingsListItem
                         title='GPA'
                         value={userData?.gpa}
-                        onPress={() => navigation.navigate('GPASettings')}
+                        onPress={() => navigation.navigate('GPASettings', { value: userData?.gpa })}
+                        isBottom={true}
 
                     />
 
@@ -137,14 +137,29 @@ const Settings = () => {
                     <SettingsListItem
                         title='Desk Privacy'
                         onPress={() => navigation.navigate('DeskPrivacy')}
+                        isTop
+                    />
 
+
+                    <SettingsListItem
+                        title='Trash'
+                        onPress={() => navigation.navigate('DeskPrivacy')}
+                        isBottom
                     />
 
                 </View>
 
 
 
-
+                <Button
+                    title={'Log Out'}
+                    backgroundColor={Colors.light.red}
+                    tint={'white'}
+                    width={'100%'}
+                    onPress={() => { auth.signOut() }}
+                    margin={20}
+                    condition={true}
+                />
 
 
             </ScrollView>
@@ -156,7 +171,9 @@ const Settings = () => {
 
 const styles = StyleSheet.create({
     sectionContainer: {
-        marginVertical: 30
+        marginVertical: 30,
+        ...SHADOWS.dark
+
     },
 
     sectionTitle: {

@@ -18,8 +18,7 @@ const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStu
     useEffect(() => {
         const subscriber = db.collection('users').doc(auth.currentUser.uid)
             .onSnapshot(doc => {
-                setImage(doc.data().photoURL);
-                setFriends(doc.data().friends)
+                setImage(doc.data()?.photoUrl);
             })
 
         return () => subscriber()
@@ -51,15 +50,18 @@ const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStu
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
 
-                    <View style={{ position: 'absolute', width: size, height: size, backgroundColor: 'gray', borderRadius: 100, justifyContent: 'center', alignItems: 'center', zIndex: 0 }} />
+                    <View style={{ position: 'absolute', width: size, height: size, backgroundColor: 'gray', borderRadius: 100, justifyContent: 'center', alignItems: 'center', zIndex: 0 }}>
+                        {showActive &&
 
-                    {showActive &&
+                            <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#333333', width: 15, height: 15, borderRadius: 100, position: 'absolute', left: size - (size / 3), top: size - (size / 3) }}>
+                                <View style={{ backgroundColor: '#7FF449', width: 10, height: 10, borderRadius: 100 }} />
 
-                        <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#333333', width: 15, height: 15, borderRadius: 100, position: 'absolute', left: 7, top: '60%' }}>
-                            <View style={{ backgroundColor: '#7FF449', width: 10, height: 10, borderRadius: 100 }} />
+                            </View>
+                        }
 
-                        </View>
-                    }
+                    </View>
+
+
 
 
 

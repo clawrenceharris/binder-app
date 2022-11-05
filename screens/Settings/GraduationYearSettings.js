@@ -9,28 +9,18 @@ import SelectionButton from '../../components/SelectionButton'
 import ToggleButton from '../../components/ToggleButton'
 import { Colors } from '../../constants'
 import Button from '../../components/Button'
-import { auth, updateUserCollection } from '../../Firebase/firebase'
+import { auth, updateCollection } from '../../Firebase/firebase'
 
 const GraduationYearSettings = () => {
     const navigation = useNavigation()
     const year = new Date().getFullYear();
-    const years = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 'Other']
+    const years = [year, year + 1, year + 2, , year + 3, , year + 4, , year + 5, , year + 6, "I Don't Know"]
     const [selectedYear, setSelectedYear] = useState(null)
-    const onViewableItemsChanged = useRef((item) => {
-        const index = item.viewableItems[0].index;
-        //setCurrentSlideIndex(index)
 
-    })
-    const viewabilityConfig = useRef({
-        itemVisiblePercentThreshold: 50
-    })
-    const isYearSelected = (year) => {
-        console.log(selectedYear)
-        return year == selectedYear
-    }
+
+
 
     const onSelect = (year) => {
-        console.log(year, " == ", selectedYear)
 
         if (selectedYear === year) {
             return setSelectedYear(null)
@@ -41,7 +31,6 @@ const GraduationYearSettings = () => {
 
 
     const isSelected = (year) => {
-        console.log(year, " == ", selectedYear)
         return year === selectedYear
     }
 
@@ -61,20 +50,24 @@ const GraduationYearSettings = () => {
 
                 <ScrollView style={{ padding: 10, height: '60%' }}
                     pagingEnabled
-                    onViewableItemsChanged={onViewableItemsChanged.current}
-                    viewabilityConfig={viewabilityConfig.current}
                     showsVerticalScrollIndicator={false}
                 >
 
                     {years.map((year, index) =>
-                        <View key={index} style={{ flexDirection: 'row', marginBottom: 22, padding: 30, width: '100%', backgroundColor: '#272727', borderRadius: 10, justifyContent: 'space-between' }}>
+                        <TouchableOpacity
+                            onPress={() => { onSelect(year) }}
+                            key={index}
+                            activeOpacity={0.8}
+                            style={{ flexDirection: 'row', marginBottom: 22, padding: 30, width: '100%', backgroundColor: '#272727', borderRadius: 10, justifyContent: 'space-between' }}>
                             <Text style={{ color: 'white', fontFamily: "KanitMedium", fontSize: 16 }}>{year}</Text>
                             <SelectionButton
                                 onSelect={() => { onSelect(year) }}
                                 isSelected={isSelected(year)}
+                                acitveOpacity={1}
+
                             />
 
-                        </View>
+                        </TouchableOpacity>
                     )}
                 </ScrollView>
 
@@ -82,7 +75,8 @@ const GraduationYearSettings = () => {
                     background={Colors.light.primary}
                     tint={'white'}
                     title='Save'
-                    onPress={() => { updateUserCollection(auth.currentUser.uid, { gradYear: selectedYear }); navigation.goBack(); }}
+                    width={'100%'}
+                    onPress={() => { updateCollection('users', auth.currentUser.uid, { gradYear: selectedYear }); navigation.goBack(); }}
                     condition={selectedYear != null}
                 />
             </View>

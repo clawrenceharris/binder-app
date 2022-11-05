@@ -8,7 +8,6 @@ const StartScreen = ({ navigation }) => {
 
             <Image source={assets.logo_light} style={{ width: 200, height: 200 }} />
 
-
             <View style={{ marginTop: '30%', width: '100%', alignItems: 'center' }}>
 
                 <TouchableOpacity

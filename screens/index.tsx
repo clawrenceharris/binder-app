@@ -15,6 +15,7 @@ import NameSettings from './Settings/NameSettings'
 import BirthdaySettings from './Settings/BirthdaySettings'
 import GPASetttings from './Settings/GPASettings'
 import PasswordSettings from './Settings/PasswordSettings'
+import GraduationYearSettings from './Settings/GraduationYearSettings'
 
 import SignUpBirthday from './SignUp/SignUpBirthday'
 import SignUpEmailPassword from './SignUp/SignUpEmailPassword'
@@ -37,6 +38,7 @@ export {
     BirthdaySettings,
     GPASetttings,
     PasswordSettings,
+    GraduationYearSettings,
 
     SignUpBirthday,
     SignUpEmailPassword,

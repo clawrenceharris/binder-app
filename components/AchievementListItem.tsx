@@ -83,6 +83,8 @@ const AchievementListItem = (props) => {
                             background='white'
                             tint='black'
                             title='Done'
+                            width={'100%'}
+                            condition={true}
                             onPress={() => { setShowModal(false) }}
                         />
 

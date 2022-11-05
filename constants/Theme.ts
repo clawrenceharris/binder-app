@@ -34,8 +34,8 @@ export const SHADOWS = {
             width: 0,
             height: 3,
         },
-        shadowOpacity: 0.9,
-        shadowRadius: 3,
+        shadowOpacity: 1,
+        shadowRadius: 20,
 
         elevation: 0.2,
     },
@@ -51,7 +51,7 @@ export const SHADOWS = {
         elevation: 2,
     },
     dark: {
-        shadowColor: '#0D0D0D',
+        shadowColor: '#272727',
         shadowOffset: {
             width: 0,
             height: 5,

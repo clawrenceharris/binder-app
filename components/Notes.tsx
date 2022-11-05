@@ -36,8 +36,8 @@ const NotesComponent = () => {
 
                 keyExtractor={(item) => item.id}
                 horizontal
-                pagingEnabled
                 showsHorizontalScrollIndicator={false}
+                pagingEnabled
                 onViewableItemsChanged={onViewableItemsChanged.current}
                 viewabilityConfig={viewabilityConfig.current}
             />
