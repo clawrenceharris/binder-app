@@ -25,7 +25,7 @@ export default class Button extends React.Component {
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: this.props.margin,
-                minHeight: 60,
+                height: 60,
                 alignSelf: 'center'
             },
             btnText: {

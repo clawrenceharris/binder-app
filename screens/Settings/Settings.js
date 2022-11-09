@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Image, StyleSheet, LogBox } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth, db } from '../../Firebase/firebase'
+import { auth, db, getSchool, getUserSnapshot } from '../../Firebase/firebase'
 import { useNavigation } from '@react-navigation/native'
 import SettingsListItem from '../../components/SettingsListItem'
 import moment from 'moment'
@@ -15,8 +15,10 @@ const Settings = () => {
     const [secondSchoolData, setSecondSchoolData] = useState(null)
 
     const navigation = useNavigation()
+    const getSchoolData = () => {
+        return getSchool(userData?.school.id)
 
-
+    }
     const signOut = () => {
         auth.signOut().then(() => {
             navigation.navigate('Login')
@@ -28,24 +30,20 @@ const Settings = () => {
         //get and set the user data and the user's school data
         const subscriber = db.collection('users')
             .doc(auth.currentUser.uid)
-            .onSnapshot(doc => {
+            .onSnapshot((doc) => {
                 setUserData(doc.data())
-
-                if (userData?.schoolID != null) {
+                if (doc.data().school)
                     db.collection('schools')
-                        .doc(userData.schoolID)
-                        .onSnapshot(doc => {
+                        .doc(doc.data().school.id)
+                        .get()
+                        .then((doc) => {
                             setSchoolData(doc.data())
                         })
-                }
-
             })
 
-        return () => {
-            subscriber()
-        }
+        return () => subscriber()
 
-    }, [userData]);
+    }, []);
 
 
 

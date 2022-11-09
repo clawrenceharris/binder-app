@@ -117,19 +117,17 @@ const SignUpBirthday = ({ navigation }) => {
                 <Text style={styles.finePrint}>You must be at least 12 years old to use Binder</Text>
 
 
-                <View style={{ alignItems: 'center' }}>
 
-                    <Button
-                        title={'Continue'}
-                        background={styles.continueBtn.backgroundColor}
-                        tint={'white'}
-                        margin={40}
-                        onPress={onNextPressed}
-                        condition={isValidMonth(month) && isValidDay(day) && isValidYear(year)}
-                        width={styles.continueBtn.width}
+                <Button
+                    title={'Continue'}
+                    background={styles.continueBtn.backgroundColor}
+                    tint={'white'}
+                    margin={40}
+                    onPress={onNextPressed}
+                    condition={isValidMonth(month) && isValidDay(day) && isValidYear(year)}
+                    width={styles.continueBtn.width}
 
-                    />
-                </View>
+                />
 
             </View>
         </SafeAreaView>

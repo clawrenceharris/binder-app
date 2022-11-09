@@ -1,5 +1,5 @@
 //@refresh reset
-import { NavigationContainer, DefaultTheme, DarkTheme, useRoute } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, useRoute, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Image, Text, View } from 'react-native';
@@ -23,11 +23,11 @@ import {
   GPASetttings,
   NameSettings,
   PasswordSettings,
-  GraduationYearSettings
+  GraduationYearSettings,
+  ClassesScreen
 } from '../screens';
 import { SIZES } from '../constants/Theme';
 import Notes from '../screens/Notes';
-import NotesHeader from '../components/NotesHeader';
 import { CameraScreen } from '../screens';
 import EditPictureToSend from '../screens/EditPictureToSend';
 import EditVideoToSend from '../screens/EditVideoToSend';
@@ -35,21 +35,26 @@ import EditProfile from '../screens/EditProfile';
 import StartScreen from '../screens/StartScreen';
 import Settings from '../screens/Settings/Settings';
 import CurrentUserProfile from '../screens/CurrentUserProfile';
-import Achievements from '../screens/Achievements';
 import AchievementsScreen from '../screens/Achievements';
 import SchoolSettings from '../screens/Settings/SchoolSettings';
 import DeskPrivacy from '../screens/Settings/DeskPrivacy';
 import SearchSelect from '../screens/SearchSelect';
 import { auth } from '../Firebase/firebase';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
-
+import Feed from '../screens/Feed';
+import Header from '../components/Header';
+import ClassChatroom from '../screens/ClassChatroom';
+import SearchSelectUsers from '../screens/SearchSelectUsers';
+import NewChat from '../screens/NewChat';
 
 const Stack = createNativeStackNavigator();
 
-// const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator();
 
 
 export default function Navigation({ currentUser, colorScheme }) {
+
   return (
 
     <NavigationContainer
@@ -64,8 +69,32 @@ export default function Navigation({ currentUser, colorScheme }) {
 }
 
 
+function Classroom({ route }) {
+  return (
+    <Drawer.Navigator
+      drawerStyle={{
+        backgroundColor: '#333',
+        width: '100%',
+      }}
+      drawerPosition={'right'} drawerType={'back'}
+      drawerContent={() => {
+        return (
+          <Header
+            headerLeft={<></>}
+            shadow
+            title={'Chats'}
+          />
 
 
+
+        )
+      }}>
+      <Drawer.Screen name='Feed' children={() => { return <Feed route={route} /> }} />
+      <Drawer.Screen name='ClassChatroom' children={() => { return <ClassChatroom route={route} /> }} />
+
+
+    </Drawer.Navigator>)
+}
 
 
 function RootNavigator({ currentUser }) {
@@ -77,7 +106,6 @@ function RootNavigator({ currentUser }) {
       initialRouteName='StartScreen'
       screenOptions={{
         headerShown: false,
-
         headerStyle: {
 
           backgroundColor: Colors[colorScheme].background,
@@ -120,8 +148,14 @@ function RootNavigator({ currentUser }) {
         <Stack.Screen
           name="SearchSelect"
           component={SearchSelect}
-          options={{ gestureDirection: 'vertical' }}
+          options={{
+            gestureDirection: "vertical",
+            presentation: 'modal'
+
+          }}
         />
+
+
         <Stack.Screen
           name="SignUpEmailPassword"
           component={SignUpEmailPassword}
@@ -134,29 +168,40 @@ function RootNavigator({ currentUser }) {
 
         />
 
+
       </Stack.Group >
       <Stack.Screen
         name="Root"
-        children={() => { return <BottomTabNavigator currentUser={currentUser} /> }}
+        children={() => { return <BottomTabNavigator /> }}
       />
 
+      <Stack.Screen
+        name="NewChat"
+        component={NewChat}
+        options={{
+          gestureDirection: "vertical",
+          presentation: 'modal'
 
+        }}
+      />
 
       <Stack.Screen
         name="Achievements"
         component={AchievementsScreen}
-        options={({ route }) => ({
+        options={{
           gestureDirection: "vertical",
           headerShown: false,
-        })}
+          presentation: 'modal'
+
+        }}
 
       />
 
 
 
       <Stack.Screen
-        name="Chats"
-        component={Chats}
+        name="Classroom"
+        component={Classroom}
       />
 
 

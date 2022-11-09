@@ -6,7 +6,7 @@ import { SHADOWS, SIZES } from '../../constants/Theme'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { descriptions, styles } from '.'
 import Button from '../../components/Button'
-import { auth, db, updateCollection } from '../../Firebase/firebase'
+import { AddUserToSchool, auth, db, updateCollection } from '../../Firebase/firebase'
 import Header from '../../components/Header'
 import { faker } from '@faker-js/faker'
 import firebase from 'firebase/compat'
@@ -35,8 +35,9 @@ const SchoolSettings = ({ route }) => {
         isClass: false
     }
     const onSavePress = () => {
-        updateCollection('users', auth.currentUser.uid, { school: school ? school.id : null });
-        updateCollection('schools', school.id, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(auth.currentUser.uid)) });
+        console.log(school.id)
+        AddUserToSchool(school.id, auth.currentUser.uid)
+
         navigation.goBack()
     }
     useEffect(() => {
@@ -70,15 +71,16 @@ const SchoolSettings = ({ route }) => {
                 onCancelPress={() => setShowModal(false)}
                 showModal={showModal}
                 onConfirmPress={onSavePress}
-                message={`Saving this school means you will leave ${route.params.school.name} and you won't be able to see their feed or chats anymore.`}
+                message={`Saving this school means you will leave ${route.params?.school?.name} and you won't be able to see their feed or chats anymore.`}
                 cancelText='Cancel'
-                confirmText='Confirm'
+                confirmText="Yes, I'm Sure 👍"
 
             />
 
             <Header
                 title='School'
                 navigation={navigation}
+                direction='horizontal'
 
             />
             <View style={styles.mainContainer}>
@@ -103,7 +105,7 @@ const SchoolSettings = ({ route }) => {
                                 style={{ flexDirection: 'row', backgroundColor: Colors.light.accent, borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={assets.pencil} style={{ width: 20, height: 20, tintColor: 'white' }} />
-                                <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>{school?.name}</Text>
+                                {school && <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>{school?.name}</Text>}
                             </TouchableOpacity>
 
 

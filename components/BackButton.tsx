@@ -4,7 +4,7 @@ import { assets } from '../constants'
 
 const BackButton = (props) => {
     return (
-        <TouchableWithoutFeedback onPress={() => { props.navigation.goBack() }}>
+        <TouchableWithoutFeedback onPress={() => { props.onBackPress ? props.onBackPress : props.navigation.goBack() }}>
             {props.direction === 'horizontal' ?
                 <Image
                     source={assets.left_arrow}

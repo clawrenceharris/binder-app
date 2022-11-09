@@ -9,7 +9,7 @@ import { Image } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import CustomInput from '../components/CustomInput'
-import { auth, signIn } from '../Firebase/firebase'
+import { auth, db, signIn } from '../Firebase/firebase'
 import Button from '../components/Button'
 const SignIn = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm();
@@ -41,9 +41,10 @@ const SignIn = ({ navigation }) => {
     setLoading(true)
     auth
       .signInWithEmailAndPassword(data.email, data.password)
-      .then(userCredentials => {
+      .then(user => {
         setLoading(false)
         navigation.navigate('Root')
+
 
       })
 

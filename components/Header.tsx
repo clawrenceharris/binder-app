@@ -1,35 +1,82 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native'
 import React from 'react'
 import BackButton from './BackButton'
 import { SHADOWS, SIZES } from '../constants/Theme'
+import { assets } from '../constants'
 
-const Header = ({ navigation, title, props, shadow, headerLeft = null, headerCenter = null, headerRight = null, direction = 'horizontal' }) => {
+const Header = (props) => {
+    const styles = StyleSheet.create({
+        shadows: {
+            ...SHADOWS.light,
+            shadowColor: '#272727'
+        },
+
+        title: {
+            fontFamily: 'KanitMedium',
+            color: 'white',
+            fontSize: 22,
+        },
+
+        mainContainer: {
+            justifyContent: 'center',
+            flexDirection: 'row',
+            alignItems: 'center',
+            height: !props.isModal ? SIZES.header : SIZES.header - 40,
+            padding: 5,
+            backgroundColor: '#333',
+            zIndex: 1
+        },
+
+        centerContainer: {
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            paddingTop: !props.isModal ? 30 : 0
+        },
+
+        rightContainer: {
+            position: 'absolute',
+            right: 20,
+            paddingTop: 30,
+
+        },
+
+        leftContainer: {
+            position: 'absolute',
+            left: 20,
+            paddingTop: 30
+        }
+    })
     return (
-        <View style={[styles.mainContainer, shadow && styles.shadows]}>
+        <View style={[styles.mainContainer, props.shadow && styles.shadows]}>
             <View style={styles.leftContainer}>
-                {!headerLeft ?
-                    <BackButton
-                        navigation={navigation}
-                        margin={0}
+                {!props.headerLeft ?
+                    !props.isModal && <BackButton
+                        navigation={props.navigation}
                         color={'white'}
-                        direction={direction} />
+                        direction={props.direction} />
                     :
-                    headerLeft
+                    props.headerLeft
                 }
 
             </View>
             <View style={styles.centerContainer}>
 
 
-                {!headerCenter ? <Text style={styles.title}>{title}</Text>
+                {!props.headerCenter ?
+                    <View style={{ alignItems: 'center' }} >
+                        {props.isModal && <View style={{ width: '80%', height: 5, borderRadius: 25, backgroundColor: 'gray', marginBottom: 10 }} />}
+                        <Text style={styles.title}>{props.title}</Text>
+
+                    </View>
                     :
-                    headerCenter
+                    props.headerCenter
 
                 }
             </View>
 
             <View style={styles.rightContainer}>
-                {headerRight}
+                {props.headerRight}
 
             </View>
 
@@ -39,46 +86,5 @@ const Header = ({ navigation, title, props, shadow, headerLeft = null, headerCen
     )
 }
 
-const styles = StyleSheet.create({
-    shadows: {
-        ...SHADOWS.light,
-        shadowColor: '#272727'
-    },
 
-    title: {
-        fontFamily: 'KanitMedium',
-        color: 'white',
-        fontSize: 22,
-    },
-
-    mainContainer: {
-        justifyContent: 'center',
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: SIZES.header,
-        padding: 5,
-        backgroundColor: '#333',
-        zIndex: 1
-    },
-
-    centerContainer: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingTop: 30
-    },
-
-    rightContainer: {
-        position: 'absolute',
-        right: 20,
-        paddingTop: 30,
-
-    },
-
-    leftContainer: {
-        position: 'absolute',
-        left: 20,
-        paddingTop: 30
-    }
-})
 export default Header

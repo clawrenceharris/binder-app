@@ -1,6 +1,6 @@
-import { View, Text, Animated, TouchableOpacity, TouchableWithoutFeedback, Image } from 'react-native'
-import React, { useState } from 'react'
-import { Colors, assets } from '../constants'
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import React from 'react'
+import { Colors } from '../constants'
 export default class SelectionButton extends React.Component {
     constructor(props) {
         super(props);
@@ -8,15 +8,25 @@ export default class SelectionButton extends React.Component {
     }
 
     render() {
-
+        const styles = StyleSheet.create({
+            selectionBtn: {
+                padding: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 30,
+                height: 30,
+                borderColor: 'lightgray',
+                borderWidth: 1,
+                borderRadius: 100,
+                backgroundColor: this.props.isSelected ? Colors.light.primary : 'transparent'
+            }
+        })
         return (
 
             <TouchableOpacity
                 onPress={this.props.onSelect}
-                activeOpacity={this.props.activeOpacity}
-            >
-
-                <View style={{ padding: 5, justifyContent: 'center', alignItems: 'center', width: 30, height: 30, borderColor: 'lightgray', borderWidth: 1, borderRadius: 100, backgroundColor: this.props.isSelected ? Colors.light.primary : '#272727' }} />
+                activeOpacity={this.props.activeOpacity}>
+                <View style={styles.selectionBtn} />
             </TouchableOpacity>
 
         )

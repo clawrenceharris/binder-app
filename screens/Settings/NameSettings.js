@@ -26,7 +26,6 @@ const NameSettings = ({ route }) => {
                 navigation={navigation}
                 direction={'horizontal'}
                 title={'Name'}
-                shadow
 
             />
             <View style={styles.mainContainer}>

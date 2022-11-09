@@ -8,17 +8,18 @@ import useColorScheme from '../hooks/useColorScheme'
 import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../Firebase/firebase'
 
-const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStudyBuddy, showActive, ...props }) => {
+const UserProfileCircle = (props) => {
     const colorScheme = useColorScheme();
     const navigation = useNavigation()
-    const [image, setImage] = useState(null)
     const [studyBuddies, setStudyBuddies] = useState([])
     const [friends, setFriends] = useState([])
+    const [image, setImage] = useState(null)
+
 
     useEffect(() => {
-        const subscriber = db.collection('users').doc(auth.currentUser.uid)
+        const subscriber = db.collection('users').doc(props.user.uid)
             .onSnapshot(doc => {
-                setImage(doc.data()?.photoUrl);
+                setImage(doc.data()?.photoURL);
             })
 
         return () => subscriber()
@@ -29,14 +30,7 @@ const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStu
 
     }
 
-    const goToProfile = () => {
-        if (user.uid == auth.currentUser.uid)
-            navigation.navigate('CurrentUserProfile', { user: user, class: undefined })
-        else {
-            navigation.navigate('Profile', { user: user, class: undefined })
 
-        }
-    }
 
 
 
@@ -45,16 +39,36 @@ const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStu
     }
     return (
 
-        <TouchableWithoutFeedback onPress={hasStory() ? showStory : goToProfile}>
+        <TouchableWithoutFeedback onPress={() => props.navigation.openDrawer()}>
             <View style={{ flexDirection: props.flexDirection, alignItems: 'center', margin: props.margin }}>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
 
-                    <View style={{ position: 'absolute', width: size, height: size, backgroundColor: 'gray', borderRadius: 100, justifyContent: 'center', alignItems: 'center', zIndex: 0 }}>
-                        {showActive &&
+                    <View style={{
+                        position: 'absolute',
+                        width: props.size,
+                        height: props.size,
+                        backgroundColor: 'gray',
+                        borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 0
+                    }}>
+                        {props.showActive &&
 
-                            <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#333333', width: 15, height: 15, borderRadius: 100, position: 'absolute', left: size - (size / 3), top: size - (size / 3) }}>
-                                <View style={{ backgroundColor: '#7FF449', width: 10, height: 10, borderRadius: 100 }} />
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#333333',
+                                width: 15,
+                                height: 15,
+                                borderRadius: 100,
+                                position: 'absolute',
+                                left: props.size - (props.size / 3),
+                                top: props.size - (props.size / 3)
+                            }}
+                            >
+                                <View style={{ backgroundColor: '#7FF449', width: 10, height: 10, borderRadius: 100, zIndex: 1 }} />
 
                             </View>
                         }
@@ -65,21 +79,21 @@ const UserProfileCircle = ({ user, size, showStoryBoder, bold, showName, showStu
 
 
 
-                    {showStoryBoder && hasStory() && <View style={{ width: size + 10, height: size + 10, borderWidth: 3, borderColor: Colors.light.primary, borderRadius: 50 }} />}
+                    {props.showStoryBoder && hasStory() && <View style={{ width: props.size + 10, height: props.size + 10, borderWidth: 3, borderColor: Colors.light.primary, borderRadius: 50 }} />}
 
 
 
-                    <View style={{ borderRadius: 100, alignItems: 'center', overflow: 'hidden', width: size, height: size, justifyContent: 'center' }}>
-                        {image && <Image source={{ uri: image }} style={[styles.image, { width: size, height: size }]} />}
-                        {!image && <Image source={assets.person} style={[styles.defaultImage, { width: size - (size / 3), height: size - (size / 3) }]} />}
+                    <View style={{ borderRadius: 100, alignItems: 'center', overflow: 'hidden', width: props.size, height: props.size, justifyContent: 'center' }}>
+                        {image ? <Image source={{ uri: image }} style={[styles.image, { width: props.size, height: props.size }]} />
+                            : <Image source={assets.person} style={[styles.defaultImage, { width: props.size - (props.size / 3), height: props.size - (props.size / 3) }]} />}
 
                     </View>
 
 
 
 
-                    {studyBuddies.includes(user) && <View style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', padding: 4, backgroundColor: Colors[colorScheme].background, borderRadius: 50, right: -15, top: 20 }}>
-                        <Text style={{ fontSize: (size / 3) }}>🤓</Text>
+                    {studyBuddies.includes(props.user) && <View style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', padding: 4, backgroundColor: Colors[colorScheme].background, borderRadius: 50, right: -15, top: 20 }}>
+                        <Text style={{ fontSize: (props.size / 3) }}>🤓</Text>
 
                     </View>}
 

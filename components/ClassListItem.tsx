@@ -8,39 +8,42 @@ import ActivePeople from './ActivePeople'
 import ClassProfileCircle from './ClassProfileCircle'
 import ModalComponent from './Modal'
 import { SHADOWS } from '../constants/Theme'
-import { auth, db } from '../Firebase/firebase'
+import { auth, db, updateCollection } from '../Firebase/firebase'
+import firebase from 'firebase/compat'
 
-
-const ClassListItem = ({ Class }) => {
+const ClassListItem = ({ Class, onLongPress }) => {
     const colorScheme = useColorScheme()
     const navigation = useNavigation()
     const [longPressed, setLongPressed] = useState(false)
     const snapPoints = ['40%', '15%', '100%']
-    const [totalUsers, setTotalUsers] = useState(0)
-
-
+    const [classData, setClassData] = useState(null)
     const onPress = () => {
-        navigation.navigate('Chats', { class: Class })
-
+        navigation.navigate('Classroom', { Class: Class })
     }
-
+    const date = new Date().getMinutes()
 
     useEffect(() => {
-        //if the users 
-        const subscriber = db.collection('users').doc(auth.currentUser.uid).onSnapshot(doc => {
+        //if this class id is equal to the users class id
+        const subscriber = db.collection('classes').doc(Class.id).onSnapshot(doc => {
+            setClassData(doc.data())
 
-            db.collection('schools').doc(doc.data().schoolID)
-                .onSnapshot(doc =>
-                    doc.data().users.forEach(user => {
-                        //console.log(user.data().classes.filter(item => item === Class).length)
+            //update active users
+            doc.data().users?.forEach((user) => {
 
-                        console.log(user)
-                    }))
+                db.collection('users').doc(user.id)
+                    .onSnapshot(doc => {
 
+                        if (doc.data()?.lastActive.toDate().getMinutes() <= 2) {
+                            updateCollection('classes', Class.id, { active: firebase.firestore.FieldValue.arrayUnion(user) })
+                        } else {
+                            updateCollection('classes', Class.id, { active: firebase.firestore.FieldValue.arrayRemove(user) })
 
-
+                        }
+                    })
+            })
 
         })
+
         return () => {
             subscriber()
         }
@@ -50,20 +53,21 @@ const ClassListItem = ({ Class }) => {
     return (
 
 
-        <TouchableWithoutFeedback onPress={onPress}>
+        <TouchableWithoutFeedback
+            onPress={onPress}
+            onLongPress={() => onLongPress(Class)}
+        >
             <View style={{ marginBottom: 20 }}>
-
-
-                <View style={{ backgroundColor: colorScheme === 'light' ? 'white' : 'white', borderTopRightRadius: 25, borderTopLeftRadius: 25, ...SHADOWS.light, shadowOpacity: 0.6, shadowRadius: 2 }}>
+                <View style={{ backgroundColor: 'white', borderTopRightRadius: 25, borderTopLeftRadius: 25, ...SHADOWS.light, shadowOpacity: 0.6, shadowRadius: 2 }}>
                     <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ margin: 10 }}>
                             <ClassProfileCircle Class={Class} story={[]} showStoryBoder={false} size={40} showName bold chatroom={Class.chatroom} />
 
                         </View>
                         <View>
-                            <Text style={[styles.className, { color: Colors.light.accent }]}>{Class.name}</Text>
+                            <Text style={[styles.className, { color: Colors.light.accent }]}>{classData?.name}</Text>
 
-                            <ActivePeople userCount={totalUsers} activeCount={3} />
+                            <ActivePeople userCount={classData?.users?.length} activeCount={classData?.active?.length} />
 
                         </View>
 
@@ -71,7 +75,7 @@ const ClassListItem = ({ Class }) => {
 
                 </View>
 
-                <View style={[styles.container, { ...SHADOWS.dark, backgroundColor: colorScheme === 'light' ? '#F2F2F2' : '#F2F2F2', shadowColor: '#272727' }]}>
+                <View style={[styles.container, { ...SHADOWS.dark, backgroundColor: '#F2F2F2', shadowColor: '#272727' }]}>
 
                     <Text style={{ fontFamily: 'KanitMedium', fontSize: 20, color: 'lightgray' }}>No Recent Activity</Text>
 

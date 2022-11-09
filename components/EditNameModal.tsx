@@ -4,11 +4,12 @@ import { auth, db, updateCollection, updateUserProfile } from '../Firebase/fireb
 import { Colors } from '../constants';
 import { styles } from '../screens/SignUp';
 import Button from './Button';
+import { getDisplayName } from '../utils';
 
 const EditNameModal = (props) => {
 
-    const [firstName, setFirstName] = useState(props.firstName)
-    const [lastName, setLastName] = useState(props.lastName)
+    const [firstName, setFirstName] = useState(props.firstName ? props.firstName : null)
+    const [lastName, setLastName] = useState(props.lastName ? props.lastName : null)
     const { width, height } = useWindowDimensions()
     const translateValue = useRef(new Animated.Value(0)).current
 
@@ -83,12 +84,15 @@ const EditNameModal = (props) => {
                             title={'Save'}
                             background={Colors.light.accent}
                             tint={'white'}
-                            condition={true}
+                            condition={firstName || lastName}
                             width={'100%'}
                             onPress={() => {
-                                updateUserProfile(firstName + " " + lastName, auth.currentUser.photoURL);
+
+                                updateUserProfile(getDisplayName(firstName, lastName), auth.currentUser.photoURL);
                                 updateCollection('users', auth.currentUser.uid, { firstName: firstName, lastName: lastName });
                                 props.onSavePress()
+
+
                             }}
 
 

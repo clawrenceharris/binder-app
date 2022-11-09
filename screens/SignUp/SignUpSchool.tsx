@@ -13,6 +13,7 @@ const SignUpSchool = ({ navigation }) => {
     const [school, setSchool] = useState(null)
     const [data, setData] = useState([])
 
+    console.log(school)
 
     const defaultData = {
         id: faker.datatype.uuid(),
@@ -35,7 +36,7 @@ const SignUpSchool = ({ navigation }) => {
 
     const onNextPressed = () => {
 
-        navigation.navigate('SignUpPhoto', { ...route.params, schoolID: school.id })
+        navigation.navigate('SignUpPhoto', { ...route.params, school: school })
     }
 
 

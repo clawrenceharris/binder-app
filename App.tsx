@@ -10,10 +10,13 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth'
 // import AsyncStorage from '@react-native-community/async-storage'
 import { LogBox, StyleSheet, Text, View } from 'react-native';
-import { auth, db } from './Firebase/firebase';
+import { auth, db, updateCollection } from './Firebase/firebase';
 import Schools from './constants/data/Schools';
 import Classes from './constants/data/Classes';
 import { faker } from '@faker-js/faker';
+import firebase from 'firebase/compat';
+import { useIsDrawerOpen } from '@react-navigation/drawer';
+
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null)
 
@@ -31,17 +34,12 @@ export default function App() {
   });
 
   useEffect(() => {
-    console.log(currentUser)
 
-    const unsubscribe = auth.onAuthStateChanged(function (user) {
-      if (user) {
-        setCurrentUser(user)
-      }
-    })
 
-    return () => unsubscribe()
 
-  }, [currentUser])
+
+
+  }, [])
 
 
   if (!loaded) {
@@ -58,5 +56,7 @@ export default function App() {
     );
   }
 }
+
+
 
 

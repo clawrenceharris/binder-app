@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { FlatList, LogBox, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 import { useRoute } from '@react-navigation/native'
 import Header from '../components/Header'
@@ -6,7 +6,9 @@ import { Colors, assets } from '../constants'
 import SchoolListItemToJoin from '../components/SchoolListItemToJoin'
 import ClassListItemToJoin from '../components/ClassListItemToJoin'
 const SearchSelect = ({ navigation }) => {
-
+  LogBox.ignoreLogs([
+    'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.'
+  ])
   const route = useRoute()
 
   const [search, setSearch] = useState('')
@@ -18,17 +20,21 @@ const SearchSelect = ({ navigation }) => {
   const handleSearch = (value) => {
     setSearch(value)
 
-    setNewData({   //creates a map of default data with the name matching the search value
 
-      name: value,
-      ...defaultData
-    })
+    if (defaultData) {
+      setNewData({   //creates a map of default data with the name matching the search value
+
+        name: value,
+        ...defaultData
+      })
+
+    }
 
     if (!value.length) {
       return setData(_data)
     }
     const filteredData = _data.filter((item) =>
-      item.name.toLowerCase().includes(value.toLowerCase()))
+      item.name.includes(value.toLowerCase()))
 
     if (filteredData.length) {
       setData(filteredData)

@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import useColorScheme from '../hooks/useColorScheme'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
@@ -8,11 +8,13 @@ import ClassProfileCircle from './ClassProfileCircle'
 import ModalComponent from './Modal'
 import { SHADOWS } from '../constants/Theme'
 import { assets } from '../constants'
+import { auth, db } from '../Firebase/firebase'
 
 
 const ClassListItemToJoin = ({ Class, isSelected, onSelect }) => {
     const colorScheme = useColorScheme()
     const navigation = useNavigation()
+    const [classData, setClassData] = useState(null)
 
 
     const onPress = () => {
@@ -20,6 +22,26 @@ const ClassListItemToJoin = ({ Class, isSelected, onSelect }) => {
 
     }
 
+    useEffect(() => {
+        console.log("CLASS", Class.id)
+
+        //if this class id is equal to the users class id
+        const subscriber = db.collection('classes')
+            .doc(Class.id)
+            .onSnapshot(doc =>
+                setClassData(doc.data()))
+
+
+
+
+
+
+
+
+        return () => {
+            subscriber()
+        }
+    }, [])
 
 
 
@@ -35,7 +57,7 @@ const ClassListItemToJoin = ({ Class, isSelected, onSelect }) => {
 
                     <View style={styles.headerLeft}>
                         <ClassProfileCircle Class={Class} story={[]} showStoryBoder={false} size={40} showName bold />
-                        <Text style={[styles.className, { color: Colors.light.accent, marginLeft: 10, width: '72%' }]}>{Class.name} </Text>
+                        <Text style={[styles.className, { color: Colors.light.accent, marginLeft: 10, width: '72%' }]}>{classData?.name} </Text>
                     </View>
 
 
@@ -57,7 +79,7 @@ const ClassListItemToJoin = ({ Class, isSelected, onSelect }) => {
 
                 <View style={styles.bottomContainer}>
 
-                    <Text style={{ fontFamily: 'KanitMedium', fontSize: 20, color: 'lightgray' }}></Text>
+                    <Text style={{ fontFamily: 'Kanit', fontSize: 12, color: 'gray', marginLeft: 5 }}>Teacher: {classData?.teacher}</Text>
 
                 </View>
             </View>

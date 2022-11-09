@@ -12,13 +12,12 @@ const ProfileTag = ({ icon, title, onPress, ...props }) => {
             <View style={{
                 backgroundColor: '#333',
                 borderWidth: 1,
-                borderColor: 'lightgray',
+                borderColor: '#464646',
                 borderRadius: 50,
-                height: 35,
-                width: props.width,
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                padding: 10
             }}>
                 {icon}
                 <Text style={{ color: '#9BA0A6', marginLeft: 4 }}>{title}</Text>

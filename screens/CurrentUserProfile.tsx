@@ -9,7 +9,7 @@ import { UserProfileCircle } from '../components'
 import CircleButton from '../components/CircleButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SHADOWS, SIZES } from '../constants/Theme'
-import { useNavigation } from '@react-navigation/native'
+import { DrawerActions, useNavigation } from '@react-navigation/native'
 import ProfileTag from '../components/ProfileTag'
 import ModalComponent from '../components/Modal'
 import moment from 'moment'
@@ -20,15 +20,14 @@ import ProfileListBox from '../components/ProfileListBox'
 import ClassChatListItem from '../components/ClassChatListItem'
 import ChatRooms from '../constants/data/ChatRooms'
 import { auth, db, updateCollection, updateUserProfile } from '../Firebase/firebase'
-import { openMediaLibrary } from '../utils'
+import { getDisplayName, getZodiacSign, openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
 import ImageOptionsModal from '../components/ImageOptionsModal'
 import BackButton from '../components/BackButton'
 import Header from '../components/Header'
 //route.params = class, user
-const CurrentUserProfile = ({ route }) => {
+const CurrentUserProfile = ({ navigation }) => {
     const colorScheme = useColorScheme()
-    const navigation = useNavigation()
     const [showModal, setShowModal] = useState(false)
     const [modal, setModal] = useState(null)
     const [image, setImage] = useState(null)
@@ -36,7 +35,8 @@ const CurrentUserProfile = ({ route }) => {
     const [showEditNameModal, setShowEditNameModal] = useState(false)
     const [showMore, setShowMore] = useState(false)
     const [userData, setUserData] = useState(null)
-
+    const sign = getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth());
+    const zodiacEmoji = getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth(), true);
     const user = auth.currentUser
 
 
@@ -57,8 +57,8 @@ const CurrentUserProfile = ({ route }) => {
 
 
     const birthdayModal = () => (
-        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-            <View style={{ backgroundColor: '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
+        <View style={{ alignItems: 'center' }}>
+            <View style={styles.emojiContainer}>
                 <Text style={{ fontSize: 36 }}>🎂</Text>
             </View>
 
@@ -67,7 +67,7 @@ const CurrentUserProfile = ({ route }) => {
 
             </View>
             <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>{`Your birthday is on ${moment(userData?.birthday).format("MMM DD, YYYY")}`}</Text>
+                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>{`Your birthday is on ${moment(userData?.birthday?.toDate()).format("MMM DD, YYYY")}!`}</Text>
 
             </View>
 
@@ -84,17 +84,20 @@ const CurrentUserProfile = ({ route }) => {
 
 
     const zodiacSignModal = () => (
-        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-            <View style={{ backgroundColor: '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
-                <Text style={{ fontSize: 36 }}>♏️</Text>
+
+        <View style={{ alignItems: 'center' }}>
+            <View style={styles.emojiContainer}>
+                <Text style={{ fontSize: 36 }}>{zodiacEmoji}</Text>
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Zodiac</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Zodiac Sign</Text>
 
             </View>
             <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>{'You are is a Scorpio'}</Text>
+                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>
+                    {`You are a ${sign}!`}
+                </Text>
 
             </View>
 
@@ -112,8 +115,9 @@ const CurrentUserProfile = ({ route }) => {
 
 
     const classModal = () => (
-        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-            <View style={{ backgroundColor: '#1A1A1A', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: colorScheme === 'light' ? '#F1F2F4' : '#121212' }}>
+        <View style={{ alignItems: 'center' }}>
+            <View style={styles.emojiContainer}>
+
                 <Text style={{ fontSize: 36 }}>🎓</Text>
             </View>
 
@@ -122,7 +126,7 @@ const CurrentUserProfile = ({ route }) => {
 
             </View>
             <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>You graduate in {userData.gradYear}</Text>
+                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>You graduate in {userData?.gradYear}</Text>
 
             </View>
 
@@ -131,16 +135,21 @@ const CurrentUserProfile = ({ route }) => {
                 style={{ height: 50, backgroundColor: '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
                 <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>Close</Text>
             </TouchableOpacity>
-
-
         </View>
+
+
 
     );
 
     const headerRight = () => (
-        <TouchableOpacity onPress={() => { navigation.navigate('Settings') }}>
-            <Image source={assets.settings} style={{ width: 25, height: 25, tintColor: Colors.dark.tint }} />
-        </TouchableOpacity>
+        <TouchableWithoutFeedback onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}>
+            <Image
+                source={assets.right_arrow}
+                style={{ width: 24, height: 24, tintColor: 'white' }}
+            />
+        </TouchableWithoutFeedback >
+
+
     )
 
     const headerCenter = () => (
@@ -150,11 +159,49 @@ const CurrentUserProfile = ({ route }) => {
         </TouchableOpacity>
     )
 
+    const headerLeft = () => (
+        <TouchableOpacity onPress={() => { navigation.navigate('Settings') }}>
+            <Image source={assets.settings} style={{ width: 25, height: 25, tintColor: Colors.dark.tint }} />
+        </TouchableOpacity>
+    )
+
 
 
     return (
 
         <View style={{ backgroundColor: '#333333', flex: 1 }}>
+
+            <ModalComponent renderContent={modal} showModal={showModal} toValue={-900} animated height={280} width={250} />
+
+            <EditNameModal
+                firstName={userData?.firstName}
+                lastName={userData?.lastName}
+                onCancelPress={() => {
+                    setShowEditNameModal(false)
+                }}
+                showModal={showEditNameModal}
+                onSavePress={() => {
+                    setShowEditNameModal(false)
+
+                }}
+            />
+
+
+            <ImageOptionsModal
+                onLibraryPress={async () => {
+                    setShowImageOptionsModal(false);
+                    const result = await openMediaLibrary('photo', 1);
+                    if (result) {
+                        updateUserProfile(auth.currentUser.displayName, result)
+                        updateCollection('users', auth.currentUser.uid, { photoURL: result });
+                    }
+                }}
+
+                onTakePicturePress={() => { }}
+                showModal={showImageOptionsModal}
+                onCancelPress={() => { setShowImageOptionsModal(false) }}
+            />
+
             <Header
                 navigation={navigation}
                 direction={'horizontal'}
@@ -162,47 +209,15 @@ const CurrentUserProfile = ({ route }) => {
                 headerCenter={headerCenter()}
                 shadow
                 headerRight={headerRight()}
+                headerLeft={headerLeft()}
             />
 
             <View style={{ paddingHorizontal: 20 }}>
 
-                <ModalComponent renderContent={modal} showModal={showModal} toValue={-900} animated height={300} width={250} />
-
-                <EditNameModal
-                    firstName={userData?.firstName}
-                    lastName={userData?.lastName}
-                    onCancelPress={() => {
-                        setShowEditNameModal(false)
-                    }}
-                    showModal={showEditNameModal}
-                    onSavePress={() => {
-                        setShowEditNameModal(false)
-
-                    }}
-                />
-
-
-                <ImageOptionsModal
-                    onLibraryPress={async () => {
-                        setShowImageOptionsModal(false);
-                        const result = await openMediaLibrary('photo', 1);
-                        if (result) {
-                            updateUserProfile(auth.currentUser.displayName, result)
-                            updateCollection('users', auth.currentUser.uid, { photoURL: image });
-                        }
-                    }}
-
-                    onTakePicturePress={() => { }}
-                    showModal={showImageOptionsModal}
-                    onCancelPress={() => { setShowImageOptionsModal(false) }}
-                />
-
-
-
                 <ScrollView showsVerticalScrollIndicator={false} style={{ height: '100%' }}>
 
 
-                    <View style={{ alignItems: 'center' }}>
+                    <View style={{ alignItems: 'center', marginTop: 40 }}>
 
 
                         <TouchableWithoutFeedback onPress={() => { setShowImageOptionsModal(true) }}>
@@ -227,7 +242,7 @@ const CurrentUserProfile = ({ route }) => {
                     <View style={{ alignItems: 'center', marginTop: 10, flexDirection: 'row', justifyContent: 'center' }}>
                         <Text
                             onPress={() => { setShowEditNameModal(true) }}
-                            style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>{userData?.firstName + " " + userData?.lastName}</Text>
+                            style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>
                         <TouchableWithoutFeedback
                             onPress={() => { setShowEditNameModal(true) }} >
 
@@ -248,16 +263,16 @@ const CurrentUserProfile = ({ route }) => {
 
 
                         <View style={{ marginLeft: 10 }}>
-                            {<ProfileTag icon={<Text>🎓</Text>} title={userData?.gradYear} width={90} onPress={() => { setModal(classModal()); setShowModal(true); }} />}
+                            {userData?.gradYear && <ProfileTag icon={<Text>🎓</Text>} title={userData?.gradYear} onPress={() => { setModal(classModal()); setShowModal(true); }} />}
 
                         </View>
                         <View style={{ marginLeft: 10 }}>
-                            {<ProfileTag icon={<Text>🎂</Text>} title={moment(userData?.birthday.toDate()).format("MMM DD, YYYY")} width={135} onPress={() => { setModal(birthdayModal()); setShowModal(true); }} />}
+                            {<ProfileTag icon={<Text>🎂</Text>} title={moment(userData?.birthday.toDate()).format("MMM DD, YYYY")} onPress={() => { setModal(birthdayModal()); setShowModal(true); }} />}
 
                         </View>
 
                         <View style={{ marginLeft: 10 }}>
-                            {<ProfileTag icon={<Text>♏️</Text>} title={'Scorpio'} width={100} onPress={() => { setModal(zodiacSignModal()); setShowModal(true); }} />}
+                            {<ProfileTag icon={<Text>{zodiacEmoji}</Text>} title={sign} onPress={() => { setModal(zodiacSignModal()); setShowModal(true); }} />}
 
                         </View>
 
@@ -309,6 +324,19 @@ const CurrentUserProfile = ({ route }) => {
 
 
 const styles = StyleSheet.create({
+
+
+    emojiContainer: {
+        backgroundColor: '#272727',
+        borderRadius: 50,
+        width: 80,
+        height: 80,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 3,
+        borderColor: '#464646',
+        ...SHADOWS.dark
+    },
 
     classHeader: {
         padding: 30,

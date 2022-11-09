@@ -65,6 +65,7 @@ const ConfirmationModal = ({ message = 'Are you sure you want to do this?', canc
                             tint={'white'}
                             condition={true}
                             width={'100%'}
+                            margin={20}
                             onPress={onConfirmPress}
 
 
@@ -72,7 +73,7 @@ const ConfirmationModal = ({ message = 'Are you sure you want to do this?', canc
                         />
 
                         <TouchableOpacity onPress={onCancelPress}>
-                            <Text style={{ color: 'white', fontFamily: "Kanit", marginTop: 10 }}>{cancelText}</Text>
+                            <Text style={{ color: 'white', fontFamily: "Kanit", marginTop: 5 }}>{cancelText}</Text>
                         </TouchableOpacity>
                     </View>
                 </Animated.View>

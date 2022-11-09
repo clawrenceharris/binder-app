@@ -73,8 +73,183 @@ export function updateCollection(collection, id, data) {
 
 }
 
+export function RemoveUserFromClass(classID, userUid) {
+
+    updateCollection('classes', classID, { users: firebase.firestore.FieldValue.arrayRemove(db.collection('users').doc(userUid)) });
+    updateCollection('users', userUid, { classes: firebase.firestore.FieldValue.arrayRemove(db.collection('classes').doc(classID)) });
+}
 
 
+export function AddUserToClass(classID, userUid) {
+    updateCollection('classes', classID, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(userUid)) });
+    updateCollection('users', userUid, { classes: firebase.firestore.FieldValue.arrayUnion(db.collection('classes').doc(classID)) });
+}
+
+
+export function RemoveUserFromSchool(schoolID, userUid) {
+    var user = null
+    db.collection('users')
+        .doc(userUid)
+        .get()
+        .then((doc) => {
+            updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayRemove(doc.data()) });
+        })
+
+    updateCollection('users', userUid, { school: null });
+}
+
+
+export function AddUserToSchool(schoolID, userUid) {
+    var user = null
+    db.collection('users')
+        .doc(userUid)
+        .get()
+        .then((doc) => {
+            updateCollection('users', userUid, { classes: [] })
+            updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayUnion(doc.data()) });
+        })
+
+    updateCollection('users', userUid, { school: db.collection('schools').doc(schoolID) });
+
+}
+
+// export function getUserSnapshot(userUid = auth.currentUser.uid, setUser) {
+//     db
+//         .collection('users')
+//         .doc(userUid)
+//         .onSnapshot((doc) => {
+//             setUser(doc.data())
+//         })
+
+
+// }
+
+
+// export async function getSchools(setSchools) {
+//     var schools = []
+//     var query = await db
+//         .collection('schools')
+//         .get()
+
+//     query.forEach((doc) => {
+//         schools.push(doc.data())
+//     })
+
+//     setSchools(schools)
+// }
+
+
+
+
+
+// export async function getClasses(setClasses) {
+//     var classes = []
+//     var query = await db
+//         .collection('classes')
+//         .get()
+
+//     query.forEach((doc) => {
+//         classes.push(doc.data())
+//     })
+
+//     setClasses(classes)
+// }
+
+// export function getUser(userUid = auth.currentUser.uid, setUser) {
+//     db
+//         .collection('users')
+//         .doc(userUid)
+//         .get()
+//         .then(doc => {
+//             setUser(doc.data())
+//         })
+//         .catch((error) => {
+//             console.log(error);
+//         })
+
+
+
+// }
+
+
+
+// export function getSchool(schoolID, setSchool) {
+//     db
+//         .collection('schools')
+//         .doc(schoolID)
+//         .get()
+//         .then((doc) => {
+//             setSchool(doc.data())
+//         })
+//         .catch((error) => {
+//             console.log(error);
+//         })
+
+// }
+
+
+
+// export function getUserSchool(userUid, setSchool) {
+//     db
+//         .collection('users')
+//         .doc(userUid)
+//         .onSnapshot((doc) => {
+//             if (doc.data().school) {
+
+//                 db
+//                     .collection('schools')
+//                     .doc(doc.data().school.id)
+//                     .get()
+//                     .then((doc) => {
+//                         setSchool(doc.data())
+//                     })
+//             }
+
+//         })
+
+// }
+
+
+
+// export function getClass(classID, setClass) {
+//     db
+//         .collection('classes')
+//         .doc(classID)
+//         .get()
+//         .then((doc) => {
+//             setClass(doc.data())
+//         })
+
+
+// }
+
+
+// export function getClassSnapshot(classID, setClass) {
+//     db
+//         .collection('classes')
+//         .doc(classID)
+//         .onSnapshot((doc) => {
+//             setClass(doc.data())
+//         })
+
+
+// }
+
+
+// export function getUsers(collection, docId, orderBy = 'lastActive', setUsers) {
+
+//     db
+//         .collection(collection).doc(docId)
+//         .orderBy(orderBy)
+//         .get()
+//         .then(doc => {
+//             setUsers(doc.data().users)
+//         })
+
+
+
+
+// }
 
 
 

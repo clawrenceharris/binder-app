@@ -5,7 +5,7 @@ import { assets, Colors } from '../../constants'
 import { askForCameraPermission, openMediaLibrary, pickImage } from '../../utils'
 import * as ImagePicker from 'expo-image-picker'
 import { useRoute } from '@react-navigation/native'
-import { auth, db, updateCollection, updateUserProfile } from '../../Firebase/firebase'
+import { AddUserToSchool, auth, db, updateCollection, updateUserProfile } from '../../Firebase/firebase'
 import Camera from 'expo-camera'
 import BottomSheet from '@gorhom/bottom-sheet'
 import ModalComponent from '../../components/Modal'
@@ -24,7 +24,7 @@ const SignUpPhoto = ({ navigation }) => {
     const [user, setUser] = useState(null)
 
     const [showModal, setShowModal] = useState(false)
-    const { firstName, lastName, birthday, schoolID, uid } = route.params
+    const { firstName, lastName, birthday, school, uid } = route.params
 
     const onFinishedPressed = () => {
 
@@ -35,10 +35,10 @@ const SignUpPhoto = ({ navigation }) => {
                 firstName: firstName,
                 lastName: lastName,
                 photoURL: image,
-                birthday: null,
+                birthday: birthday,
                 gpa: null,
                 gradYear: null,
-                schoolID: schoolID ? schoolID : ' ',
+                school: school ? school : null,
                 lastActive: new Date(),
                 studyBuddies: [],
                 friends: [],
@@ -61,7 +61,7 @@ const SignUpPhoto = ({ navigation }) => {
         updateUserProfile(displayName, image)
 
         //add user doc reference to school collection
-        updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(auth.currentUser.uid)) });
+        AddUserToSchool(school.id, auth.currentUser.uid)
         navigation.navigate('Root')
     }
 
@@ -78,7 +78,7 @@ const SignUpPhoto = ({ navigation }) => {
                 birthday: birthday,
                 gpa: null,
                 gradYear: null,
-                schoolID: schoolID ? schoolID : null,
+                school: school ? school : null,
                 lastActive: new Date(),
                 studyBuddies: [],
                 friends: [],
@@ -101,8 +101,7 @@ const SignUpPhoto = ({ navigation }) => {
 
 
         updateUserProfile(displayName, image)
-
-        updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(auth.currentUser.uid)) });
+        AddUserToSchool(school.id, auth.currentUser.uid)
         navigation.navigate('Root')
 
 
