@@ -6,8 +6,9 @@ import { useNavigation } from '@react-navigation/native'
 import UserProfileCircle from './UserProfileCircle'
 import { SHADOWS } from '../constants/Theme'
 import { db } from '../Firebase/firebase'
+import GroupProfileCircle from './GroupProfileCircle'
 
-const ChatListItem = ({ chatroom, isTop, isBottom }) => {
+const ChatListItem = ({ chatroom, onPress, onLongPress }) => {
   const colorScheme = useColorScheme()
   const navigation = useNavigation()
   //const message = chatroom.messages[chatroom.messages.length - 1]
@@ -26,7 +27,9 @@ const ChatListItem = ({ chatroom, isTop, isBottom }) => {
 
   return (
     <TouchableWithoutFeedback
-    // onPress={onPress}
+      onPress={onPress}
+      onLongPress={() => onLongPress(chatroom)}
+
     >
       <View style={{
         backgroundColor: '#333',
@@ -35,7 +38,14 @@ const ChatListItem = ({ chatroom, isTop, isBottom }) => {
       }}>
         <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
           <View style={{ margin: 10 }}>
-            {chatroomData?.type === 'private' && <UserProfileCircle user={chatroomData?.users[0]} story={[]} showStoryBoder={false} size={40} showName bold />}
+            {chatroomData?.type === 'private' ?
+
+              <UserProfileCircle user={chatroomData?.users[0]} story={[]} showStoryBoder={false} size={40} showName={false} bold />
+
+              :
+              <GroupProfileCircle type={'group'} chatroom={chatroomData} story={[]} showStoryBoder={false} size={40} showName={false} bold />
+
+            }
 
           </View>
           <View>

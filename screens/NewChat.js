@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { assets, Colors } from '../constants'
@@ -11,22 +11,19 @@ import { getDisplayName } from '../utils'
 import Button from '../components/Button'
 import firebase from 'firebase/compat'
 import { faker } from '@faker-js/faker'
+import { useRoute } from '@react-navigation/native'
 const NewChat = ({ navigation }) => {
     const [search, setSearch] = useState('')
-
-
+    const [chatroomExists, setChatroomExists] = useState(false)
     const [users, setUsers] = useState([])
-    const [userData, setUserData] = useState([])
     const [results, setResults] = useState([])
     const [school, setSchool] = useState(null)
     const [classes, setClasses] = useState([])
     const [filters, setFilters] = useState([])
-    const [isStudyBuddy, setIsStudyBuddy] = useState(false)
     const selectionLimit = 10
     const [selectedUsers, setSelectedUsers] = useState([])
-    const [isSameClass, setIsSameClass] = useState(false)
     const [groupName, setGroupName] = useState('')
-
+    const [isGroup, setIsGroup] = useState(false)
     // const getFilteredData = () => {
     //     let filteredData = []
     //     filters.forEach(filter => {
@@ -109,29 +106,32 @@ const NewChat = ({ navigation }) => {
 
 
     const handleNewChat = () => {
-        const id = faker.datatype.uuid()
+        const id = selectedUsers.map(user => user.uid).join("")
+        const defaultGroupName = selectedUsers.map(item => getDisplayName(item.firstName, item.lastName)).join(", ")
 
-        const doc = db.collection('chatrooms').doc(id).set({
-            id: id,
-            type: selectedUsers.length > 1 ? 'group' : 'private',
-            name: selectedUsers.length === 1
+        db.collection('chatrooms').doc(id).get().then(doc => setChatroomExists(doc.exists))
 
-                ? getDisplayName(selectedUsers[0].firstName, selectedUsers[0].lastName)
-                : groupName ? groupName : selectedUsers.map(item =>
-                    getDisplayName(item.firstName, item.lastName) + ", "
+        if (!chatroomExists) {
+            db.collection('chatrooms').doc(id).set({
+                id: id,
+                type: selectedUsers.length > 1 ? 'group' : 'private',
+                name: selectedUsers.length === 1 // if we only selected on user
+                    ? getDisplayName(selectedUsers[0].firstName, selectedUsers[0].lastName) // then set the chatroom name as that user
+                    : groupName ? groupName : defaultGroupName, //else if group name is defined then set that as the name otherwise, use the default group name
 
-                ),
 
-            users: selectedUsers,
-            messages: []
+                users: selectedUsers,
+                messages: []
 
-        })
-
-        db.collection('users')
-            .doc(auth.currentUser.uid)
-            .update({ chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(id)) })
+            })
+            db.collection('users')
+                .doc(auth.currentUser.uid)
+                .update({ chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(id)) })
+        }
 
         navigation.goBack()
+        navigation.navigate('Chatroom', { chatroom: id })
+
     }
 
     const handleSearch = (value) => {
@@ -196,7 +196,6 @@ const NewChat = ({ navigation }) => {
             <Header
                 title='New Chat'
                 direction='vertical'
-                navigation={navigation}
                 isModal
 
             />
@@ -246,13 +245,20 @@ const NewChat = ({ navigation }) => {
 
 
 
-                {selectedUsers.length < 2 && <View style={{ width: '100%', height: 60, backgroundColor: '#272727', borderRadius: 15, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                {selectedUsers.length < 2 && !isGroup ?
+                    <TouchableWithoutFeedback onPress={() => { setIsGroup(true) }}>
 
-                    <Text style={{ color: 'white', fontFamily: 'Kanit' }}>New Group Chat</Text>
+                        <View style={{ width: '100%', height: 60, backgroundColor: '#272727', borderWidth: 2, borderColor: Colors.light.primary, borderRadius: 15, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, justifyContent: 'space-between' }}>
 
-                </View>}
+                            <Text style={{ color: 'white', fontFamily: 'KanitSemiBold', fontSize: 16 }}>New Group Chat</Text>
+                            <Image source={assets.group} style={{ width: 28, height: 28, tintColor: 'white' }} />
 
-                {selectedUsers.length > 1 &&
+                        </View>
+                    </TouchableWithoutFeedback>
+
+
+
+                    :
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', height: 60, justifyContent: 'center' }}>
                         <Image source={assets.pencil} style={{ width: 30, height: 30, tintColor: 'lightgray', margin: 10 }} />
@@ -337,7 +343,7 @@ const NewChat = ({ navigation }) => {
                     tint='white'
                     onPress={handleNewChat}
                     width='50%'
-                    title={selectedUsers.length === 1 ? 'Chat' : 'Group Chat'}
+                    title={selectedUsers.length <= 1 && !isGroup ? 'Chat' : 'Group Chat'}
 
                     condition={selectedUsers.length > 0}
 
@@ -355,9 +361,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#454545',
         borderRadius: 25,
         width: '100%',
-        padding: 10,
         marginVertical: 20,
-        fontFamily: 'KanitMedium'
+        padding: 10,
+        fontFamily: 'KanitSemiBold'
     },
 
 })

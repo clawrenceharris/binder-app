@@ -4,22 +4,18 @@ import { TouchableWithoutFeedback } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { assets, Colors } from '../constants'
 import { Image } from 'react-native'
-import useColorScheme from '../hooks/useColorScheme'
-import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../Firebase/firebase'
+import { getDisplayName } from '../utils'
 
 const UserProfileCircle = (props) => {
-    const colorScheme = useColorScheme();
-    const navigation = useNavigation()
     const [studyBuddies, setStudyBuddies] = useState([])
-    const [friends, setFriends] = useState([])
-    const [image, setImage] = useState(null)
-
+    const [userData, setUserData] = useState(null)
+    //console.log("USER UID", props.user.uid)
 
     useEffect(() => {
         const subscriber = db.collection('users').doc(props.user.uid)
             .onSnapshot(doc => {
-                setImage(doc.data()?.photoURL);
+                setUserData(doc.data())
             })
 
         return () => subscriber()
@@ -39,8 +35,8 @@ const UserProfileCircle = (props) => {
     }
     return (
 
-        <TouchableWithoutFeedback onPress={() => props.navigation.openDrawer()}>
-            <View style={{ flexDirection: props.flexDirection, alignItems: 'center', margin: props.margin }}>
+        <TouchableWithoutFeedback onPress={() => { auth.currentUser.uid === userData?.uid ? props.navigation.openDrawer() : props.navigation.navigate('Profile', { user: props.user, class: null }) }}>
+            <View style={{ flexDirection: props.flexDirection ? props.flexDirection : 'row', alignItems: 'center', margin: props.margin }}>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
 
@@ -78,13 +74,12 @@ const UserProfileCircle = (props) => {
 
 
 
-
                     {props.showStoryBoder && hasStory() && <View style={{ width: props.size + 10, height: props.size + 10, borderWidth: 3, borderColor: Colors.light.primary, borderRadius: 50 }} />}
 
 
 
                     <View style={{ borderRadius: 100, alignItems: 'center', overflow: 'hidden', width: props.size, height: props.size, justifyContent: 'center' }}>
-                        {image ? <Image source={{ uri: image }} style={[styles.image, { width: props.size, height: props.size }]} />
+                        {userData?.photoURL ? <Image source={{ uri: userData.photoURL }} style={[styles.image, { width: props.size, height: props.size }]} />
                             : <Image source={assets.person} style={[styles.defaultImage, { width: props.size - (props.size / 3), height: props.size - (props.size / 3) }]} />}
 
                     </View>
@@ -92,12 +87,13 @@ const UserProfileCircle = (props) => {
 
 
 
-                    {studyBuddies.includes(props.user) && <View style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', padding: 4, backgroundColor: Colors[colorScheme].background, borderRadius: 50, right: -15, top: 20 }}>
+                    {studyBuddies.includes(props.user) && <View style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', padding: 4, backgroundColor: '#333', borderRadius: 50, right: -15, top: 20 }}>
                         <Text style={{ fontSize: (props.size / 3) }}>🤓</Text>
 
                     </View>}
 
                 </View>
+                {props.showName && <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white', marginLeft: 10 }}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>}
 
 
             </View>

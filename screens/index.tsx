@@ -2,7 +2,7 @@ import ClassesScreen from './ClassesScreen'
 import Calendar from './Calendar'
 import Classmates from './Classmates'
 import Chats from './Feed'
-import ChatRoom from './ChatRoom'
+import Chatroom from './Chatroom'
 import SignIn from './SignIn'
 import Profile from './Profile'
 import CameraScreen from './CameraScreen'
@@ -28,7 +28,7 @@ export {
     Calendar,
     Classmates,
     Chats,
-    ChatRoom,
+    Chatroom,
     SignIn,
     Profile,
     CameraScreen,

@@ -1,15 +1,12 @@
 //@refresh reset
-import { NavigationContainer, DefaultTheme, DarkTheme, useRoute, useNavigation } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Image, Text, View } from 'react-native';
-import { Colors, assets } from '../constants';
+import { Colors } from '../constants';
 import useColorScheme from '../hooks/useColorScheme';
-import { RootStackParamList, } from '../types';
 import BottomTabNavigator from './BottomTabNavigator';
-import { MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import {
-  ChatRoom,
+  Chatroom,
   Chats,
   Profile,
   SignIn,
@@ -24,9 +21,7 @@ import {
   NameSettings,
   PasswordSettings,
   GraduationYearSettings,
-  ClassesScreen
 } from '../screens';
-import { SIZES } from '../constants/Theme';
 import Notes from '../screens/Notes';
 import { CameraScreen } from '../screens';
 import EditPictureToSend from '../screens/EditPictureToSend';
@@ -39,13 +34,10 @@ import AchievementsScreen from '../screens/Achievements';
 import SchoolSettings from '../screens/Settings/SchoolSettings';
 import DeskPrivacy from '../screens/Settings/DeskPrivacy';
 import SearchSelect from '../screens/SearchSelect';
-import { auth } from '../Firebase/firebase';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
 import Feed from '../screens/Feed';
 import Header from '../components/Header';
 import ClassChatroom from '../screens/ClassChatroom';
-import SearchSelectUsers from '../screens/SearchSelectUsers';
 import NewChat from '../screens/NewChat';
 
 const Stack = createNativeStackNavigator();
@@ -60,10 +52,6 @@ export default function Navigation({ currentUser, colorScheme }) {
     <NavigationContainer
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator currentUser={currentUser} />
-
-
-
-
     </NavigationContainer>
   );
 }
@@ -82,7 +70,7 @@ function Classroom({ route }) {
           <Header
             headerLeft={<></>}
             shadow
-            title={'Chats'}
+            title={'Class Chat'}
           />
 
 
@@ -310,8 +298,8 @@ function RootNavigator({ currentUser }) {
       />
 
       <Stack.Screen
-        name="ChatRoom"
-        children={({ route }) => { return <ChatRoom route={route} /> }}
+        name="Chatroom"
+        component={Chatroom}
       />
 
     </Stack.Navigator >

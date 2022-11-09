@@ -31,6 +31,8 @@ import camera_o from '../assets/icons/camera-o.png'
 import camera from '../assets/icons/camera.png'
 import person from '../assets/icons/person.png'
 import loading from '../assets/icons/loading.png'
+import group from '../assets/icons/group.png'
+
 import image01 from '../assets/images/image01.jpeg'
 
 import group01 from '../assets/images/group01.jpg'
@@ -75,6 +77,7 @@ export default {
     pencil,
     pin,
     logo_light,
+    group,
     more,
     person01,
     person02,

@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, useColorScheme } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Message } from '../types';
-import { SHADOWS } from '../constants/Theme';
 import NotesMessage from './NotesMessage';
 import Notes from '../constants/data/Notes';
 import CircleButton from './CircleButton';
@@ -11,20 +10,24 @@ import Polls from '../constants/data/Polls';
 import { Colors } from '../constants/index';
 import moment from 'moment';
 import UserProfileCircle from './UserProfileCircle';
-
-
-export type ChatMessageProps = {
-    message: Message;
-
+import { auth, db } from '../Firebase/firebase';
+import { getDisplayName } from '../utils';
 
 
 
-}
-const PrivateChatMessage = (props: ChatMessageProps) => {
-    const colorScheme = useColorScheme();
-    const { message } = props;
+const ChatMessage = ({ message, previousMessage }) => {
+    const [userData, setUserData] = useState(null)
+
     const isMyMessage = () => {
-        return message.user.id === 5
+        return message.user === auth.currentUser.uid
+    }
+
+    const isSameMessage = () => {
+        if (previousMessage)
+            return message.user === previousMessage.user
+        return false
+
+
     }
 
     const isNotes = () => {
@@ -32,66 +35,99 @@ const PrivateChatMessage = (props: ChatMessageProps) => {
     }
 
     const isPoll = () => {
-        return message.contentType === 'Poll'
+        return message.contentType === 'poll'
     }
 
     const isBurningQuestion = () => {
-        return message.contentType === 'Burning Question'
+        return message.contentType === 'burning question'
     }
     const isTextMessage = () => {
-        return message.contentType === 'message'
+        return message.contentType === 'text'
     }
+    useEffect(() => {
+        const subscriber = db.collection('users')
+            .doc(message.user)
+            .onSnapshot(doc => {
+                setUserData(doc.data())
+            })
 
+        return () => {
+            subscriber()
+        }
+    }, [])
+    const styles = StyleSheet.create({
+
+        messageIndicator: {
+            borderRadius: 25,
+            width: 10,
+            height: '100%'
+
+
+        },
+
+        name: {
+            color: 'gray',
+            fontFamily: 'Kanit',
+            marginBottom: 5
+
+        },
+
+        time: {
+            alignSelf: "flex-end",
+            color: 'grey'
+        },
+
+        mainContainer: {
+            flexDirection: 'row',
+            alignItems: 'center'
+
+        },
+
+        midContainer: {
+            marginLeft: 10
+        },
+
+        text: {
+            fontFamily: 'KanitMedium',
+            marginLeft: 10,
+            color: 'white',
+            fontSize: 16
+        },
+
+        profileImage: {
+            width: 40,
+            height: 40,
+            marginLeft: 10
+        }
+
+
+    })
 
 
     return (
+        <React.Fragment>
+            {isMyMessage() &&
 
-        <View style={[
-            {
-                flexDirection: isMyMessage() ? 'column' : 'row',
-                marginBottom: 10,
-                alignItems: 'center'
+                <Text style={styles.name}>You</Text>
+
             }
-        ]}>
-            <View style={{ marginRight: 10 }}>
-                {!isMyMessage() && <UserProfileCircle user={message.user} showName={false} showStoryBoder={false} size={30} bold={false} showStudyBuddy={false} />}
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
+
+                {!isMyMessage() && <Text style={[styles.name]}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>}
             </View>
 
-
-            <View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', height: 25 }}>
-                    {isMyMessage() && <Text style={[styles.myName, { color: colorScheme === 'light' ? 'gray' : 'lightgray' }]}>You</Text>}
-                    {!isMyMessage() && <Text style={[styles.name, { color: colorScheme === 'light' ? 'gray' : 'lightgray' }]}>{message.user.firstName}</Text>}
-
-
-                </View>
+            <View style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'center', width: '90%' }}>
 
 
 
+                {isTextMessage() && <View style={[styles.messageIndicator, { backgroundColor: isMyMessage() && isTextMessage() ? Colors.light.accent : Colors.light.primary }]} />}
 
 
-                <View style={styles.container}>
 
-                    {isTextMessage() && <View style={[
-                        styles.messageBox, {
-                            backgroundColor: isMyMessage() && isTextMessage() ? '#8C3BD7' : 'white',
-                            marginLeft: isMyMessage() ? 90 : 0,
-                            marginRight: isMyMessage() ? 0 : 50,
-                            shadowColor: colorScheme === 'light' ? 'lightgray' : 'black'
+                {isMyMessage() && <Text style={styles.text}>{message.text}</Text>}
+                {!isMyMessage() && <Text style={styles.text}>{message.text}</Text>}
 
-                        }
-                    ]}>
-
-
-                        {isMyMessage() && <Text style={styles.myMessage}>{message.content}</Text>}
-                        {!isMyMessage() && <Text style={styles.message}>{message.content}</Text>}
-
-
-                    </View>}
-
-
-                </View>
 
 
 
@@ -119,105 +155,13 @@ const PrivateChatMessage = (props: ChatMessageProps) => {
             </View>
 
 
-        </View>
+        </React.Fragment>
+
 
 
 
 
     )
 }
-const styles = StyleSheet.create({
 
-    container: {
-    },
-    messageBox: {
-
-        padding: 7,
-        ...SHADOWS.light,
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        borderBottomRightRadius: 15,
-        borderBottomLeftRadius: 15
-
-
-    },
-
-
-
-
-    name: {
-        color: 'gray',
-        fontFamily: 'Kanit',
-        marginLeft: 5
-
-
-    },
-    message: {
-        margin: 2,
-        fontFamily: 'Kanit'
-
-    },
-
-    myMessage: {
-        margin: 2,
-        textAlign: 'left',
-        color: 'white',
-        fontFamily: 'Kanit'
-
-    },
-    time: {
-        alignSelf: "flex-end",
-        color: 'grey'
-    },
-
-
-
-
-
-
-
-    mainContainer: {
-        flexDirection: 'row',
-        alignItems: 'center'
-
-    },
-
-    midContainer: {
-        marginLeft: 10
-    },
-
-
-
-    text: {
-        fontFamily: 'Kanit'
-
-    },
-
-    myText: {
-        fontFamily: 'Kanit'
-
-
-
-
-    },
-    // name: {
-    //     color: 'gray',
-    //     marginBottom: 5
-    // },
-    myName: {
-        marginLeft: '90%',
-        fontFamily: 'Kanit',
-
-
-    },
-
-    profileImage: {
-        width: 40,
-        height: 40,
-        marginLeft: 10
-
-    }
-
-
-})
-export default PrivateChatMessage
+export default ChatMessage

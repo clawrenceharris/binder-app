@@ -150,57 +150,60 @@ export default function ClassesScreen({ currentUser }) {
 
             />
 
-            <ScrollView style={{ padding: 10 }}>
-                {school != null ? <View>
+            <ScrollView
+                style={{ padding: 10 }}
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image source={school?.logo ? school.logo : assets.school} style={{ width: 20, height: 20, tintColor: Colors.light.primary }} />
-                            <Text style={{ margin: 10, fontFamily: 'KanitSemiBold', fontSize: 16, color: Colors.light.primary }}>{school?.name}</Text>
-                        </View>
+            >
+                {school != null ?
+                    <View>
 
-
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('SearchSelect', { ...routeParams })}
-                            style={{ padding: 5, backgroundColor: Colors.light.accent, borderRadius: 50, flexDirection: 'row', alignItems: 'center' }}>
-                            <Image source={assets.add_class} style={{ width: 20, height: 20, tintColor: 'white' }} />
-
-                            <Text style={{ fontFamily: 'Kanit', color: 'white' }}>Add Classes</Text>
-
-                        </TouchableOpacity>
-                    </View>
-                    {
-
-                        classes?.length > 0 ?
-                            <FlatList
-                                data={classes}
-                                renderItem={({ item }) =>
-                                    <ClassListItem
-                                        Class={item}
-                                        onLongPress={() => {
-                                            setShowClassModal(true);
-                                            setSelectedClass(item)
-                                        }} />}
-                                keyExtractor={(item) => item.id}
-                                showsVerticalScrollIndicator={false}
-                                scrollEnabled={false}
-
-                            />
-                            :
-
-                            <View style={{ ...SHADOWS.dark, width: '100%', borderRadius: 15, backgroundColor: '#5B5B5B', padding: 10, alignItems: 'center', justifyContent: 'center' }}>
-
-                                <View>
-                                    <Text style={{ color: 'darkgray', fontFamily: 'Kanit', fontSize: 18, textAlign: 'center' }}>{`📚 This is where all your classes for ${school?.name} will appear.`}</Text>
-                                    <View style={{ backgroundColor: Colors.light.primary }}>
-
-                                    </View>
-                                </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Image source={school?.logo ? school.logo : assets.school} style={{ width: 20, height: 20, tintColor: Colors.light.primary }} />
+                                <Text style={{ margin: 10, fontFamily: 'KanitSemiBold', fontSize: 16, color: Colors.light.primary }}>{school?.name}</Text>
                             </View>
 
-                    }
 
-                </View > : <Text>You are not in a school yet.</Text>}
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('SearchSelect', { ...routeParams })}
+                                style={{ padding: 5, backgroundColor: Colors.light.accent, borderRadius: 50, flexDirection: 'row', alignItems: 'center' }}>
+                                <Image source={assets.add_class} style={{ width: 20, height: 20, tintColor: 'white' }} />
+
+                                <Text style={{ fontFamily: 'Kanit', color: 'white' }}>Add Classes</Text>
+
+                            </TouchableOpacity>
+                        </View>
+                        {
+
+                            classes?.length > 0 ?
+                                classes.map((item) =>
+                                    <View key={item.id}>
+                                        <ClassListItem
+                                            Class={item}
+                                            onLongPress={() => {
+                                                setShowClassModal(true);
+                                                setSelectedClass(item)
+                                            }}
+                                        />
+                                    </View>
+
+                                )
+
+                                :
+
+                                <View style={{ ...SHADOWS.dark, width: '100%', borderRadius: 15, backgroundColor: '#5B5B5B', padding: 10, alignItems: 'center', justifyContent: 'center' }}>
+
+                                    <View>
+                                        <Text style={{ color: 'darkgray', fontFamily: 'Kanit', fontSize: 18, textAlign: 'center' }}>{`📚 This is where all your classes for ${school?.name} will appear.`}</Text>
+                                        <View style={{ backgroundColor: Colors.light.primary }}>
+
+                                        </View>
+                                    </View>
+                                </View>
+
+                        }
+
+                    </View > : <Text>You are not in a school yet.</Text>}
 
 
             </ScrollView>

@@ -24,7 +24,7 @@ const UserListItem = ({ user, isTop, isBottom }) => {
         mainContainer: {
             borderRadius: 15,
             padding: 15,
-            backgroundColor: '#292929',
+            backgroundColor: '#454545',
             flexDirection: 'row',
             alignItems: 'center',
             borderTopLeftRadius: isTop ? 15 : 0,
