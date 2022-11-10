@@ -45,7 +45,7 @@ export default class ChatInput extends React.Component {
                 backgroundColor: '#404040',
                 flexDirection: 'row',
                 borderTopColor: 'gray',
-                borderTopWidth: 1,
+                borderTopWidth: 0.2,
                 minHeight: 90,
                 alignItems: 'baseline'
             },
@@ -110,7 +110,7 @@ export default class ChatInput extends React.Component {
 
                         </View>
                         <TextInput
-                            placeholder={`Send a chat...`}
+                            placeholder={`Message...`}
                             style={styles.textInput}
                             multiline
                             value={this.state.message}
@@ -118,6 +118,7 @@ export default class ChatInput extends React.Component {
                             placeholderTextColor={'lightgray'}
                             selectionColor={Colors.light.accent}
                             autoFocus
+                            onFocus={this.props.onFocus}
 
 
 

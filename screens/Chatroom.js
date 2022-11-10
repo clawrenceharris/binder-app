@@ -13,6 +13,7 @@ import BackButton from '../components/BackButton'
 import { UserProfileCircle } from '../components'
 import GroupProfileCircle from '../components/GroupProfileCircle'
 import { faker } from '@faker-js/faker'
+import moment from 'moment'
 const ICON_SIZE = 30;
 
 //route.params = chatRoom, class
@@ -22,25 +23,12 @@ const Chatroom = () => {
     const [chatroomData, setChatroomData] = useState(null)
     const [ref, setRef] = useState(null)
     const route = useRoute()
+
     const colors = [Colors.light.primary, '#FFF02B', Colors.light.red, '#8BFF5D']
     const [users, setUsers] = useState([])
-    //  useLayoutEffect(() => {
-    //     const unsubscribe = db
+    const [showTimestamp, setShowTimestamp] = useState(false)
 
-    //     .collection('chats') 
-    //     .orderBy('createdAt', 'desc')
-    //     .onSnapshot(snapshot => 
 
-    //         setMessages(
-    //         snapshot.docs.map(doc => ({
-    //             id: doc.data().id,
-    //             createdAt: doc.data().createdAt.toDate(),
-    //             text: doc.data().text,
-    //             user: doc.data().user
-    //         }))
-    //     ))
-    //     return unsubscribe
-    // }, [])
 
     useEffect(() => {
         //get the chatroom data 
@@ -129,27 +117,45 @@ const Chatroom = () => {
 
     )
 
-    const getSender = (message) => {
-        console.log(message.user.uid, " == ", users[0].uid)
-    }
     return (
 
         <View style={{ flex: 1, backgroundColor: '#404040' }}>
             <Header
                 headerLeft={headerLeft()}
                 headerRight={headerRight()}
+                border
             />
 
-            <FlatList
-                data={messages}
-                renderItem={({ item }) =>
-                    <ChatMessage message={item} user={users.filter(user => user.uid === item.user)[0]} />}
-                style={{ padding: 10 }}
+            <ScrollView
                 onContentSizeChange={() => ref.scrollToEnd({ animated: true })}
                 ref={(ref) => { setRef(ref) }}
-            />
+                onScrollBeginDrag={() => { setShowTimestamp(true) }}
+                onScrollEndDrag={() => setShowTimestamp(false)
+
+                }
+            >
+
+                {messages && messages.length ?
+                    <Text style={{ text: 'center', fontFamily: 'Kanit', color: 'gray', alignSelf: 'center', margin: 20 }}>
+                        {moment(messages[0].createdAt.toDate()).calendar()}
+                    </Text>
+                    :
+                    <Text style={{ text: 'center', fontFamily: 'Kanit', color: 'gray', alignSelf: 'center', margin: 20 }}>
+                        {'Today'}
+                    </Text>
+                }
+
+                <FlatList
+                    data={messages}
+                    renderItem={({ item }) =>
+                        <ChatMessage message={item} user={users.filter(user => user.uid === item.user)[0]} showTimestamp={true} />}
+                    style={{ padding: 10 }}
+
+                    scrollEnabled={false}
+                />
 
 
+            </ScrollView>
 
             <ChatInput onCameraPress={() => { }} onSendPress={onSendPress} />
 

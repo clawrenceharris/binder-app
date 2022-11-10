@@ -15,7 +15,7 @@ import { getDisplayName } from '../utils';
 
 
 
-const ChatMessage = ({ message, previousMessage, user }) => {
+const ChatMessage = ({ message, previousMessage, user, showTimestamp }) => {
     const [userData, setUserData] = useState(null)
 
     const isMyMessage = () => {
@@ -30,6 +30,14 @@ const ChatMessage = ({ message, previousMessage, user }) => {
 
     }
 
+    // useEffect(() => {
+    //     setInterval(() => {
+
+    //         setShowTimestamp(!showTimestamp)
+    //     }, showTimestamp ? 3000 : 0);
+
+
+    // }, [])
 
 
 
@@ -117,16 +125,15 @@ const ChatMessage = ({ message, previousMessage, user }) => {
 
     return (
         <React.Fragment>
-            {isMyMessage() &&
 
+            {isMyMessage() ?
                 <Text style={styles.name}>You</Text>
 
-            }
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                :
+
+                <Text style={[styles.name]}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>}
 
 
-                {!isMyMessage() && <Text style={[styles.name]}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>}
-            </View>
 
             <View style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'center', width: '90%' }}>
 
@@ -135,9 +142,12 @@ const ChatMessage = ({ message, previousMessage, user }) => {
                 {isTextMessage() && <View style={styles.messageIndicator} />}
 
 
+                <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
+                    {isMyMessage() && <Text style={styles.text}>{message.text}</Text>}
+                    {!isMyMessage() && <Text style={styles.text}>{message.text}</Text>}
 
-                {isMyMessage() && <Text style={styles.text}>{message.text}</Text>}
-                {!isMyMessage() && <Text style={styles.text}>{message.text}</Text>}
+                    {showTimestamp && <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 12, marginRight: -20 }}>{moment(message.createdAt.toDate()).format('LT')}</Text>}
+                </View>
 
 
 

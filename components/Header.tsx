@@ -24,7 +24,9 @@ const Header = (props) => {
             height: !props.isModal ? SIZES.header : SIZES.header - 40,
             padding: 5,
             backgroundColor: '#333',
-            zIndex: 1
+            zIndex: 1,
+            borderBottomColor: 'gray',
+            borderBottomWidth: props.border ? 0.2 : 0
         },
 
         centerContainer: {
