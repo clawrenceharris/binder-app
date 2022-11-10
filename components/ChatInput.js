@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet } from "react-native"
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView } from "react-native"
 import {
     MaterialCommunityIcons,
     MaterialIcons,
@@ -13,152 +13,235 @@ import { SHADOWS } from '../constants/Theme';
 import { useNavigation } from '@react-navigation/native';
 import useColorScheme from '../hooks/useColorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getDisplayName } from '../utils';
 
-export default class ChatInput extends React.Component {
-    state = {
-        message: ''
-    }
-    constructor(props) {
-        super(props)
-    }
+const ChatInput = (props) => {
 
-    onChatBubblePress = () => {
+
+    const [message, setMessage] = useState('')
+    const [isSearching, setIsSearching] = useState(false)
+    const [search, setSearch] = useState('')
+    const [results, setResults] = useState([])
+
+
+    const onChatBubblePress = () => {
 
         console.log("chat bubble pressed")
     }
 
 
-    onSendPress = (content) => {
+    const onSendPress = (content) => {
+        props.onSendPress('text', message)
 
-        this.setState({ message: '' });
-        this.props.onSendPress('text', this.state.message)
+        setMessage('');
+    }
+
+    const handleSearch = (value) => {
+        setIsSearching(true)
+
+        value = value.split('@')[1]
+
+
+
+        const filteredData = props.users.filter(item =>
+            getDisplayName(item?.firstName, item?.lastName).toLowerCase().includes(value.toLowerCase()
+
+            ))
+
+
+        if (filteredData.length) {
+            return setResults(filteredData)
+        }
+
+
+    }
+
+    function handleKeyPress(key) {
+
+        if (key === '@') {
+            setIsSearching(true)
+
+        }
     }
 
 
 
-    render() {
-
-        const styles = StyleSheet.create({
-
-            container: {
-                padding: 5,
-                backgroundColor: '#404040',
-                flexDirection: 'row',
-                borderTopColor: 'gray',
-                borderTopWidth: 0.2,
-                minHeight: 90,
-                alignItems: 'baseline'
-            },
-            textContainer: {
-                flexDirection: 'row',
-                padding: 5,
-                borderRadius: 25,
-                marginBottom: 30,
-                marginRight: 10,
-                maxHeight: 160,
-                flex: 1,
-                backgroundColor: '#272727',
-                alignItems: 'center',
-
-            },
-            textInput: {
-                marginHorizontal: 10,
-                flex: 1,
-                color: 'white',
-                fontFamily: 'Kanit',
-                fontSize: 16
-            },
-            icon: {
-                marginHorizontal: 5,
-            },
-            specialChatButton: {
-                backgroundColor: '#8C3BD7',
-                borderRadius: 25,
-                width: 45,
-                height: 45,
-                justifyContent: 'center',
-                alignItems: 'center',
 
 
-            },
-            rightContainer: {
-                flexDirection: 'row',
-                marginRight: 10,
-                alignItems: 'center'
-            },
-            cameraButton: {
-                borderRadius: 50,
-                backgroundColor: Colors.light.primary,
-                width: 35,
-                height: 35,
-                alignItems: 'center',
-                justifyContent: 'center'
-            }
-        })
+    return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"} >
 
-        return (
-            <KeyboardAvoidingView
-                behavior={Platform.OS == "ios" ? "padding" : "height"} >
-                <View style={styles.container}>
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ flexDirection: 'row', marginBottom: 5, backgroundColor: 'transparent', padding: 5 }}>
 
-                    <View style={styles.textContainer}>
-                        <View style={styles.cameraButton}>
-                            <TouchableOpacity onPress={this.props.onCameraPress}>
-                                <Image source={assets.camera} style={{ width: 25, height: 25, tintColor: 'white' }} />
-
-                            </TouchableOpacity>
-
+                {!isSearching && props.chatroom?.type != 'private' &&
+                    props.users?.map((item, index) =>
+                        <View style={{ paddingVertical: 2, paddingHorizontal: 10, borderRadius: 50, borderColor: item.color, marginLeft: 10, borderWidth: 2, alignItems: 'center' }}>
+                            <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 12 }}>{getDisplayName(item.firstName, item.lastName)}</Text>
                         </View>
-                        <TextInput
-                            placeholder={`Message...`}
-                            style={styles.textInput}
-                            multiline
-                            value={this.state.message}
-                            onChangeText={(value) => this.setState({ message: value })}
-                            placeholderTextColor={'lightgray'}
-                            selectionColor={Colors.light.accent}
-                            autoFocus
-                            onFocus={this.props.onFocus}
+                    )}
 
 
+                {isSearching && props.chatroom?.type != 'private' &&
 
-                        />
-
-                        {!this.state.message ? <View style={styles.rightContainer}>
-                            <MaterialCommunityIcons name="microphone" size={28} color="grey" style={styles.icon} />
-                            <MaterialCommunityIcons name="image" size={28} color="grey" />
-                            <Image source={assets.desk} style={{ width: 28, height: 28, tintColor: 'gray', marginLeft: 10 }} />
-                        </View>
-                            : <TouchableOpacity onPress={this.onSendPress} >
+                    results?.map((item, index) =>
 
 
-                                <Text style={{
-                                    fontWeight: 'bold', fontSize: 16, color: Colors.light.accent, marginRight: 10, fontFamily: 'KanitMedium'
-                                }} >Send</Text>
-                            </TouchableOpacity>
-                        }
+                        <TouchableOpacity
+                            onPress={() => {
+                                const front = message.slice(0, message.indexOf(search))
+                                const end = message.slice(message.indexOf(search) + search.length + 1, message.length - 1)
+                                console.log(search)
+                                setMessage(front + '@' + getDisplayName(item.firstName, item.lastName) + end)
+                                setIsSearching(false)
 
+                            }}
+                            style={{ paddingVertical: 2, paddingHorizontal: 10, borderRadius: 50, borderColor: item.color, marginLeft: 10, borderWidth: 2, alignItems: 'center' }}>
+                            <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 12 }}>{getDisplayName(item.firstName, item.lastName)}</Text>
+                        </TouchableOpacity>
+                    )
+
+                }
+
+            </ScrollView>
+
+
+            <View style={styles.container}>
+
+                <View style={styles.textContainer}>
+                    <View style={styles.cameraButton}>
+                        <TouchableOpacity onPress={props.onCameraPress}>
+                            <Image source={assets.camera} style={{ width: 25, height: 25, tintColor: 'white' }} />
+
+                        </TouchableOpacity>
 
                     </View>
-                    <TouchableOpacity onPress={this.onChatBubblePress}>
-                        <View style={styles.specialChatButton}
-                        >
-                            <Image source={assets.chat_bubble} style={{ width: 24, height: 24, tintColor: "white" }} />
-                        </View>
-                    </TouchableOpacity>
+                    <TextInput
+
+                        placeholder={`Message...`}
+                        style={styles.textInput}
+                        multiline
+                        value={message}
+
+                        enablesReturnKeyAutomatically
+                        onChangeText={(value) => {
+                            setMessage(value);
+
+                            message.split(" ").forEach(item => {
+                                if (item[0] === '@') {
+                                    handleSearch(item)
+                                    setSearch(item)
+                                    setIsSearching(true)
+                                }
+
+                            })
+                        }}
+                        placeholderTextColor={'lightgray'}
+                        selectionColor={Colors.light.accent}
+                        autoFocus
+
+
+
+
+                    />
+
+                    {!message ? <View style={styles.rightContainer}>
+                        <MaterialCommunityIcons name="microphone" size={28} color="grey" style={styles.icon} />
+                        <MaterialCommunityIcons name="image" size={28} color="grey" />
+                        <Image source={assets.desk} style={{ width: 28, height: 28, tintColor: 'gray', marginLeft: 10 }} />
+                    </View>
+                        : <TouchableOpacity onPress={onSendPress} >
+
+
+                            <Text style={{
+                                fontWeight: 'bold', fontSize: 16, color: Colors.light.accent, marginRight: 10, fontFamily: 'KanitMedium'
+                            }} >Send</Text>
+                        </TouchableOpacity>
+                    }
 
 
                 </View>
+                <TouchableOpacity onPress={onChatBubblePress}>
+                    <View style={styles.specialChatButton}
+                    >
+                        <Image source={assets.chat_bubble} style={{ width: 24, height: 24, tintColor: "white" }} />
+                    </View>
+                </TouchableOpacity>
+
+
+            </View>
 
 
 
 
 
 
-            </KeyboardAvoidingView >
+        </KeyboardAvoidingView >
 
-        )
-    }
+    )
 }
+
+const styles = StyleSheet.create({
+
+    container: {
+        padding: 5,
+        flexDirection: 'row',
+        borderTopColor: 'gray',
+        borderTopWidth: 0.2,
+        minHeight: 90,
+        alignItems: 'baseline',
+        backgroundColor: 'transparent'
+    },
+    textContainer: {
+        flexDirection: 'row',
+        padding: 5,
+        borderRadius: 25,
+        marginBottom: 30,
+        marginRight: 10,
+        maxHeight: 160,
+        flex: 1,
+        backgroundColor: '#272727',
+        alignItems: 'center',
+
+    },
+    textInput: {
+        marginHorizontal: 10,
+        flex: 1,
+        color: 'white',
+        fontFamily: 'Kanit',
+        fontSize: 16
+    },
+    icon: {
+        marginHorizontal: 5,
+    },
+    specialChatButton: {
+        backgroundColor: '#8C3BD7',
+        borderRadius: 25,
+        width: 45,
+        height: 45,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+
+    },
+    rightContainer: {
+        flexDirection: 'row',
+        marginRight: 10,
+        alignItems: 'center'
+    },
+    cameraButton: {
+        borderRadius: 50,
+        backgroundColor: Colors.light.primary,
+        width: 35,
+        height: 35,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
+
+export default ChatInput
 
 

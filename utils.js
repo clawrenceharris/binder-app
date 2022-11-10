@@ -137,6 +137,26 @@ export function getDisplayName(firstName, lastName) {
     else {
         displayName = firstName + " " + lastName
     }
-    return displayName
+    if (displayName)
+        return displayName
+    return "Someone"
 
 }
+
+
+
+export function getName(firstName, lastName) {
+    let name = ""
+    if (!firstName) {
+        name = lastName
+    }
+    else if (!lastName) {
+        name = firstName
+    }
+    if (name)
+        return name
+    return "Someone"
+
+}
+
+

@@ -110,27 +110,33 @@ const NewChat = ({ navigation }) => {
         const id = selectedUsers.map(user => user.uid).join("")
         const defaultGroupName = selectedUsers.map(item => getDisplayName(item.firstName, item.lastName)).join(", ")
 
-        db.collection('chatrooms').doc(id).get().then(doc => setChatroomExists(doc.exists))
+        db.collection('chatrooms').doc(id).get().then(doc => {
+            if (doc.exists) {
+                navigation.goBack()
+                navigation.navigate('Chatroom', { chatroom: id })
+            }
+            else {
+                db.collection('chatrooms').doc(id).set({
+                    id: id,
+                    type: selectedUsers.length > 1 ? 'group' : 'private',
+                    name: selectedUsers.length < 2 ? '' // if we only selected one user to chat with
+                        : groupName ? groupName : "Group: " + defaultGroupName, //else if group name is defined then set that as the name otherwise, use the default group name
 
-        if (!chatroomExists) {
-            db.collection('chatrooms').doc(id).set({
-                id: id,
-                type: selectedUsers.length > 1 ? 'group' : 'private',
-                name: selectedUsers.length < 2 ? '' // if we only selected one user to chat with
-                    : groupName ? groupName : "Group: " + defaultGroupName, //else if group name is defined then set that as the name otherwise, use the default group name
+
+                    users: [...selectedUsers, currentUser],
+                    messages: []
+
+                })
+                db.collection('users')
+                    .doc(auth.currentUser.uid)
+                    .update({ chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(id)) })
 
 
-                users: [...selectedUsers, currentUser],
-                messages: []
+            }
 
-            })
-            db.collection('users')
-                .doc(auth.currentUser.uid)
-                .update({ chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(id)) })
-        }
+        })
 
-        navigation.goBack()
-        navigation.navigate('Chatroom', { chatroom: id })
+
 
     }
 
@@ -215,6 +221,7 @@ const NewChat = ({ navigation }) => {
                         value={search}
                         placeholderTextColor={'gray'}
                         autoFocus
+                        returnKeyType='search'
                     />
 
 

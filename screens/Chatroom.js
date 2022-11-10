@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, ScrollView, Keyboard } from 'react-native'
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { assets, Colors } from '../constants'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -14,6 +14,9 @@ import { UserProfileCircle } from '../components'
 import GroupProfileCircle from '../components/GroupProfileCircle'
 import { faker } from '@faker-js/faker'
 import moment from 'moment'
+import CallButton from '../components/CallButton'
+import { getDisplayName } from '../utils'
+import Drawer from 'react-native-draggable-view'
 const ICON_SIZE = 30;
 
 //route.params = chatRoom, class
@@ -24,7 +27,7 @@ const Chatroom = () => {
     const [ref, setRef] = useState(null)
     const route = useRoute()
 
-    const colors = [Colors.light.primary, '#FFF02B', Colors.light.red, '#8BFF5D']
+    const colors = [Colors.light.primary, '#FFF02B', Colors.light.red, '#8BFF5D', '#2E52F5', '#F64083', '#F89E3E']
     const [users, setUsers] = useState([])
     const [showTimestamp, setShowTimestamp] = useState(false)
 
@@ -38,14 +41,21 @@ const Chatroom = () => {
             .doc(route.params.chatroom)
             .onSnapshot(doc => {
                 setChatroomData(doc.data())
-                doc.data().users.filter(user => user.uid != auth.currentUser.uid).forEach((user, index) => {
+
+                const users = doc.data().users.filter(user => user.uid != auth.currentUser.uid)
+                let index = 0
+                for (let i = 0; i < users.length; i++) {
+                    if (index === colors.length) {
+                        index = 0
+                    }
                     array.push({
-                        ...user,
+                        ...users[i],
                         color: colors[index]
 
                     })
+                    index++
                     setUsers(array)
-                })
+                }
 
                 setMessages(chatroomData?.messages)
             })
@@ -111,9 +121,7 @@ const Chatroom = () => {
     )
 
     const headerRight = () => (
-        <TouchableOpacity style={{ backgroundColor: '#272727', width: 40, height: 40, borderRadius: 50, alignItems: 'center', padding: 5, justifyContent: 'center' }}>
-            <Image source={assets.more} style={{ width: 20, height: 20, tintColor: 'white' }} />
-        </TouchableOpacity>
+        <CallButton />
 
     )
 
@@ -129,10 +137,7 @@ const Chatroom = () => {
             <ScrollView
                 onContentSizeChange={() => ref.scrollToEnd({ animated: true })}
                 ref={(ref) => { setRef(ref) }}
-                onScrollBeginDrag={() => { setShowTimestamp(true) }}
-                onScrollEndDrag={() => setShowTimestamp(false)
-
-                }
+                onScrollBeginDrag={() => Keyboard.dismiss()}
             >
 
                 {messages && messages.length ?
@@ -146,18 +151,28 @@ const Chatroom = () => {
                 }
 
                 <FlatList
+                    style={{ padding: 10 }}
+
                     data={messages}
                     renderItem={({ item }) =>
                         <ChatMessage message={item} user={users.filter(user => user.uid === item.user)[0]} showTimestamp={true} />}
-                    style={{ padding: 10 }}
 
                     scrollEnabled={false}
                 />
 
 
+
+
+
             </ScrollView>
 
-            <ChatInput onCameraPress={() => { }} onSendPress={onSendPress} />
+            <ChatInput
+                onCameraPress={() => { }}
+                onSendPress={onSendPress}
+                chatroom={chatroomData}
+                users={users.filter(user => user.uid != auth.currentUser.uid)} />
+
+
 
 
         </View >

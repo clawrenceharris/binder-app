@@ -126,6 +126,7 @@ export default function Chat({ navigation }) {
 
                 chatrooms?.length > 0 ?
                     <FlatList
+                        style={{ paddingHorizontal: 10 }}
                         data={chatrooms}
                         renderItem={({ item }) =>
                             <ChatListItem

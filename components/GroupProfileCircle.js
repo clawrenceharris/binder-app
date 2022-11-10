@@ -106,12 +106,9 @@ const GroupProfileCircle = (props) => {
                     </View>}
 
                 </View>
-                <View>
 
-                    {props.showName && <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white', marginLeft: 10 }}>{props.chatroom?.name}</Text>}
-                    {props.showName && <Text style={{ fontFamily: 'Kanit', fontSize: 12, color: 'gray', marginLeft: 10 }}>{getUsernames()}</Text>}
+                {props.showName && <Text numberOfLines={1} style={{ fontFamily: 'KanitBold', fontSize: 18, color: 'white', marginLeft: 10, width: '60%' }}>{props.chatroom?.name}</Text>}
 
-                </View>
 
 
             </View>
