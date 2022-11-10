@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, StyleSheet, ScrollView, LogBox } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import useColorScheme from '../hooks/useColorScheme';
 import { assets, Colors } from '../constants/index';
 import ClassListItem from '../components/ClassListItem';
@@ -15,6 +15,9 @@ import firebase from 'firebase/compat';
 import ClassListItemModal from '../components/ClassListItemModal';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { getDisplayName } from '../utils';
+import NotificationDrop from '../components/NotificationDrop';
+import DropdownAlert from 'react-native-dropdownalert';
+import ChatListItemModal from '../components/ChatListItemModal';
 export default function Chat({ navigation }) {
     LogBox.ignoreLogs([
         'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.'
@@ -27,7 +30,6 @@ export default function Chat({ navigation }) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const [chatrooms, setChatrooms] = useState(null)
     const [selectedChat, setSelectedChat] = useState(null)
-
 
     const headerLeft = () => (
 
@@ -78,7 +80,9 @@ export default function Chat({ navigation }) {
     return (
 
         <View style={{ backgroundColor: '#333333', flex: 1 }} >
-            <ClassListItemModal
+
+
+            <ChatListItemModal
                 showModal={showChatModal}
                 onDeletePress={onDeletePress}
                 onPinPress={() => { }}
@@ -86,10 +90,11 @@ export default function Chat({ navigation }) {
 
             <ConfirmationModal
                 showModal={showConfirmationModal}
-                message='This will delete the converstation from your chat list.'
+                message='This will delete the converstation from your chat list. Chats and attachments sent will still be saved.'
                 onConfirmPress={() => { deleteChat(); setShowConfirmationModal(false) }}
                 onCancelPress={() => setShowConfirmationModal(false)}
             />
+
             <Header
                 title='Chat'
                 headerLeft={headerLeft()}
@@ -98,7 +103,6 @@ export default function Chat({ navigation }) {
                 navigation={navigation}
 
             />
-
 
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10 }}>

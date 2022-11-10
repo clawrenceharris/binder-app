@@ -41,10 +41,13 @@ export default class ChatInput extends React.Component {
         const styles = StyleSheet.create({
 
             container: {
-                padding: 10,
-                backgroundColor: '#333',
+                padding: 5,
+                backgroundColor: '#404040',
                 flexDirection: 'row',
-
+                borderTopColor: 'gray',
+                borderTopWidth: 1,
+                minHeight: 90,
+                alignItems: 'baseline'
             },
             textContainer: {
                 flexDirection: 'row',
@@ -54,6 +57,9 @@ export default class ChatInput extends React.Component {
                 marginRight: 10,
                 maxHeight: 160,
                 flex: 1,
+                backgroundColor: '#272727',
+                alignItems: 'center',
+
             },
             textInput: {
                 marginHorizontal: 10,
@@ -73,6 +79,7 @@ export default class ChatInput extends React.Component {
                 justifyContent: 'center',
                 alignItems: 'center',
 
+
             },
             rightContainer: {
                 flexDirection: 'row',
@@ -90,20 +97,11 @@ export default class ChatInput extends React.Component {
         })
 
         return (
-            <View
-                // behavior={Platform.OS == "ios" ? "padding" : "height"}
-                // keyboardVerticalOffset={100}
-                style={{ width: '100%' }}
-            >
-
+            <KeyboardAvoidingView
+                behavior={Platform.OS == "ios" ? "padding" : "height"} >
                 <View style={styles.container}>
 
-                    <View style={[
-                        styles.textContainer, {
-                            backgroundColor: '#1E1E1E',
-                            alignItems: 'center',
-                        }]}
-                    >
+                    <View style={styles.textContainer}>
                         <View style={styles.cameraButton}>
                             <TouchableOpacity onPress={this.props.onCameraPress}>
                                 <Image source={assets.camera} style={{ width: 25, height: 25, tintColor: 'white' }} />
@@ -112,7 +110,7 @@ export default class ChatInput extends React.Component {
 
                         </View>
                         <TextInput
-                            placeholder={'Message...'}
+                            placeholder={`Send a chat...`}
                             style={styles.textInput}
                             multiline
                             value={this.state.message}
@@ -156,7 +154,7 @@ export default class ChatInput extends React.Component {
 
 
 
-            </View >
+            </KeyboardAvoidingView >
 
         )
     }

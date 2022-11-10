@@ -24,6 +24,7 @@ const NewChat = ({ navigation }) => {
     const [selectedUsers, setSelectedUsers] = useState([])
     const [groupName, setGroupName] = useState('')
     const [isGroup, setIsGroup] = useState(false)
+    const [currentUser, setCurrentUser] = useState(null)
     // const getFilteredData = () => {
     //     let filteredData = []
     //     filters.forEach(filter => {
@@ -80,6 +81,7 @@ const NewChat = ({ navigation }) => {
             .doc(auth.currentUser.uid)
             .get()
             .then(doc => {
+                setCurrentUser(doc.data())
                 setClasses(doc.data().classes)
                 if (doc.data().school) {
                     db.collection('schools')
@@ -94,7 +96,6 @@ const NewChat = ({ navigation }) => {
                                 setFilters([school?.id])
 
                             }
-
                         })
                 }
             })
@@ -115,12 +116,11 @@ const NewChat = ({ navigation }) => {
             db.collection('chatrooms').doc(id).set({
                 id: id,
                 type: selectedUsers.length > 1 ? 'group' : 'private',
-                name: selectedUsers.length === 1 // if we only selected on user
-                    ? getDisplayName(selectedUsers[0].firstName, selectedUsers[0].lastName) // then set the chatroom name as that user
-                    : groupName ? groupName : defaultGroupName, //else if group name is defined then set that as the name otherwise, use the default group name
+                name: selectedUsers.length < 2 ? '' // if we only selected one user to chat with
+                    : groupName ? groupName : "Group: " + defaultGroupName, //else if group name is defined then set that as the name otherwise, use the default group name
 
 
-                users: selectedUsers,
+                users: [...selectedUsers, currentUser],
                 messages: []
 
             })
@@ -224,7 +224,8 @@ const NewChat = ({ navigation }) => {
                         <Text style={{ fontFamily: 'KanitSemiBold', color: 'gray', marginLeft: 10, fontSize: 18 }}>To: </Text>
                         <ScrollView
                             horizontal
-                            style={{ flexDirection: 'row', position: 'absolute', top: 7, left: 50 }}>
+                            showsHorizontalScrollIndicator={false}
+                            style={{ flexDirection: 'row', position: 'absolute', top: 7, left: 50, width: '85%' }}>
 
                             {selectedUsers.map((item, index) =>
                                 <View style={{ paddingVertical: 5, paddingHorizontal: 15, borderRadius: 50, backgroundColor: '#272727', marginLeft: 10 }}>
@@ -265,7 +266,7 @@ const NewChat = ({ navigation }) => {
 
                         <TextInput
                             style={{ flexDirection: 'row', width: '50%', height: 60, fontFamily: 'Kanit', fontSize: 28, color: 'white' }}
-                            placeholder='Group Name...'
+                            placeholder='Group Name'
                             value={groupName}
                             onChangeText={setGroupName}
                             placeholderTextColor={'darkgray'}

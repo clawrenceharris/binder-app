@@ -15,7 +15,7 @@ import { getDisplayName } from '../utils';
 
 
 
-const ChatMessage = ({ message, previousMessage }) => {
+const ChatMessage = ({ message, previousMessage, user }) => {
     const [userData, setUserData] = useState(null)
 
     const isMyMessage = () => {
@@ -29,6 +29,9 @@ const ChatMessage = ({ message, previousMessage }) => {
 
 
     }
+
+
+
 
     const isNotes = () => {
         return message.contentType === 'notes'
@@ -45,6 +48,7 @@ const ChatMessage = ({ message, previousMessage }) => {
         return message.contentType === 'text'
     }
     useEffect(() => {
+
         const subscriber = db.collection('users')
             .doc(message.user)
             .onSnapshot(doc => {
@@ -55,21 +59,28 @@ const ChatMessage = ({ message, previousMessage }) => {
             subscriber()
         }
     }, [])
+
+    const getColor = () => {
+        if (user) {
+            return user.color
+        }
+        else {
+            return 'white'
+        }
+    }
     const styles = StyleSheet.create({
 
         messageIndicator: {
             borderRadius: 25,
             width: 10,
-            height: '100%'
-
-
+            height: '100%',
+            backgroundColor: isMyMessage() ? Colors.light.accent : getColor()
         },
 
         name: {
             color: 'gray',
             fontFamily: 'Kanit',
             marginBottom: 5
-
         },
 
         time: {
@@ -121,7 +132,7 @@ const ChatMessage = ({ message, previousMessage }) => {
 
 
 
-                {isTextMessage() && <View style={[styles.messageIndicator, { backgroundColor: isMyMessage() && isTextMessage() ? Colors.light.accent : Colors.light.primary }]} />}
+                {isTextMessage() && <View style={styles.messageIndicator} />}
 
 
 

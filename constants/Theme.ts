@@ -16,7 +16,7 @@ export const SIZES = {
     medium: 16,
     large: 18,
     extraLarge: 24,
-    header: 120
+    header: 110
 };
 
 export const FONTS = {

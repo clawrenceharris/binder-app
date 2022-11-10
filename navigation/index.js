@@ -45,13 +45,13 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 
-export default function Navigation({ currentUser, colorScheme }) {
+export default function Navigation({ colorScheme }) {
 
   return (
 
     <NavigationContainer
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator currentUser={currentUser} />
+      <RootNavigator colorScheme={colorScheme} />
     </NavigationContainer>
   );
 }
@@ -85,8 +85,7 @@ function Classroom({ route }) {
 }
 
 
-function RootNavigator({ currentUser }) {
-  const colorScheme = useColorScheme();
+function RootNavigator({ colorScheme }) {
   return (
 
 

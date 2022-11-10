@@ -7,34 +7,33 @@ import { Image } from 'react-native'
 import useColorScheme from '../hooks/useColorScheme'
 import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../Firebase/firebase'
+import { getDisplayName } from '../utils'
 
 const GroupProfileCircle = (props) => {
     const [studyBuddies, setStudyBuddies] = useState([])
 
-    const [chatroomData, setChatroomData] = useState(null)
-
-    useEffect(() => {
-        console.log(props.chatroom?.id)
-        const subscriber = db.collection('chatroom').doc(props.chatroom?.id)
-            .onSnapshot(doc => {
-                setChatroomData(doc.data())
-                console.log(chatroomData?.type)
-            })
 
 
-        return () => subscriber()
-    }, [])
 
+    const getUsernames = () => {
+        return props.chatroom.users
+            .filter(user => user.uid != auth.currentUser.uid)
+            .map((user, index) => {
+
+                return getDisplayName(user.firstName, user.lastName)
+
+            }).join(", ")
+    }
 
     const showStory = () => {
 
     }
     const getDefaultImage = () => {
-        if (chatroomData?.type === 'group') {
+        if (props.chatroom?.type === 'group') {
             return assets.group
         }
 
-        else if (chatroomData?.type === 'class') {
+        else if (props.chatroom?.type === 'class') {
             return assets.book
         }
 
@@ -49,64 +48,73 @@ const GroupProfileCircle = (props) => {
     return (
 
         <TouchableWithoutFeedback onPress={() => { console.log('pressed') }}>
+            <View style={{ flexDirection: props.flexDirection ? props.flexDirection : 'row', alignItems: 'center', margin: props.margin }}>
 
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
 
-                <View style={{
-                    position: 'absolute',
-                    width: props.size,
-                    height: props.size,
-                    backgroundColor: 'gray',
-                    borderRadius: 100,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: 0
-                }}>
-                    {props.showActive &&
+                    <View style={{
+                        position: 'absolute',
+                        width: props.size,
+                        height: props.size,
+                        backgroundColor: 'gray',
+                        borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 0
+                    }}>
+                        {props.showActive &&
 
-                        <View style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#333333',
-                            width: 15,
-                            height: 15,
-                            borderRadius: 100,
-                            position: 'absolute',
-                            left: props.size - (props.size / 3),
-                            top: props.size - (props.size / 3)
-                        }}
-                        >
-                            <View style={{ backgroundColor: '#7FF449', width: 10, height: 10, borderRadius: 100, zIndex: 1 }} />
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#333333',
+                                width: 15,
+                                height: 15,
+                                borderRadius: 100,
+                                position: 'absolute',
+                                left: props.size - (props.size / 3),
+                                top: props.size - (props.size / 3)
+                            }}
+                            >
+                                <View style={{ backgroundColor: '#7FF449', width: 10, height: 10, borderRadius: 100, zIndex: 1 }} />
 
-                        </View>
-                    }
+                            </View>
+                        }
+
+                    </View>
+
+
+                    {props.showStoryBoder && hasStory() && <View style={{ width: props.size + 10, height: props.size + 10, borderWidth: 3, borderColor: Colors.light.primary, borderRadius: 50 }} />}
+
+
+
+                    <View style={{ borderRadius: 100, alignItems: 'center', overflow: 'hidden', width: props.size, height: props.size, justifyContent: 'center' }}>
+                        {props.chatroom?.photoURL ?
+                            <Image source={{ uri: props.chatroom.photoURL }} style={[styles.image, { width: props.size, height: props.size }]} />
+                            :
+
+                            <Image source={getDefaultImage()} style={[styles.defaultImage, { width: props.size - (props.size / 3), height: props.size - (props.size / 3) }]} />}
+
+                    </View>
+
+
+
+
+                    {studyBuddies.includes(props.user) && <View style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', padding: 4, backgroundColor: '#333', borderRadius: 50, right: -15, top: 20 }}>
+                        <Text style={{ fontSize: (props.size / 3) }}>🤓</Text>
+
+                    </View>}
+
+                </View>
+                <View>
+
+                    {props.showName && <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white', marginLeft: 10 }}>{props.chatroom?.name}</Text>}
+                    {props.showName && <Text style={{ fontFamily: 'Kanit', fontSize: 12, color: 'gray', marginLeft: 10 }}>{getUsernames()}</Text>}
 
                 </View>
 
-
-                {props.showStoryBoder && hasStory() && <View style={{ width: props.size + 10, height: props.size + 10, borderWidth: 3, borderColor: Colors.light.primary, borderRadius: 50 }} />}
-
-
-
-                <View style={{ borderRadius: 100, alignItems: 'center', overflow: 'hidden', width: props.size, height: props.size, justifyContent: 'center' }}>
-                    {chatroomData?.photoURL ?
-                        <Image source={{ uri: chatroomData.photoURL }} style={[styles.image, { width: props.size, height: props.size }]} />
-                        :
-
-                        <Image source={getDefaultImage()} style={[styles.defaultImage, { width: props.size - (props.size / 3), height: props.size - (props.size / 3) }]} />}
-
-                </View>
-
-
-
-
-                {studyBuddies.includes(props.user) && <View style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', padding: 4, backgroundColor: '#333', borderRadius: 50, right: -15, top: 20 }}>
-                    <Text style={{ fontSize: (props.size / 3) }}>🤓</Text>
-
-                </View>}
 
             </View>
-
 
 
 

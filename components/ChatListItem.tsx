@@ -5,8 +5,9 @@ import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 import UserProfileCircle from './UserProfileCircle'
 import { SHADOWS } from '../constants/Theme'
-import { db } from '../Firebase/firebase'
+import { auth, db } from '../Firebase/firebase'
 import GroupProfileCircle from './GroupProfileCircle'
+import { getDisplayName } from '../utils'
 
 const ChatListItem = ({ chatroom, onPress, onLongPress }) => {
   const colorScheme = useColorScheme()
@@ -24,6 +25,12 @@ const ChatListItem = ({ chatroom, onPress, onLongPress }) => {
       subscriber()
     }
   }, [])
+
+  const getOtherUser = () => {
+    const user = chatroomData?.users.filter((user) =>
+      user.uid !== auth.currentUser.uid)[0]
+    return user
+  }
 
   return (
     <TouchableWithoutFeedback
@@ -43,13 +50,17 @@ const ChatListItem = ({ chatroom, onPress, onLongPress }) => {
               <UserProfileCircle user={chatroomData?.users[0]} story={[]} showStoryBoder={false} size={40} showName={false} bold />
 
               :
-              <GroupProfileCircle type={'group'} chatroom={chatroomData} story={[]} showStoryBoder={false} size={40} showName={false} bold />
+              <GroupProfileCircle chatroom={chatroomData} story={[]} showStoryBoder={false} size={40} showName={false} bold />
 
             }
 
           </View>
           <View>
-            <Text style={[styles.className, { color: 'white' }]}>{chatroomData?.name}</Text>
+            {chatroomData?.type === 'private' ?
+              <Text style={[styles.className, { color: 'white' }]}>{getDisplayName(getOtherUser().firstName, getOtherUser().lastName)}</Text>
+              :
+              <Text style={[styles.className, { color: 'white' }]}>{chatroomData?.name}</Text>
+            }
 
             {/* <ActivePeople userCount={classData?.users?.length} activeCount={classData?.active?.length} /> */}
 

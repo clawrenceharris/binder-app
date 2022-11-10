@@ -22,6 +22,8 @@ const Chatroom = () => {
     const [chatroomData, setChatroomData] = useState(null)
     const [ref, setRef] = useState(null)
     const route = useRoute()
+    const colors = [Colors.light.primary, '#FFF02B', Colors.light.red, '#8BFF5D']
+    const [users, setUsers] = useState([])
     //  useLayoutEffect(() => {
     //     const unsubscribe = db
 
@@ -42,11 +44,21 @@ const Chatroom = () => {
 
     useEffect(() => {
         //get the chatroom data 
+        const array = []
         const subscriber = db.collection('chatrooms')
 
             .doc(route.params.chatroom)
             .onSnapshot(doc => {
                 setChatroomData(doc.data())
+                doc.data().users.filter(user => user.uid != auth.currentUser.uid).forEach((user, index) => {
+                    array.push({
+                        ...user,
+                        color: colors[index]
+
+                    })
+                    setUsers(array)
+                })
+
                 setMessages(chatroomData?.messages)
             })
 
@@ -71,22 +83,41 @@ const Chatroom = () => {
                     contentType: contentType,
                     text: text,
                     user: auth.currentUser.uid,
-                    reactions: []
+                    reactions: [],
+
                 })
 
             })
+        db.collection('chatrooms')
+            .doc(chatroomData.id)
+            .get()
+            .then((doc) => {   // on successful message update
+                doc.data().users.forEach(user => { // for each user in the chatroom
+                    db
+                        .collection('users')
+                        .doc(user.uid)
+                        .update({
+                            chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(chatroomData.id)) //add this chatroom to their database
+                        })
+                })
+
+            })
+
     }
+
+
 
     const headerLeft = () => (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <BackButton
+                navigation={navigation}
                 direction='horizontal'
                 color='white'
             />
-            {chatroomData?.type == 'private' ? <UserProfileCircle size={40} user={chatroomData?.users[0]} showName margin={5} />
+            {chatroomData?.type == 'private' ? <UserProfileCircle size={40} user={chatroomData?.users[0]} showName margin={10} />
 
                 :
-                chatroomData?.type == 'group' && <UserProfileCircle size={40} user={chatroomData?.users[0]} showName margin={5} />}
+                chatroomData?.type == 'group' && <GroupProfileCircle size={40} chatroom={chatroomData} showName margin={10} />}
 
         </View>
     )
@@ -97,6 +128,10 @@ const Chatroom = () => {
         </TouchableOpacity>
 
     )
+
+    const getSender = (message) => {
+        console.log(message.user.uid, " == ", users[0].uid)
+    }
     return (
 
         <View style={{ flex: 1, backgroundColor: '#404040' }}>
@@ -104,21 +139,17 @@ const Chatroom = () => {
                 headerLeft={headerLeft()}
                 headerRight={headerRight()}
             />
-            <ScrollView
-                centerContent
+
+            <FlatList
+                data={messages}
+                renderItem={({ item }) =>
+                    <ChatMessage message={item} user={users.filter(user => user.uid === item.user)[0]} />}
                 style={{ padding: 10 }}
-                onContentSizeChange={() => ref.scrollToEnd({ animated: false })}
+                onContentSizeChange={() => ref.scrollToEnd({ animated: true })}
                 ref={(ref) => { setRef(ref) }}
-            >
+            />
 
-                {messages?.map((item, index) =>
-                    <View key={item.id}>
-                        <ChatMessage message={item} previousMessage={index - 1 > 0 ? messages[index - 1] : null} />
 
-                    </View>
-
-                )}
-            </ScrollView>
 
             <ChatInput onCameraPress={() => { }} onSendPress={onSendPress} />
 
