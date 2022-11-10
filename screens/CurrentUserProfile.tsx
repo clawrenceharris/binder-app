@@ -35,8 +35,9 @@ const CurrentUserProfile = ({ navigation }) => {
     const [showEditNameModal, setShowEditNameModal] = useState(false)
     const [showMore, setShowMore] = useState(false)
     const [userData, setUserData] = useState(null)
-    const sign = getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth());
-    const zodiacEmoji = getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth(), true);
+
+
+
     const user = auth.currentUser
 
 
@@ -87,7 +88,7 @@ const CurrentUserProfile = ({ navigation }) => {
 
         <View style={{ alignItems: 'center' }}>
             <View style={styles.emojiContainer}>
-                <Text style={{ fontSize: 36 }}>{zodiacEmoji}</Text>
+                <Text style={{ fontSize: 36 }}>{getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth(), true)}</Text>
             </View>
 
             <View>
@@ -96,7 +97,7 @@ const CurrentUserProfile = ({ navigation }) => {
             </View>
             <View>
                 <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>
-                    {`You are a ${sign}!`}
+                    {`You are a ${getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth())}!`}
                 </Text>
 
             </View>
@@ -165,7 +166,11 @@ const CurrentUserProfile = ({ navigation }) => {
         </TouchableOpacity>
     )
 
-
+    const getBirthday = () => {
+        if (userData?.birthday)
+            return moment(userData?.birthday).format("MMM DD, YYYY")
+        return null
+    }
 
     return (
 
@@ -228,7 +233,7 @@ const CurrentUserProfile = ({ navigation }) => {
 
                                 </View>
 
-                                <UserProfileCircle user={auth.currentUser} showStudyBuddy={false} showStoryBoder size={120} showName bold showActive={false} />
+                                <UserProfileCircle user={auth.currentUser} showStudyBuddy={false} showStoryBoder size={120} showName={false} bold showActive={false} />
 
                             </View>
 
@@ -267,12 +272,12 @@ const CurrentUserProfile = ({ navigation }) => {
 
                         </View>
                         <View style={{ marginLeft: 10 }}>
-                            {<ProfileTag icon={<Text>🎂</Text>} title={moment(userData?.birthday.toDate()).format("MMM DD, YYYY")} onPress={() => { setModal(birthdayModal()); setShowModal(true); }} />}
+                            {userData?.birthday && <ProfileTag icon={<Text>🎂</Text>} title={getBirthday()} onPress={() => { setModal(birthdayModal()); setShowModal(true); }} />}
 
                         </View>
 
                         <View style={{ marginLeft: 10 }}>
-                            {<ProfileTag icon={<Text>{zodiacEmoji}</Text>} title={sign} onPress={() => { setModal(zodiacSignModal()); setShowModal(true); }} />}
+                            {userData?.birthday && <ProfileTag icon={<Text>{getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth(), true)}</Text>} title={getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth())} onPress={() => { setModal(zodiacSignModal()); setShowModal(true); }} />}
 
                         </View>
 
