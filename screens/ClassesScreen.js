@@ -17,6 +17,7 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import * as Haptics from 'expo-haptics'
 import OptionsModal from '../components/OptionsModal';
 import ClassOptionsModal from '../components/ClassOptionsModal';
+import Button from '../components/Button';
 
 export default function ClassesScreen({ currentUser }) {
 
@@ -117,7 +118,6 @@ export default function ClassesScreen({ currentUser }) {
 
     const onPinPress = () => {
 
-        setShowClassModal(false);
 
     }
 
@@ -233,7 +233,16 @@ export default function ClassesScreen({ currentUser }) {
 
                         }
 
-                    </View > : <Text>You are not in a school yet.</Text>}
+                    </View >
+                    :
+                    <View style={{ marginTop: 30, alignItems: 'center', width: '100%' }}>
+                        <Text style={{ fontFamily: 'Kanit', color: 'gray', textAlign: 'center', }}>{'Whoops! \nYou are not in a school yet.'}</Text>
+                        <Button
+                            background={'white'}
+                            margin={30}
+                            title={'Join a School'} onPress={() => navigation.navigate('SchoolSettings', { school: null })} condition={true} />
+
+                    </View>}
 
 
             </ScrollView>

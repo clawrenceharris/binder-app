@@ -116,12 +116,11 @@ const Desk = ({ navigation }) => {
 
     }
 
-    const onPinPress = () => {
-
-    }
 
     const onBookmarkPress = () => {
-
+        db.collection(deskCategory.toLowerCase())
+            .doc(selectedDeskItem.id)
+            .update({ bookmarked: !selectedDeskItem.bookmarked })
     }
 
 
@@ -169,6 +168,12 @@ const Desk = ({ navigation }) => {
             index,
         };
     };
+
+
+    const onBookmarkedPress = () => {
+        setShowModal(false)
+        navigation.navigate('BookmarkedItems', { deskCategory: deskCategory, deskItems: getData() })
+    }
 
     const getData = () => {
         switch (deskCategory) {
@@ -221,23 +226,23 @@ const Desk = ({ navigation }) => {
 
                 <OptionsModal
                     showModal={showModal}
-                    options={['New ' + deskCategory, 'Desk Settings', 'Clear Desk']}
+                    options={['Bookmarked ' + deskCategory, 'New ' + deskCategory, 'Desk Settings', 'Clear Desk']}
                     redIndex={2}
                     toValue={-300}
                     onCancelPress={() => setShowModal(false)}
-                    onOptionPress={[onNewPress, onDeskSettingsPress, onClearDeskPress]}
+                    onOptionPress={[onBookmarkedPress, onNewPress, onDeskSettingsPress, onClearDeskPress]}
                 />
 
                 <OptionsModal
                     showModal={showDeskItemModal}
-                    options={['Pin', 'Bookmark', 'Share', 'Edit', 'Public', 'Delete']}
+                    options={['Bookmark', 'Share', 'Edit', 'Public', 'Delete']}
                     redIndex={5}
                     toValue={-460}
                     switchIndex={4}
                     onToggle={toggleIsPublic}
                     isOn={selectedDeskItem?.isPublic}
                     onCancelPress={() => setShowDeskItemModal(false)}
-                    onOptionPress={[onPinPress, onBookmarkPress, onSharePress, onEditPress, toggleIsPublic, onDeletePress]}
+                    onOptionPress={[onBookmarkPress, onSharePress, onEditPress, toggleIsPublic, onDeletePress]}
                 />
 
 

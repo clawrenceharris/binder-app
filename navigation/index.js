@@ -36,19 +36,19 @@ import Feed from '../screens/Feed';
 import NewChat from '../screens/NewChat';
 import NewDeskItem from '../screens/NewDeskItem';
 import DeskItem from '../screens/DeskItem';
+import BookmarkedItems from '../screens/BookmarkedItems';
 
 const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
 
-export default function Navigation({ colorScheme }) {
+export default function Navigation() {
 
   return (
 
-    <NavigationContainer
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator colorScheme={colorScheme} />
+    <NavigationContainer>
+      <RootNavigator />
     </NavigationContainer>
   );
 }
@@ -75,7 +75,7 @@ function Classroom({ route }) {
 }
 
 
-function RootNavigator({ colorScheme }) {
+function RootNavigator() {
   return (
 
 
@@ -83,15 +83,7 @@ function RootNavigator({ colorScheme }) {
       initialRouteName='StartScreen'
       screenOptions={{
         headerShown: false,
-        headerStyle: {
-
-          backgroundColor: Colors[colorScheme].background,
-
-        },
-        headerTintColor: Colors[colorScheme].background,
-        headerTitleAlign: 'left',
-        animationDuration: 1000 / 7
-
+        animationDuration: 200
 
       }} >
 
@@ -155,32 +147,6 @@ function RootNavigator({ colorScheme }) {
         children={() => { return <BottomTabNavigator /> }}
       />
 
-      <Stack.Screen
-        name="NewChat"
-        component={NewChat}
-        options={{
-          gestureDirection: "vertical",
-          presentation: 'modal'
-
-        }}
-      />
-
-      <Stack.Screen
-        name="Achievements"
-        component={AchievementsScreen}
-        options={{
-          gestureDirection: "vertical",
-          headerShown: false,
-          presentation: 'modal'
-
-        }}
-
-      />
-
-      <Stack.Screen
-        name="Classroom"
-        component={Classroom}
-      />
 
       {/* settings screens */}
       <Stack.Group>
@@ -238,6 +204,32 @@ function RootNavigator({ colorScheme }) {
       />
 
 
+      <Stack.Screen
+        name="NewChat"
+        component={NewChat}
+        options={{
+          gestureDirection: "vertical",
+          presentation: 'modal'
+
+        }}
+      />
+
+      <Stack.Screen
+        name="Achievements"
+        component={AchievementsScreen}
+        options={{
+          gestureDirection: "vertical",
+          headerShown: false,
+          presentation: 'modal'
+
+        }}
+
+      />
+
+      <Stack.Screen
+        name="Classroom"
+        component={Classroom}
+      />
 
 
       <Stack.Screen
@@ -253,25 +245,6 @@ function RootNavigator({ colorScheme }) {
         }}
       />
 
-      <Stack.Screen
-        name="EditPictureToSend"
-        children={({ route }) => { return <EditPictureToSend route={route} /> }}
-        options={{
-          animation: 'none',
-          gestureEnabled: false,
-        }}
-
-      />
-
-      <Stack.Screen
-        name="EditVideoToSend"
-        children={({ route }) => { return <EditVideoToSend route={route} /> }}
-        options={{
-          animation: 'none',
-          gestureEnabled: false,
-        }}
-
-      />
 
       <Stack.Screen
         name="Chatroom"
@@ -293,6 +266,17 @@ function RootNavigator({ colorScheme }) {
       <Stack.Screen
         name="DeskItem"
         component={DeskItem}
+        options={{
+          gestureDirection: "vertical",
+
+        }}
+
+      />
+
+
+      <Stack.Screen
+        name="BookmarkedItems"
+        component={BookmarkedItems}
         options={{
           gestureDirection: "vertical",
 

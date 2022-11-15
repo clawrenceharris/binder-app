@@ -227,7 +227,7 @@ export default function BottomTabNavigator({ currentUser }) {
             <BottomTab.Screen
                 name="Post"
                 component={CameraScreen}
-                options={({ route }) => ({
+                options={{
                     tabBarVisible: false,
                     tabBarStyle: { display: 'none' },
                     headerShown: false,
@@ -242,7 +242,7 @@ export default function BottomTabNavigator({ currentUser }) {
                     tabBarButton: (props) => (
                         <NewPostButton {...props} />
                     )
-                })}
+                }}
             />
 
 
