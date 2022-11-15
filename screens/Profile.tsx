@@ -22,7 +22,7 @@ import ChatRooms from '../constants/data/ChatRooms'
 import { auth, updateUserProfile } from '../Firebase/firebase'
 import { openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
-import ImageOptionsModal from '../components/ImageOptionsModal'
+import ImageOptionsModal from '../components/OptionsModal'
 //route.params = class, user
 const Profile = ({ route }) => {
     const colorScheme = useColorScheme()

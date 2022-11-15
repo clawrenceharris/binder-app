@@ -65,7 +65,9 @@ const EditNameModal = (props) => {
                                 style={{ color: 'white', padding: 15, fontSize: 18, paddingHorizontal: 10, width: '100%', backgroundColor: '#474747', borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomColor: 'gray', borderBottomWidth: 1 }}
                                 onChangeText={setFirstName}
                                 value={firstName}
+                                autoFocus
                                 placeholderTextColor={'#6F6F6F'}
+                                selectionColor={Colors.light.primary}
 
                             />
 
@@ -75,6 +77,7 @@ const EditNameModal = (props) => {
                                 style={{ color: 'white', padding: 15, fontSize: 18, paddingHorizontal: 10, width: '100%', backgroundColor: '#474747', borderBottomLeftRadius: 10, borderBottomRightRadius: 10, }}
                                 onChangeText={setLastName}
                                 value={lastName}
+                                selectionColor={Colors.light.primary}
 
                             />
                         </View>

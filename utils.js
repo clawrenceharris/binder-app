@@ -1,6 +1,8 @@
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from 'expo-media-library'
 import { useState } from "react";
+import { auth } from "./Firebase/firebase";
+import * as Haptics from 'expo-haptics'
 
 export async function pickImage() {
     let result = ImagePicker.launchCameraAsync();
@@ -142,6 +144,43 @@ export function getDisplayName(firstName, lastName) {
     return "Someone"
 
 }
+
+
+export function getDisplayNameOrYou(userData) {
+
+    let displayName = ""
+
+    if (userData?.uid === auth.currentUser.uid) {
+        return "You"
+    }
+
+    if (!userData?.firstName) {
+        displayName = userData?.lastName
+    }
+    else if (!userData?.lastName) {
+        displayName = userData?.firstName
+    }
+    else {
+        displayName = userData?.firstName + " " + userData?.lastName
+    }
+    if (displayName)
+        return displayName
+    return "Someone"
+
+}
+
+export function haptics(feedbackStyle) {
+    if (feedbackStyle === 'light')
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+    else if (feedbackStyle === 'medium')
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    else if (feedbackStyle === 'heavy')
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+
+
+}
+
+
 
 
 

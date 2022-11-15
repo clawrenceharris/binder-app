@@ -56,7 +56,7 @@ const Header = (props) => {
                     !props.isModal && <BackButton
                         navigation={props.navigation}
                         color={'white'}
-                        direction={props.direction} />
+                        direction={props.direction ? props.direction : 'horizontal'} />
                     :
                     props.headerLeft
                 }

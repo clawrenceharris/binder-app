@@ -10,7 +10,7 @@ const NotePost = ({ item }) => {
 
     return (
         <View style={{ padding: 10, height: '70%' }}>
-            <Image source={item} style={{ resizeMode: 'cover', width: postDim, height: postDim }} />
+            <Image source={{ uri: item }} style={{ resizeMode: 'cover', width: postDim, height: postDim }} />
         </View>
     )
 }

@@ -22,7 +22,7 @@ import ChatRooms from '../constants/data/ChatRooms'
 import { auth, db, updateCollection, updateUserProfile } from '../Firebase/firebase'
 import { getDisplayName, getZodiacSign, openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
-import ImageOptionsModal from '../components/ImageOptionsModal'
+import OptionsModal from '../components/OptionsModal'
 import BackButton from '../components/BackButton'
 import Header from '../components/Header'
 //route.params = class, user
@@ -92,7 +92,7 @@ const CurrentUserProfile = ({ navigation }) => {
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Zodiac Sign</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Astrology</Text>
 
             </View>
             <View>
@@ -123,7 +123,7 @@ const CurrentUserProfile = ({ navigation }) => {
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Class</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Graduating Class</Text>
 
             </View>
             <View>
@@ -171,7 +171,14 @@ const CurrentUserProfile = ({ navigation }) => {
             return moment(userData?.birthday).format("MMM DD, YYYY")
         return null
     }
-
+    const onLibraryPress = async () => {
+        setShowImageOptionsModal(false);
+        const result = await openMediaLibrary('photo', 1);
+        if (result) {
+            updateUserProfile(auth.currentUser.displayName, result)
+            updateCollection('users', auth.currentUser.uid, { photoURL: result });
+        }
+    }
     return (
 
         <View style={{ backgroundColor: '#333333', flex: 1 }}>
@@ -192,17 +199,9 @@ const CurrentUserProfile = ({ navigation }) => {
             />
 
 
-            <ImageOptionsModal
-                onLibraryPress={async () => {
-                    setShowImageOptionsModal(false);
-                    const result = await openMediaLibrary('photo', 1);
-                    if (result) {
-                        updateUserProfile(auth.currentUser.displayName, result)
-                        updateCollection('users', auth.currentUser.uid, { photoURL: result });
-                    }
-                }}
-
-                onTakePicturePress={() => { }}
+            <OptionsModal
+                options={['Take Picture', 'Choose From Library']}
+                onOptionPress={[onLibraryPress, onLibraryPress]}
                 showModal={showImageOptionsModal}
                 onCancelPress={() => { setShowImageOptionsModal(false) }}
             />

@@ -7,7 +7,7 @@ import UserProfileCircle from './UserProfileCircle'
 import { SHADOWS } from '../constants/Theme'
 import { auth, db } from '../Firebase/firebase'
 import GroupProfileCircle from './GroupProfileCircle'
-import { getDisplayName } from '../utils'
+import { getDisplayName, getDisplayNameOrYou } from '../utils'
 
 const ChatListItem = ({ chatroom, onPress, onLongPress }) => {
   const colorScheme = useColorScheme()
@@ -15,18 +15,22 @@ const ChatListItem = ({ chatroom, onPress, onLongPress }) => {
   //const message = chatroom.messages[chatroom.messages.length - 1]
   const [chatroomData, setChatroomData] = useState(null)
   const [lastUser, setLastUser] = useState(null)
+  const [lastMessage, setLastMessage] = useState(null)
   useEffect(() => {
     const subscriber = db.collection('chatrooms')
       .doc(chatroom.id)
       .onSnapshot((doc) => {
         setChatroomData(doc.data())
-
+        setLastMessage(doc.data().messages[doc.data().messages.length - 1])
       })
 
-    db.collection('users')
-      .doc(chatroomData?.messages[chatroomData?.messages?.length - 1]?.user)
-      .get()
-      .then(doc => setLastUser(doc.data()))
+    if (lastMessage) {
+      db.collection('users')
+        .doc(lastMessage.user)
+        .get()
+        .then(doc => setLastUser(doc.data()))
+    }
+
 
 
     return () => {
@@ -44,43 +48,46 @@ const ChatListItem = ({ chatroom, onPress, onLongPress }) => {
     <TouchableOpacity
       activeOpacity={0.2}
       onPress={onPress}
+      delayLongPress={70}
       onLongPress={() => onLongPress(chatroom)}>
 
-      <View style={{ marginLeft: 30, marginBottom: 10, padding: 0, ...SHADOWS.dark, width: '90%', borderRadius: 15, backgroundColor: '#5B5B5B', alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ backgroundColor: 'white', marginBottom: 15, ...SHADOWS.dark, width: '100%', borderRadius: 15, alignItems: 'center', justifyContent: 'center', height: 70 }}>
 
-        <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
-          <View style={{ margin: 10 }}>
-            {chatroomData?.type === 'private' ?
+        <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
 
-              <UserProfileCircle user={chatroomData?.users[0]} story={[]} showStoryBoder={false} size={40} showName={false} bold />
 
-              :
-              <View style={{ position: 'absolute', left: -40, bottom: -30, borderRadius: 100, backgroundColor: '#333', padding: 5, alignItems: 'center', justifyContent: 'center' }}>
-                <GroupProfileCircle chatroom={chatroomData} story={[]} showStoryBoder={false} size={50} showName={false} bold />
 
-              </View>
+          {chatroomData?.type === 'private' ?
 
-            }
+            <UserProfileCircle user={chatroomData?.users[0]} story={[]} showStoryBoder={false} size={50} showName={false} bold margin={10} />
 
-          </View>
+            :
+            <GroupProfileCircle chatroom={chatroomData} story={[]} showStoryBoder size={50} showName={false} bold margin={10} />
+
+
+          }
+
+
+
+
           <View>
             {chatroomData?.type === 'private' ?
-              <Text style={[styles.className, { color: 'white', marginLeft: 25 }]}>{getDisplayName(getOtherUser().firstName, getOtherUser().lastName)}</Text>
+              <Text style={[styles.className, { color: 'black', marginLeft: 10 }]}>{getDisplayName(getOtherUser().firstName, getOtherUser().lastName)}</Text>
               :
-              <Text style={[styles.className, { color: 'white', fontFamily: 'KanitBold', marginLeft: 25 }]}>{chatroomData?.name}</Text>
+              <Text style={[styles.className, { color: 'black', fontFamily: 'Kanit', marginLeft: 10 }]}>{chatroomData?.name}</Text>
             }
 
             {/* <ActivePeople userCount={classData?.users?.length} activeCount={classData?.active?.length} /> */}
-            {chatroomData?.messages?.length > 0 &&
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 25 }}>
+            {chatroomData?.chats?.length > 0 &&
 
-                <Text style={{ fontFamily: 'KanitMedium', color: 'lightgray', marginRight: 2 }}>
-                  {chatroomData?.messages[chatroomData?.messages?.length - 1]?.user !== auth.currentUser.uid ?
-                    getDisplayName(lastUser?.firstName, lastUser?.lastName)
-                    :
-                    'You'}:
-                </Text>
-                <Text style={{ fontFamily: 'Kanit', color: '#939292' }}>{chatroomData?.messages[chatroomData?.messages?.length - 1]?.text}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+                {!lastMessage?.system &&
+                  <Text style={{ fontFamily: 'Kanit', color: 'gray', marginRight: 2 }}>
+                    {getDisplayNameOrYou(lastUser) + ": " + lastMessage?.text}
+                  </Text>}
+
+
+
               </View>}
 
           </View>

@@ -18,15 +18,16 @@ import { getDisplayName } from '../utils';
 import NotificationDrop from '../components/NotificationDrop';
 import DropdownAlert from 'react-native-dropdownalert';
 import ChatListItemModal from '../components/ChatListItemModal';
+import OptionsModal from '../components/OptionsModal';
+import * as Haptics from 'expo-haptics'
+
 export default function Chat({ navigation }) {
     LogBox.ignoreLogs([
         'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.'
     ])
-    const colorScheme = useColorScheme();
-    const [open, setOpen] = useState(false)
-    const [classes, setClasses] = useState([])
     const [school, setSchool] = useState(null)
     const [showChatModal, setShowChatModal] = useState(false)
+
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const [chatrooms, setChatrooms] = useState(null)
     const [selectedChat, setSelectedChat] = useState(null)
@@ -38,7 +39,7 @@ export default function Chat({ navigation }) {
     )
     const headerRight = () => (
         <TouchableOpacity style={{ backgroundColor: '#272727', width: 40, height: 40, borderRadius: 50, alignItems: 'center', padding: 5, justifyContent: 'center' }}>
-            <Image source={assets.more} style={{ width: 20, height: 20, tintColor: Colors[colorScheme].background }} />
+            <Image source={assets.more} style={{ width: 20, height: 20, tintColor: 'white' }} />
 
         </TouchableOpacity>
 
@@ -58,17 +59,20 @@ export default function Chat({ navigation }) {
     }
 
     useEffect(() => {
-        const subscriber = db.collection('users').doc(auth.currentUser.uid).onSnapshot(doc => {
+        const subscriber = db.collection('users').doc(auth.currentUser.uid)
 
-            setChatrooms(doc.data()?.chatrooms)
-            if (doc.data().school.id) {
-                db.collection('schools').doc(doc.data().school.id).onSnapshot(doc => {
-                    setSchool(doc.data())
+            .onSnapshot(doc => {
+                setChatrooms(doc.data()?.chatrooms)
+                if (doc.data().school.id) {
+                    db.collection('schools').doc(doc.data().school.id)
+                        .get()
+                        .then(doc => {
+                            setSchool(doc.data())
 
-                });
-            }
+                        });
+                }
 
-        })
+            })
 
 
 
@@ -77,16 +81,49 @@ export default function Chat({ navigation }) {
 
     }, [school])
 
+
+    const onPinPress = () => {
+
+    }
+    const onMutePress = () => {
+        console.log("mute pressed")
+
+    }
+
+    const onNewChatPress = () => {
+        console.log("new chat pressed")
+
+    }
+
+
+    const onManageChatsPress = () => {
+        console.log("manage chats pressed")
+
+    }
+
+    const onLeavePress = () => {
+        console.log("leave pressed")
+
+    }
+    const onBlockPress = () => {
+        console.log("block pressed")
+    }
+
+
     return (
 
         <View style={{ backgroundColor: '#333333', flex: 1 }} >
 
 
-            <ChatListItemModal
+            <OptionsModal
                 showModal={showChatModal}
-                onDeletePress={onDeletePress}
-                onPinPress={() => { }}
-                onCancelPress={() => setShowChatModal(false)} />
+                toValue={-350}
+                options={selectedChat?.type === 'private' ? ['Pin', 'Mute', 'Delete', 'Block'] : ['Pin', 'Mute', 'Delete', 'Leave Group']}
+                onOptionPress={selectedChat?.type === 'private' ? [onPinPress, onMutePress, onDeletePress, onBlockPress] : [onPinPress, onMutePress, onDeletePress, onLeavePress]}
+                onCancelPress={() => setShowChatModal(false)}
+                redIndex={[2, 3]}
+            />
+
 
             <ConfirmationModal
                 showModal={showConfirmationModal}
@@ -132,9 +169,10 @@ export default function Chat({ navigation }) {
                             <ChatListItem
                                 chatroom={item}
                                 onPress={() => {
-                                    navigation.navigate('Chatroom', { chatroom: item?.id })
+                                    navigation.navigate('Chatroom', { chatroomID: item?.id })
                                 }}
                                 onLongPress={() => {
+                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
                                     setShowChatModal(true);
                                     setSelectedChat(item)
                                 }} />

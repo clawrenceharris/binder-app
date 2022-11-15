@@ -9,7 +9,7 @@ import { AddUserToSchool, auth, db, updateCollection, updateUserProfile } from '
 import Camera from 'expo-camera'
 import BottomSheet from '@gorhom/bottom-sheet'
 import ModalComponent from '../../components/Modal'
-import ImageOptionsModal from '../../components/ImageOptionsModal'
+import ImageOptionsModal from '../../components/OptionsModal'
 import Button from '../../components/Button'
 import firebase from 'firebase/compat'
 

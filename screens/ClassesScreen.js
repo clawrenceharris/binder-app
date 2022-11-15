@@ -14,7 +14,12 @@ import { faker } from '@faker-js/faker';
 import firebase from 'firebase/compat';
 import ClassListItemModal from '../components/ClassListItemModal';
 import ConfirmationModal from '../components/ConfirmationModal';
+import * as Haptics from 'expo-haptics'
+import OptionsModal from '../components/OptionsModal';
+import ClassOptionsModal from '../components/ClassOptionsModal';
+
 export default function ClassesScreen({ currentUser }) {
+
     LogBox.ignoreLogs([
         'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.'
     ])
@@ -33,7 +38,11 @@ export default function ClassesScreen({ currentUser }) {
         classes.forEach((item) => {
             //add each class to user's classes 
             updateCollection('users', auth.currentUser.uid, { classes: firebase.firestore.FieldValue.arrayUnion(db.collection('classes').doc(item.id)) });
-
+            db.collection('chatrooms')
+                .doc(item.id)
+                .update({
+                    users: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
+                })
             //add this user to the class
             updateCollection('classes', item.id, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(auth.currentUser.uid)) });
 
@@ -70,7 +79,7 @@ export default function ClassesScreen({ currentUser }) {
     const headerLeft = () => (
         <UserProfileCircle
             user={auth.currentUser}
-            size={45} showName={false}
+            size={40} showName={false}
             showStoryBoder bold={false}
             showStudyBuddy={false}
             showActive
@@ -84,7 +93,10 @@ export default function ClassesScreen({ currentUser }) {
 
 
     const headerRight = () => (
-        <Image source={assets.create} style={{ width: 30, height: 30, tintColor: Colors[colorScheme].background }} />
+        <TouchableOpacity style={{ backgroundColor: '#272727', width: 40, height: 40, borderRadius: 50, alignItems: 'center', padding: 5, justifyContent: 'center' }}>
+            <Image source={assets.more} style={{ width: 20, height: 20, tintColor: 'white' }} />
+
+        </TouchableOpacity>
 
     )
 
@@ -95,11 +107,27 @@ export default function ClassesScreen({ currentUser }) {
         setShowConfirmationModal(true);
 
     }
+
+
+    const onMutePress = () => {
+
+        setShowClassModal(false);
+
+    }
+
+    const onPinPress = () => {
+
+        setShowClassModal(false);
+
+    }
+
     useEffect(() => {
+        console.log("first")
         setLoading(true)
         const subscriber = db.collection('users')
             .doc(auth.currentUser.uid)
             .onSnapshot((doc) => {
+                setUser(doc.data())
                 setClasses(doc.data().classes)
 
                 if (doc.data().school) {
@@ -110,10 +138,7 @@ export default function ClassesScreen({ currentUser }) {
                             setSchool(doc.data())
                             setLoading(false)
                         }).catch((error) => console.log(error))
-
-
                 }
-
             })
 
 
@@ -122,7 +147,7 @@ export default function ClassesScreen({ currentUser }) {
 
 
 
-    }, [classes])
+    }, [])
 
     return (
 
@@ -131,16 +156,20 @@ export default function ClassesScreen({ currentUser }) {
                 onCancelPress={() => setShowConfirmationModal(false)}
                 showModal={showConfirmationModal}
                 onConfirmPress={() => { setShowConfirmationModal(false); deleteClass(); }}
-                message={`Deleting this class means you won't be able to see thier feed or chats anymore.`}
+                message={`Leaving this class means you won't be able to see thier feed or chats anymore.`}
                 cancelText='Cancel'
                 confirmText="Yes, I'm Sure 👍"
 
             />
-            <ClassListItemModal
+            <ClassOptionsModal
                 showModal={showClassModal}
-                onDeletePress={onDeletePress}
-                onPinPress={() => { }}
-                onCancelPress={() => setShowClassModal(false)} />
+                onPinPress={onPinPress}
+                onLeavePress={onDeletePress}
+                onMutePress={onMutePress}
+                toValue={-300}
+                onCancelPress={() => setShowClassModal(false)}
+
+            />
             <Header
                 title='Classes'
                 headerLeft={headerLeft()}
@@ -181,6 +210,7 @@ export default function ClassesScreen({ currentUser }) {
                                         <ClassListItem
                                             Class={item}
                                             onLongPress={() => {
+                                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
                                                 setShowClassModal(true);
                                                 setSelectedClass(item)
                                             }}

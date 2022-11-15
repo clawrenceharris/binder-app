@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView } from "react-native"
-import {
-    MaterialCommunityIcons,
-    MaterialIcons,
-    FontAwesome5,
-    Entypo,
-    Fontisto,
-} from '@expo/vector-icons';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView, Keyboard } from "react-native"
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { assets, Colors } from '../constants';
 import { Image } from 'react-native';
 import { SHADOWS } from '../constants/Theme';
@@ -14,12 +8,12 @@ import { useNavigation } from '@react-navigation/native';
 import useColorScheme from '../hooks/useColorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getDisplayName } from '../utils';
+import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
 
 const ChatInput = (props) => {
 
 
     const [message, setMessage] = useState('')
-    const [isSearching, setIsSearching] = useState(false)
     const [search, setSearch] = useState('')
     const [results, setResults] = useState([])
 
@@ -36,34 +30,6 @@ const ChatInput = (props) => {
         setMessage('');
     }
 
-    const handleSearch = (value) => {
-        setIsSearching(true)
-
-        value = value.split('@')[1]
-
-
-
-        const filteredData = props.users.filter(item =>
-            getDisplayName(item?.firstName, item?.lastName).toLowerCase().includes(value.toLowerCase()
-
-            ))
-
-
-        if (filteredData.length) {
-            return setResults(filteredData)
-        }
-
-
-    }
-
-    function handleKeyPress(key) {
-
-        if (key === '@') {
-            setIsSearching(true)
-
-        }
-    }
-
 
 
 
@@ -73,38 +39,21 @@ const ChatInput = (props) => {
             behavior={Platform.OS == "ios" ? "padding" : "height"} >
 
             <ScrollView
+
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 style={{ flexDirection: 'row', marginBottom: 5, backgroundColor: 'transparent', padding: 5 }}>
 
-                {!isSearching && props.chatroom?.type != 'private' &&
+                {props.chatroom?.type != 'private' &&
                     props.users?.map((item, index) =>
+
                         <View style={{ paddingVertical: 2, paddingHorizontal: 10, borderRadius: 50, borderColor: item.color, marginLeft: 10, borderWidth: 2, alignItems: 'center' }}>
                             <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 12 }}>{getDisplayName(item.firstName, item.lastName)}</Text>
                         </View>
+
                     )}
 
 
-                {isSearching && props.chatroom?.type != 'private' &&
-
-                    results?.map((item, index) =>
-
-
-                        <TouchableOpacity
-                            onPress={() => {
-                                const front = message.slice(0, message.indexOf(search))
-                                const end = message.slice(message.indexOf(search) + search.length + 1, message.length - 1)
-                                console.log(search)
-                                setMessage(front + '@' + getDisplayName(item.firstName, item.lastName) + end)
-                                setIsSearching(false)
-
-                            }}
-                            style={{ paddingVertical: 2, paddingHorizontal: 10, borderRadius: 50, borderColor: item.color, marginLeft: 10, borderWidth: 2, alignItems: 'center' }}>
-                            <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 12 }}>{getDisplayName(item.firstName, item.lastName)}</Text>
-                        </TouchableOpacity>
-                    )
-
-                }
 
             </ScrollView>
 

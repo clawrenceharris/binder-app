@@ -27,7 +27,7 @@ const ClassProfileCircle = ({ Class, showStoryBoder, story, size, showName, bold
                 {showStoryBoder && <View style={{ position: 'absolute', width: size + 10, height: size + 10, backgroundColor: 'white', borderRadius: 50, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: Colors.light.primary, zIndex: 0 }}>
                 </View>}
 
-                <View style={{ width: size + 10, height: size + 10, backgroundColor: '#f4f4f4', borderRadius: 50, justifyContent: 'center', alignItems: 'center', }}>
+                <View style={{ width: size + 10, height: size + 10, backgroundColor: 'lightgray', borderRadius: 50, justifyContent: 'center', alignItems: 'center', }}>
                     {Class.image && <Image source={Class.image} style={[styles.image, { width: size, height: size }]} />}
                     {!Class.image && <Image source={assets.book} style={[styles.defaultImage, { width: size - (size / 3), height: size - (size / 3) }]} />}
 
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     defaultImage: {
         resizeMode: 'contain',
         position: 'absolute',
-        tintColor: 'lightgray',
+        tintColor: '#f4f4f4',
     },
 
     image: {

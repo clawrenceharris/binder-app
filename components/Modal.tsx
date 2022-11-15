@@ -8,9 +8,24 @@ const ModalComponent = (props) => {
     const translateValue = useRef(new Animated.Value(0)).current
     const { width, height } = useWindowDimensions();
 
+    const [showModal, setshowModal] = useState(props.visible)
 
 
+    useEffect(() => {
+        toggleModal()
 
+    }, [props.visible])
+
+
+    const toggleModal = () => {
+        if (props.visible) {
+            slideIn();
+        }
+        else {
+            setTimeout(() => setshowModal(false), 200)
+            slideOut()
+        }
+    }
     function slideIn() {
         Animated.timing(
             translateValue,
@@ -30,7 +45,7 @@ const ModalComponent = (props) => {
             {
 
                 toValue: 900,
-                duration: 500,
+                duration: 300,
                 useNativeDriver: true,
 
             }).start();
@@ -41,36 +56,25 @@ const ModalComponent = (props) => {
     return (
         <Modal
             transparent
-            visible={props.showModal}
-            onShow={slideIn}
-            onDismiss={slideOut}
-
-
-
-        >
+            visible={showModal}>
 
             <View style={{ backgroundColor: '#00000085', flex: 1, alignItems: 'center' }} >
 
 
-                {props.animated ? <Animated.View style={{ alignSelf: 'center', height: props.height, backgroundColor: '#333', width: props.width, marginTop: '300%', borderRadius: 25, padding: 20, transform: [{ translateY: translateValue }], }}>
-                    {props.renderContent}
-                    {props.showBottomCancelBar &&
+                {props.animated ?
+                    <Animated.View
+                        style={{ borderColor: 'gray', borderWidth: 1, alignSelf: 'center', height: props.height, backgroundColor: '#333', width: props.width, marginTop: '300%', borderRadius: 25, padding: 20, transform: [{ translateY: translateValue }], }}>
+                        {props.renderContent}
+                        {props.showBottomCancelBar &&
 
-                        <TouchableOpacity onPress={() => { props.setOpen(false) }} style={{ alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: props.width, height: 40, backgroundColor: 'white', marginTop: 50, borderRadius: 25 }}>
-                            <Text style={{ fontFamily: 'KanitMedium', fontSize: 18 }}>{props.cancelText}</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={toggleModal} style={{ alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: props.width, height: 40, backgroundColor: 'white', marginTop: 50, borderRadius: 25 }}>
+                                <Text style={{ fontFamily: 'KanitMedium', fontSize: 18 }}>{props.cancelText}</Text>
+                            </TouchableOpacity>
 
-                    }
-                    <TouchableOpacity>
-                        {props.button}
+                        }
 
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { }}>
-                        {props.dismissButton}
 
-                    </TouchableOpacity>
-
-                </Animated.View >
+                    </Animated.View >
                     :
                     <View style={{ height: props.height, backgroundColor: colorScheme === 'light' ? 'white' : '#1E1E1E', width: 250, marginLeft: 70, marginTop: props.marginTop, borderRadius: 25, padding: 20 }}>
                         {props.renderContent}
