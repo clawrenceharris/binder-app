@@ -106,12 +106,17 @@ export function AddUserToSchool(schoolID, userUid) {
         .get()
         .then((doc) => {
             updateCollection('users', userUid, { classes: [] })
+            updateCollection('users', userUid, { chatrooms: [] })
+
             updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayUnion(doc.data()) });
         })
 
     updateCollection('users', userUid, { school: db.collection('schools').doc(schoolID) });
 
 }
+
+
+
 
 // export function getUserSnapshot(userUid = auth.currentUser.uid, setUser) {
 //     db

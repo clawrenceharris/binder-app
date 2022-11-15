@@ -35,7 +35,6 @@
     "react-native": "0.69.6",
     "react-native-clipboard": "^0.0.5",
     "react-native-date-picker": "^4.2.5",
-    "react-native-draggable-view": "^0.0.6",
     "react-native-dropdownalert": "^4.5.1",
     "react-native-element-dropdown": "^2.3.1",
     "react-native-gifted-chat": "^1.0.4",

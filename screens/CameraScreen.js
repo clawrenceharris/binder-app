@@ -48,7 +48,7 @@ const CameraScreen = ({ route }) => {
     const [canTakePicture, setCanTakePicture] = useState(true)
     const sheetRef = useRef(null);
     const snapPoints = ['1%', '100%']
-
+    const canRecord = route.params?.canRecord != undefined ? route.params.canRecord : true
     const handleDoubleTap = () => {
         const now = Date.now();
         const DOUBLE_PRESS_DELAY = 300;
@@ -171,7 +171,6 @@ const CameraScreen = ({ route }) => {
 
     }
 
-
     return (
 
         <SafeAreaView style={styles.container}>
@@ -275,7 +274,7 @@ const CameraScreen = ({ route }) => {
 
 
                     <TouchableOpacity
-                        onLongPress={route.params.canRecord && recordVideo}
+                        onLongPress={route.params?.canRecord && recordVideo}
                         delayLongPress={500}
                         onPress={takePicture}
                     >

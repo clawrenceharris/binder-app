@@ -12,7 +12,7 @@ import { getDisplayNameOrYou } from '../utils';
 
 
 
-const DeskItemPreview = ({ item, onLongPress, margin, onMorePress, deskCategory }) => {
+const DeskItemPreview = ({ item, onLongPress, margin, onMorePress, deskCategory, showBookmarked }) => {
     console.log(deskItemData?.sectionNumber)
     const navigation = useNavigation();
     const [deskItemData, setDeskItemData] = useState(null)
@@ -21,15 +21,29 @@ const DeskItemPreview = ({ item, onLongPress, margin, onMorePress, deskCategory 
         const subscriber = db.collection(deskCategory.toLowerCase())
             .doc(item.id)
             .onSnapshot(doc => {
-                setDeskItemData(doc.data())
-                if (doc.data()?.ownerUID) {
+                if (showBookmarked) {
+                    if (doc.data().bookmarked) {
+                        setDeskItemData(doc.data())
+                        db.collection('users')
+                            .doc(doc.data().ownerUID)
+                            .get()
+                            .then(doc => {
+                                setOwner(doc.data())
+                            })
+
+                    }
+
+                } else {
+                    setDeskItemData(doc.data())
                     db.collection('users')
                         .doc(doc.data().ownerUID)
                         .get()
                         .then(doc => {
                             setOwner(doc.data())
                         })
+
                 }
+
 
             })
 
