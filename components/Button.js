@@ -19,19 +19,19 @@ export default class Button extends React.Component {
         const styles = StyleSheet.create({
             btn: {
                 borderRadius: 50,
-                width: this.props.width,
+                width: this.props.width ? this.props.width : null,
                 backgroundColor: this.props.condition ? this.props.background : 'gray',
-                padding: 12,
+                paddingHorizontal: 40,
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: this.props.margin,
-                height: 60,
+                minHeight: 60,
                 alignSelf: 'center'
             },
             btnText: {
                 color: this.props.tint,
                 fontFamily: "KanitMedium",
-                fontSize: 22
+                fontSize: 18
             }
 
 

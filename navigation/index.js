@@ -3,7 +3,6 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Colors } from '../constants';
-import useColorScheme from '../hooks/useColorScheme';
 import BottomTabNavigator from './BottomTabNavigator';
 import {
   Chatroom,
@@ -22,23 +21,21 @@ import {
   PasswordSettings,
   GraduationYearSettings,
 } from '../screens';
-import Notes from '../screens/Notes';
+
 import { CameraScreen } from '../screens';
 import EditPictureToSend from '../screens/EditPictureToSend';
 import EditVideoToSend from '../screens/EditVideoToSend';
-import EditProfile from '../screens/EditProfile';
 import StartScreen from '../screens/StartScreen';
 import Settings from '../screens/Settings/Settings';
-import CurrentUserProfile from '../screens/CurrentUserProfile';
 import AchievementsScreen from '../screens/Achievements';
 import SchoolSettings from '../screens/Settings/SchoolSettings';
 import DeskPrivacy from '../screens/Settings/DeskPrivacy';
 import SearchSelect from '../screens/SearchSelect';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Feed from '../screens/Feed';
-import Header from '../components/Header';
-import ClassChatroom from '../screens/ClassChatroom';
 import NewChat from '../screens/NewChat';
+import NewDeskItem from '../screens/NewDeskItem';
+import DeskItem from '../screens/DeskItem';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +57,7 @@ export default function Navigation({ colorScheme }) {
 function Classroom({ route }) {
   return (
     <Drawer.Navigator
+      initialRouteName='Chatroom'
       drawerStyle={{
         backgroundColor: '#333',
         width: '100%',
@@ -67,18 +65,10 @@ function Classroom({ route }) {
       drawerPosition={'right'} drawerType={'back'}
       drawerContent={() => {
         return (
-          <Header
-            headerLeft={<></>}
-            shadow
-            title={'Class Chat'}
-          />
-
-
-
-        )
+          <Feed route={route} />)
       }}>
       <Drawer.Screen name='Feed' children={() => { return <Feed route={route} /> }} />
-      <Drawer.Screen name='ClassChatroom' children={() => { return <ClassChatroom route={route} /> }} />
+      <Drawer.Screen name='Chatroom' children={() => { return <Chatroom route={route} /> }} />
 
 
     </Drawer.Navigator>)
@@ -105,7 +95,7 @@ function RootNavigator({ colorScheme }) {
 
       }} >
 
-
+      {/* authentication screens */}
       <Stack.Group
         initialRouteName="StartScreen"
         screenOptions={{ headerShown: false }}>
@@ -157,6 +147,9 @@ function RootNavigator({ colorScheme }) {
 
 
       </Stack.Group >
+
+
+
       <Stack.Screen
         name="Root"
         children={() => { return <BottomTabNavigator /> }}
@@ -184,16 +177,12 @@ function RootNavigator({ colorScheme }) {
 
       />
 
-
-
       <Stack.Screen
         name="Classroom"
         component={Classroom}
       />
 
-
-
-
+      {/* settings screens */}
       <Stack.Group>
 
         <Stack.Screen
@@ -242,29 +231,14 @@ function RootNavigator({ colorScheme }) {
         />
       </Stack.Group>
 
+
       <Stack.Screen
         name="Profile"
         component={Profile}
       />
 
-      <Stack.Screen
-        name="CurrentUserProfile"
-        component={CurrentUserProfile}
-      />
 
-      <Stack.Screen
-        name="EditProfile"
-        children={({ route }) => { return <EditProfile route={route} /> }}
-      />
 
-      <Stack.Screen
-        name="Notes"
-        children={({ route }) => { return <Notes route={route} /> }}
-        options={{
-          gestureDirection: 'vertical',
-
-        }}
-      />
 
       <Stack.Screen
         name="PrivateChats"
@@ -274,6 +248,9 @@ function RootNavigator({ colorScheme }) {
       <Stack.Screen
         name="Camera"
         component={CameraScreen}
+        options={{
+          gestureDirection: 'vertical',
+        }}
       />
 
       <Stack.Screen
@@ -300,6 +277,29 @@ function RootNavigator({ colorScheme }) {
         name="Chatroom"
         component={Chatroom}
       />
+
+
+      <Stack.Screen
+        name="NewDeskItem"
+        component={NewDeskItem}
+        options={{
+          gestureDirection: "vertical",
+
+        }}
+
+      />
+
+
+      <Stack.Screen
+        name="DeskItem"
+        component={DeskItem}
+        options={{
+          gestureDirection: "vertical",
+
+        }}
+
+      />
+
 
     </Stack.Navigator >
   );

@@ -9,17 +9,8 @@ import { getDisplayName } from '../utils'
 
 const UserProfileCircle = (props) => {
     const [studyBuddies, setStudyBuddies] = useState([])
-    const [userData, setUserData] = useState(null)
     //console.log("USER UID", props.user.uid)
 
-    useEffect(() => {
-        const subscriber = db.collection('users').doc(props.user.uid)
-            .onSnapshot(doc => {
-                setUserData(doc.data())
-            })
-
-        return () => subscriber()
-    }, [])
 
 
     const showStory = () => {
@@ -35,7 +26,7 @@ const UserProfileCircle = (props) => {
     }
     return (
 
-        <TouchableWithoutFeedback onPress={() => { auth.currentUser.uid === userData?.uid ? props.navigation.openDrawer() : props.navigation.navigate('Profile', { user: props.user, class: null }) }}>
+        <TouchableWithoutFeedback onPress={() => { auth.currentUser.uid === props.user?.uid ? props.navigation.openDrawer() : props.navigation.navigate('Profile', { user: props.user, class: null }) }}>
             <View style={{ flexDirection: props.flexDirection ? props.flexDirection : 'row', alignItems: 'center', margin: props.margin }}>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
@@ -44,11 +35,10 @@ const UserProfileCircle = (props) => {
                         position: 'absolute',
                         width: props.size,
                         height: props.size,
-                        backgroundColor: 'gray',
+                        backgroundColor: 'lightgray',
                         borderRadius: 100,
                         justifyContent: 'center',
                         alignItems: 'center',
-                        zIndex: 0
                     }}>
                         {props.showActive &&
 
@@ -59,6 +49,7 @@ const UserProfileCircle = (props) => {
                                 width: 15,
                                 height: 15,
                                 borderRadius: 100,
+                                zIndex: 1,
                                 position: 'absolute',
                                 left: props.size - (props.size / 3),
                                 top: props.size - (props.size / 3)
@@ -79,7 +70,7 @@ const UserProfileCircle = (props) => {
 
 
                     <View style={{ borderRadius: 100, alignItems: 'center', overflow: 'hidden', width: props.size, height: props.size, justifyContent: 'center' }}>
-                        {userData?.photoURL ? <Image source={{ uri: userData.photoURL }} style={[styles.image, { width: props.size, height: props.size }]} />
+                        {props.user?.photoURL ? <Image source={{ uri: props.user.photoURL }} style={[styles.image, { width: props.size, height: props.size, zIndex: 0 }]} />
                             : <Image source={assets.person} style={[styles.defaultImage, { width: props.size - (props.size / 3), height: props.size - (props.size / 3) }]} />}
 
                     </View>
@@ -93,7 +84,7 @@ const UserProfileCircle = (props) => {
                     </View>}
 
                 </View>
-                {props.showName && <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white', marginLeft: 10 }}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>}
+                {props.showName && <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white', marginLeft: 10 }}>{getDisplayName(props.user?.firstName, props.user?.lastName)}</Text>}
 
 
             </View>
@@ -108,7 +99,7 @@ const styles = StyleSheet.create({
 
     defaultImage: {
         resizeMode: 'cover',
-        tintColor: '#D4D4D4',
+        tintColor: 'gray',
     },
 
     image: {

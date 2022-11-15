@@ -80,6 +80,7 @@ const GPASetttings = ({ route }) => {
                     title='Save'
                     onPress={() => { updateCollection('users', auth.currentUser.uid, { gpa: selectedGpa }); navigation.goBack(); }}
                     condition={selectedGpa != null}
+                    width='100%'
                 />
 
             </View>

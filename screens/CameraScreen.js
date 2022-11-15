@@ -23,6 +23,7 @@ import * as ImagePicker from 'expo-image-picker'
 import ModalComponent from '../components/Modal'
 import * as Haptics from 'expo-haptics'
 import CameraButton from '../components/CameraButton'
+import { haptics } from '../utils'
 
 const MAX_VIDEO_DURATION = 10000
 
@@ -55,11 +56,11 @@ const CameraScreen = ({ route }) => {
             console.log(type)
             if (type == Camera.Constants.Type.back) {
                 setType(Camera.Constants.Type.front)
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+
             }
             if (type == Camera.Constants.Type.front) {
                 setType(Camera.Constants.Type.back)
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                haptics('light')
             }
         } else {
             setLastTap(now);
@@ -69,11 +70,11 @@ const CameraScreen = ({ route }) => {
     const onFlipPressed = () => {
         if (type == Camera.Constants.Type.back) {
             setType(Camera.Constants.Type.front)
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+            haptics('light')
         }
         if (type == Camera.Constants.Type.front) {
             setType(Camera.Constants.Type.back)
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+            haptics('light')
         }
     }
 
@@ -107,8 +108,9 @@ const CameraScreen = ({ route }) => {
 
                     const data = await videoRecordPromise;
                     setVideo(data.uri)
-                    navigation.navigate('EditVideoToSend', { video: video, class: route.params.class, chatRoom: route.params.chatRoom })
-                    setCanTakePicture(true)
+                    route.params.setVideo(result.uri)
+                    navigation.goBack()
+
                 }
             } catch (e) {
                 console.warn(e)
@@ -121,7 +123,7 @@ const CameraScreen = ({ route }) => {
     const stopRecording = () => {
         if (cameraRef) {
 
-            // cameraRef.current.stopRecording()
+            cameraRef.current.stopRecording()
 
 
         }
@@ -132,10 +134,11 @@ const CameraScreen = ({ route }) => {
                 const data = await cameraRef.current.takePictureAsync();
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
 
-                navigation.navigate('EditPictureToSend', { image: data.uri, class: route.params.class, chatRoom: route.params.chatRoom })
+                route.params.setImage(data.uri)
+                navigation.goBack()
 
             } catch (e) {
-                console.log(`Error: ${e}`)
+                console.log(e)
             }
         }
     }
@@ -153,12 +156,15 @@ const CameraScreen = ({ route }) => {
 
         if (!result.cancelled && result != null) {
             if (result.type == 'video') {
-                navigation.navigate('EditVideoToSend', { video: video, class: route.params.class, chatRoom: route.params.chatRoom })
+                route.params.setVideo(result.uri)
+                navigation.goBack()
+
 
             }
 
             else if (result.type == 'image' && result != null) {
-                navigation.navigate('EditPictureToSend', { image: result.uri, class: route.params.class, chatRoom: route.params.chatRoom })
+                route.params.setImage(result.uri)
+                navigation.goBack()
 
             }
         }
@@ -211,27 +217,19 @@ const CameraScreen = ({ route }) => {
                     ratio={'16:9'}
                     onCameraReady={() => { setIsCameraReady(true) }}
 
-
-
                 />
 
 
             </View>
 
 
-            <View style={styles.sideBarContainer}>
-                <TouchableOpacity>
-
-                </TouchableOpacity>
-
-            </View>
 
 
-            <View style={styles.sendToContainer}>
+            {route.params?.chatroom && <View style={styles.sendToContainer}>
                 {route.params.chatRoom.type === 'private' && <Text style={{ fontFamily: 'KanitMedium', color: 'white', fontSize: 18 }}>Send to {route.params.chatRoom.users[0].firstName}</Text>}
                 {route.params.chatRoom.type === 'group' && <Text style={{ position: 'absolute', fontSize: 16, fontFamily: 'Kanit', color: 'white' }}></Text>}
 
-            </View>
+            </View>}
 
             <View style={styles.topContainer}>
 
@@ -277,7 +275,7 @@ const CameraScreen = ({ route }) => {
 
 
                     <TouchableOpacity
-
+                        onLongPress={route.params.canRecord && recordVideo}
                         delayLongPress={500}
                         onPress={takePicture}
                     >

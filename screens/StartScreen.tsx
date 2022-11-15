@@ -5,10 +5,10 @@ import { assets, Colors } from '../constants'
 const StartScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#333', alignItems: 'center' }}>
+            <Text style={{ fontFamily: 'KanitSemiBold', fontSize: 30, color: 'white', marginTop: 20, alignSelf: 'flex-start', margin: 20 }}>Welcome to</Text>
+            <Image source={assets.logo} style={{ width: 180, height: 180 }} />
 
-            <Image source={assets.logo_light} style={{ width: 200, height: 200 }} />
-
-            <View style={{ marginTop: '30%', width: '100%', alignItems: 'center' }}>
+            <View style={{ marginTop: '20%', width: '100%', alignItems: 'center' }}>
 
                 <TouchableOpacity
                     onPress={() => { navigation.navigate('SignIn') }}

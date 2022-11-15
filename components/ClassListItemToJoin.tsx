@@ -77,11 +77,7 @@ const ClassListItemToJoin = ({ Class, isSelected, onSelect }) => {
 
                 </View>
 
-                <View style={styles.bottomContainer}>
 
-                    <Text style={{ fontFamily: 'Kanit', fontSize: 12, color: 'gray', marginLeft: 5 }}>Teacher: {classData?.teacher}</Text>
-
-                </View>
             </View>
 
 
@@ -155,9 +151,8 @@ const styles = StyleSheet.create({
         padding: 10,
         flexDirection: 'row',
         backgroundColor: 'white',
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
-        ...SHADOWS.light,
+        borderRadius: 15,
+        ...SHADOWS.dark,
         shadowOpacity: 0.6,
         shadowRadius: 2,
         alignItems: 'center',

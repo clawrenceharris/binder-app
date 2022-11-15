@@ -1,14 +1,17 @@
 import { View, Text, FlatList, Image } from 'react-native'
 import React, { useRef, useState } from 'react'
-import Notes from '../constants/data/Notes'
 import NotePost from './NotePost'
 import { Colors } from '../constants'
-const NotesComponent = () => {
+import FlippableFlashcard from './FlippableFlashcard'
+import { faker } from '@faker-js/faker'
+const ScrollableFlashcards = ({ flashcards }) => {
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
+    const [reset, setReset] = useState(false)
 
     const onViewableItemsChanged = useRef((item) => {
         const index = item.viewableItems[0].index;
         setCurrentSlideIndex(index)
+
 
     })
     const viewabilityConfig = useRef({
@@ -16,25 +19,30 @@ const NotesComponent = () => {
     })
     return (
 
-        <View>
-            <View style={{ padding: 10 }}>
+        <View style={{ padding: 20, alignItems: 'center' }}>
+            <View>
 
                 <View style={{ alignItems: 'flex-end' }}>
 
                     <View style={{
                         backgroundColor: 'lightgray', width: 40, height: 30, borderRadius: 50, alignItems: 'center', justifyContent: 'center'
                     }}>
-                        < Text style={{ fontFamily: 'Kanit' }}>{currentSlideIndex + 1} / {Notes[0].images.length}</Text>
+                        < Text style={{ fontFamily: 'Kanit' }}>{currentSlideIndex + 1} / {flashcards?.length}</Text>
 
                     </View>
                 </View>
 
             </View >
             <FlatList
-                data={Notes[0].images}
-                renderItem={({ item }) => <NotePost item={item.image} />}
+                data={flashcards}
+                renderItem={({ item }) =>
 
-                keyExtractor={(item) => item.id}
+                    <FlippableFlashcard card={item} reset={reset} margin={50} />
+
+
+                }
+
+                keyExtractor={(item) => faker.datatype.uuid()}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 pagingEnabled
@@ -44,9 +52,11 @@ const NotesComponent = () => {
 
 
             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                {Notes[0].images.map((item, index) => {
-                    return (<View key={item.id} style={{ marginTop: 10, width: 6, height: 6, borderRadius: 50, backgroundColor: currentSlideIndex === index ? Colors.light.primary : 'lightgray', marginRight: 10 }} />)
-                })}
+                {flashcards?.map((item, index) =>
+                    <View
+                        key={index.toString()}
+                        style={{ marginTop: 10, width: 6, height: 6, borderRadius: 50, backgroundColor: currentSlideIndex === index ? Colors.light.primary : 'lightgray', marginRight: 10 }} />
+                )}
             </View>
 
         </View >
@@ -55,4 +65,4 @@ const NotesComponent = () => {
     )
 }
 
-export default NotesComponent
+export default ScrollableFlashcards

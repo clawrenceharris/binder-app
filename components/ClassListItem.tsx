@@ -18,31 +18,32 @@ const ClassListItem = ({ Class, onLongPress }) => {
     const snapPoints = ['40%', '15%', '100%']
     const [classData, setClassData] = useState(null)
     const onPress = () => {
-        navigation.navigate('Classroom', { Class: Class })
+        navigation.navigate('Classroom', { chatroomID: classData.id })
     }
     const date = new Date().getMinutes()
-
     useEffect(() => {
         //if this class id is equal to the users class id
-        const subscriber = db.collection('classes').doc(Class.id).onSnapshot(doc => {
-            setClassData(doc.data())
+        const subscriber = db.collection('classes')
+            .doc(Class.id)
+            .onSnapshot(doc => {
+                setClassData(doc.data())
 
-            //update active users
-            doc.data().users?.forEach((user) => {
+                //update active users
+                doc.data().users?.forEach((user) => {
 
-                db.collection('users').doc(user.id)
-                    .onSnapshot(doc => {
+                    db.collection('users').doc(user.id)
+                        .onSnapshot(doc => {
 
-                        if (doc.data()?.lastActive.toDate().getMinutes() <= 2) {
-                            updateCollection('classes', Class.id, { active: firebase.firestore.FieldValue.arrayUnion(user) })
-                        } else {
-                            updateCollection('classes', Class.id, { active: firebase.firestore.FieldValue.arrayRemove(user) })
+                            if (doc.data()?.lastActive.toDate().getMinutes() <= 2) {
+                                updateCollection('classes', Class.id, { active: firebase.firestore.FieldValue.arrayUnion(user) })
+                            } else {
+                                updateCollection('classes', Class.id, { active: firebase.firestore.FieldValue.arrayRemove(user) })
 
-                        }
-                    })
+                            }
+                        })
+                })
+
             })
-
-        })
 
         return () => {
             subscriber()
@@ -58,7 +59,7 @@ const ClassListItem = ({ Class, onLongPress }) => {
             onLongPress={() => onLongPress(Class)}
         >
             <View style={{ marginBottom: 20 }}>
-                <View style={{ backgroundColor: 'white', borderTopRightRadius: 25, borderTopLeftRadius: 25, ...SHADOWS.light, shadowOpacity: 0.6, shadowRadius: 2 }}>
+                <View style={{ backgroundColor: 'white', borderRadius: 15, ...SHADOWS.dark, shadowOpacity: 0.6, shadowRadius: 2 }}>
                     <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ margin: 10 }}>
                             <ClassProfileCircle Class={Class} story={[]} showStoryBoder={false} size={40} showName bold chatroom={Class.chatroom} />
@@ -75,11 +76,11 @@ const ClassListItem = ({ Class, onLongPress }) => {
 
                 </View>
 
-                <View style={[styles.container, { ...SHADOWS.dark, backgroundColor: '#F2F2F2', shadowColor: '#272727' }]}>
+                {/* <View style={[styles.container, { ...SHADOWS.dark, backgroundColor: '#F2F2F2', shadowColor: '#272727' }]}>
 
                     <Text style={{ fontFamily: 'KanitMedium', fontSize: 20, color: 'lightgray' }}>No Recent Activity</Text>
 
-                </View>
+                </View> */}
             </View>
 
 

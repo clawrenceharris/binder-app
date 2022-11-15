@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, FlatList, ScrollView, Image, TouchableWithout
 import React, { useEffect, useState } from 'react'
 import BackButton from '../components/BackButton'
 import AchievementListItem from '../components/AchievementListItem'
-import { assets } from '../constants'
+import { assets, Colors } from '../constants'
 import { SHADOWS, SIZES } from '../constants/Theme'
 import Header from '../components/Header'
 import { db } from '../Firebase/firebase'
@@ -101,7 +101,16 @@ const AchievementsScreen = ({ navigation }) => {
 
             />
 
+
             <ScrollView style={{ padding: 10 }}>
+                <Text style={{ fontFamily: 'Kanit', color: 'gray', textAlign: 'center', margin: 10 }}>
+                    {'Achievements are a fun way to help you gain mastery in all the features Binder has to offer. They also give you and your other classmates valuable insight on each others academic qualities.'}
+                </Text>
+                <Text
+                    onPress={() => { }}
+                    style={{ fontFamily: 'KanitMedium', color: Colors.light.primary, textAlign: 'center' }}>{'Learn More'}</Text>
+
+
                 {/* Data is sorted by current index(or level number) increasing from top to bottom */}
 
                 {/* Completed */}

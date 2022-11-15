@@ -2,7 +2,7 @@ import { View, Text, FlatList, StyleSheet, TouchableWithoutFeedback, ScrollView 
 import React, { useEffect, useState } from 'react'
 import Classes from '../constants/data/Classes'
 import ClassChatListItem from '../components/ClassChatListItem'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { DrawerActions, useNavigation, useRoute } from '@react-navigation/native'
 import { Colors, assets } from '../constants'
 import { SHADOWS } from '../constants/Theme'
 import { Image } from 'react-native'
@@ -11,6 +11,7 @@ import useColorScheme from '../hooks/useColorScheme'
 import { UserProfileCircle } from '../components'
 import Header from '../components/Header'
 import { db } from '../Firebase/firebase'
+import BackButton from '../components/BackButton'
 
 
 
@@ -20,26 +21,27 @@ export default function Feed() {
     const [classData, setClassData] = useState(null)
     const [users, setUsers] = useState(null)
     const navigation = useNavigation()
-    // useEffect(() => {
-    //     const subscriber = db.collection('classes').doc(route.params.Class.id).get().then(doc => {
-    //         setClassData(doc.data())
+    const route = useRoute()
+    console.log(route.params?.chatroomID)
+    useEffect(() => {
+        const subscriber = db.collection('classes')
+            .doc(route.params.chatroomID).get().then(doc => {
+                setClassData(doc.data())
 
-    //         const array = []
-    //         doc.data().users.forEach(user => {
-    //             console.log(user.id)
-    //             db.collection('users').doc(user.id).onSnapshot(doc => { setUsers(doc.data()); console.log(doc.data()) })
-    //         })
-
-    //     })
-    //     console.log(users)
-    //     return () => {
-    //     }
-    // }, [])
+            })
+        return () => {
+        }
+    }, [])
 
 
-    const headerRight = () => (
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('Chats')}>
-            <Image source={assets.send} style={{ width: 28, height: 28, tintColor: 'white' }} />
+    const headerLeft = () => (
+
+        <TouchableWithoutFeedback onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}>
+            <BackButton
+                navigation={navigation}
+                direction='horizontal'
+                color='white'
+            />
 
         </TouchableWithoutFeedback>
     )
@@ -47,10 +49,10 @@ export default function Feed() {
     return (
         <View style={{ backgroundColor: '#333', height: '100%' }}>
             <Header
-                title={classData?.name}
-                navigation={useNavigation()}
+                title={'Feed'}
                 shadow
-                headerRight={headerRight()}
+                headerLeft={headerLeft()}
+                direction={'horizontal'}
             />
             {/* {users?.length > 1 ? <ScrollView showsVerticalScrollIndicator={false}>
 

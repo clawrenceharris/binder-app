@@ -8,7 +8,6 @@ import add_class from '../assets/icons/add_class.png'
 import grad_cap from '../assets/icons/grad_cap.png'
 import school from '../assets/icons/school.png'
 import school_outlined from '../assets/icons/school_outlined.png'
-import logo from '../assets/icons/logo.png'
 import desk from '../assets/icons/desk.png'
 import profile from '../assets/icons/profile.png'
 import left_arrow from '../assets/icons/left_arrow.png'
@@ -48,6 +47,7 @@ import flash from '../assets/icons/flash.png'
 import flash_off from '../assets/icons/flash-off.png'
 import send from '../assets/icons/send.png'
 import flip from '../assets/icons/flip.png'
+import logo from '../assets/images/logo.png'
 
 import chat_background from '../assets/images/chat_background.jpg'
 import chat_background_dark from '../assets/images/chat_background_dark.jpg'
@@ -65,9 +65,35 @@ import question_mark from '../assets/icons/question-mark.png'
 import check from '../assets/icons/check.png'
 import info from '../assets/icons/info.png'
 import shines from '../assets/icons/shines.png'
-
+import add from '../assets/icons/add.png'
+import capture from '../assets/icons/capture.png'
+import thumbtack from '../assets/icons/thumbtack.png'
+import bookmark from '../assets/icons/bookmark.png'
+import lock from '../assets/icons/lock.png'
+import folder from '../assets/icons/folder.png'
+import reply from '../assets/icons/reply.png'
+import unlock from '../assets/icons/unlock.png'
+import trash from '../assets/icons/trash.png'
+import send_o from '../assets/icons/send-o.png'
+import leave from '../assets/icons/leave.png'
+import copy from '../assets/icons/copy.png'
+import bell from '../assets/icons/bell.png'
 
 export default {
+    leave,
+    copy,
+    bell,
+    reply,
+    send_o,
+    trash,
+    bookmark,
+    logo,
+    thumbtack,
+    lock,
+    unlock,
+    folder,
+    capture,
+    add,
     shines,
     info,
     check,
@@ -86,7 +112,6 @@ export default {
     book,
     add_class,
     grad_cap,
-    logo,
     loading,
     school_outlined,
     school,

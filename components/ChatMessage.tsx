@@ -1,64 +1,62 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, useColorScheme } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Message } from '../types';
-import NotesMessage from './NotesMessage';
 import Notes from '../constants/data/Notes';
-import CircleButton from './CircleButton';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import PollMessage from './PollMessage';
-import Polls from '../constants/data/Polls';
 import { Colors } from '../constants/index';
 import moment from 'moment';
-import UserProfileCircle from './UserProfileCircle';
 import { auth, db } from '../Firebase/firebase';
 import { getDisplayName } from '../utils';
+import DeskItemPreview from './DeskItemPreview';
 
 
 
-const ChatMessage = ({ message, previousMessage, user, showTimestamp }) => {
+const ChatMessage = ({ chat, previousMessage, user, showTimestamp, onLongPress, onChatSelected }) => {
     const [userData, setUserData] = useState(null)
-
+    const [chatData, setChatData] = useState(null)
+    console.log()
     const isMyMessage = () => {
-        return message.user === auth.currentUser.uid
+        return chatData?.user === auth.currentUser.uid
     }
 
     const isSameMessage = () => {
         if (previousMessage)
-            return message.user === previousMessage.user
+            return chatData?.user === previousMessage.user
         return false
 
 
     }
 
-    // useEffect(() => {
-    //     setInterval(() => {
+    useEffect(() => {
+        const subscriber = db.collection('chats')
+            .doc(chat.id)
+            .onSnapshot(doc => {
+                setChatData(doc.data())
+            })
 
-    //         setShowTimestamp(!showTimestamp)
-    //     }, showTimestamp ? 3000 : 0);
+        return () => subscriber()
 
 
-    // }, [])
+    }, [])
 
 
 
     const isNotes = () => {
-        return message.contentType === 'notes'
+        return chatData?.contentType === 'notes'
     }
 
     const isPoll = () => {
-        return message.contentType === 'poll'
+        return chatData?.contentType === 'poll'
     }
 
     const isBurningQuestion = () => {
-        return message.contentType === 'burning question'
+        return chatData?.contentType === 'burning question'
     }
     const isTextMessage = () => {
-        return message.contentType === 'text'
+        return chatData?.contentType === 'text'
     }
     useEffect(() => {
 
         const subscriber = db.collection('users')
-            .doc(message.user)
+            .doc(chatData?.user)
             .onSnapshot(doc => {
                 setUserData(doc.data())
             })
@@ -123,61 +121,99 @@ const ChatMessage = ({ message, previousMessage, user, showTimestamp }) => {
     })
 
 
-    return (
-        <React.Fragment>
+    const getReactions = () => {
+        if (chatData?.reactions?.length > 0) {
+            return chatData?.reactions[0].reaction
+        }
+        return ' '
+    }
 
-            {isMyMessage() ?
-                <Text style={styles.name}>You</Text>
+    return (
+        <View>
+
+            {!chatData?.system ?
+
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onLongPress={() => onChatSelected(chatData)}
+                    delayLongPress={100}>
+
+                    <React.Fragment>
+
+                        {isMyMessage() ?
+                            <Text style={styles.name}>You</Text>
+
+                            :
+
+                            <Text style={[styles.name]}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>}
+
+
+
+
+                        <View style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'center', width: '90%' }}>
+
+
+
+                            {isTextMessage() && <View style={styles.messageIndicator} />}
+
+
+                            <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
+                                {isMyMessage() && <Text style={styles.text}>{chatData?.text}</Text>}
+                                {!isMyMessage() && <Text style={styles.text}>{chatData?.text}</Text>}
+
+
+
+
+
+                                {showTimestamp && <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 12, marginRight: -20 }}>{moment(chatData?.createdAt.toDate()).format('LT')}</Text>}
+                            </View>
+
+
+
+
+
+
+
+
+                            {isNotes() && isMyMessage() &&
+                                <View style={
+                                    {
+                                        marginLeft: isMyMessage() ? 80 : 0,
+                                        marginRight: isMyMessage() ? 0 : 50,
+
+
+                                    }
+                                }>
+                                    <DeskItemPreview item={Notes[0]} />
+
+                                </View>
+
+                            }
+
+                            {isPoll() && <DeskItemPreview item={Notes[0]} />}
+                            {isBurningQuestion() && <DeskItemPreview item={Notes[0]} />}
+                        </View>
+                        {chatData?.reactions?.length > 0 && <View style={{ flexDirection: 'row', borderRadius: 25, paddingHorizontal: 5, marginTop: -10 }}>
+
+                            {chatData?.reactions.map((item, index) =>
+                                <View key={index.toString()} style={{ backgroundColor: 'gray', borderColor: '#404040', width: 30, height: 30, borderRadius: 50, alignItems: 'center', justifyContent: 'center', borderWidth: 3, marginLeft: -10 }}>
+                                    <Text style={{ fontSize: 12 }}>{item.reaction}</Text>
+                                </View>
+
+                            )}
+                        </View>}
+
+                    </React.Fragment>
+                </TouchableOpacity>
 
                 :
+                <View style={{ padding: 10 }}>
+                    <Text style={{ fontFamily: 'Kanit', color: 'gray', textAlign: 'center' }}>{chatData?.text}</Text>
 
-                <Text style={[styles.name]}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>}
-
-
-
-            <View style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'center', width: '90%' }}>
-
-
-
-                {isTextMessage() && <View style={styles.messageIndicator} />}
-
-
-                <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
-                    {isMyMessage() && <Text style={styles.text}>{message.text}</Text>}
-                    {!isMyMessage() && <Text style={styles.text}>{message.text}</Text>}
-
-                    {showTimestamp && <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 12, marginRight: -20 }}>{moment(message.createdAt.toDate()).format('LT')}</Text>}
                 </View>
+            }
 
-
-
-
-
-
-
-
-                {isNotes() && isMyMessage() &&
-                    <View style={
-                        {
-                            marginLeft: isMyMessage() ? 80 : 0,
-                            marginRight: isMyMessage() ? 0 : 50,
-
-
-                        }
-                    }>
-                        <NotesMessage notes={Notes[0]} />
-
-                    </View>
-
-                }
-
-                {isPoll() && <NotesMessage notes={Notes[0]} />}
-                {isBurningQuestion() && <NotesMessage notes={Notes[0]} />}
-            </View>
-
-
-        </React.Fragment>
-
+        </View>
 
 
 

@@ -13,8 +13,8 @@ import firebase from 'firebase/compat'
 import { faker } from '@faker-js/faker'
 import { useRoute } from '@react-navigation/native'
 const NewChat = ({ navigation }) => {
+
     const [search, setSearch] = useState('')
-    const [chatroomExists, setChatroomExists] = useState(false)
     const [users, setUsers] = useState([])
     const [results, setResults] = useState([])
     const [school, setSchool] = useState(null)
@@ -25,55 +25,6 @@ const NewChat = ({ navigation }) => {
     const [groupName, setGroupName] = useState('')
     const [isGroup, setIsGroup] = useState(false)
     const [currentUser, setCurrentUser] = useState(null)
-    // const getFilteredData = () => {
-    //     let filteredData = []
-    //     filters.forEach(filter => {
-
-
-    //         if (filter === 'study buddies') {
-
-    //             filteredData = (results.filter(item => {
-    //                 getStudyBuddy(item?.uid, setIsStudyBuddy)
-    //                 return isStudyBuddy
-    //             }
-
-    //             ))
-    //         }
-    //         else {
-    //             filteredData = (results.filter(item => {
-    //                 getIsSameClass(item?.uid, filter, setIsSameClass)
-    //                 return isSameClass
-
-    //             }))
-    //         }
-    //     })
-    //     console.log(filteredData)
-    //     if (filteredData.length > 0)
-    //         return filteredData
-    //     else {
-    //         return results
-    //     }
-
-    // }
-    // const getIsSameClass = (userId, classId, setIsSameClass) => {
-
-    //     db.collection('users')
-    //         .doc(userId)
-    //         .get()
-    //         .then(doc => doc.data()?.classes.forEach(item => {
-    //             setIsSameClass(item.id === classId)
-
-    //         }))
-
-    // }
-
-    // const getStudyBuddy = (uid, setIsStudyBuddy) => {
-    //     db.collection('users')
-    //         .doc(auth.currentUser.uid)
-    //         .get()
-    //         .then(doc => setIsStudyBuddy(doc.data().studyBuddies.includes(db.collection('users').doc(uid))))
-
-    // }
 
     useEffect(() => {
         // const array = []
@@ -110,27 +61,30 @@ const NewChat = ({ navigation }) => {
         const id = selectedUsers.map(user => user.uid).join("")
         const defaultGroupName = selectedUsers.map(item => getDisplayName(item.firstName, item.lastName)).join(", ")
 
-        db.collection('chatrooms').doc(id).get().then(doc => setChatroomExists(doc.exists))
+        db.collection('chatrooms').doc(id).get().then(doc => {
+            if (!doc.exists) {
+                db.collection('chatrooms').doc(id).set({
+                    id: id,
+                    type: selectedUsers.length > 1 ? 'group' : 'private',
+                    name: selectedUsers.length < 2 ? '' // if we only selected one user to chat with
+                        : groupName ? groupName : "Group: " + defaultGroupName, //else if group name is defined then set that as the name otherwise, use the default group name
 
-        if (!chatroomExists) {
-            db.collection('chatrooms').doc(id).set({
-                id: id,
-                type: selectedUsers.length > 1 ? 'group' : 'private',
-                name: selectedUsers.length < 2 ? '' // if we only selected one user to chat with
-                    : groupName ? groupName : "Group: " + defaultGroupName, //else if group name is defined then set that as the name otherwise, use the default group name
+
+                    users: [...selectedUsers, currentUser],
+                    messages: []
+
+                })
+                db.collection('users')
+                    .doc(auth.currentUser.uid)
+                    .update({ chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(id)) })
+
+            }
 
 
-                users: [...selectedUsers, currentUser],
-                messages: []
-
-            })
-            db.collection('users')
-                .doc(auth.currentUser.uid)
-                .update({ chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(id)) })
-        }
+        })
 
         navigation.goBack()
-        navigation.navigate('Chatroom', { chatroom: id })
+        navigation.navigate('Chatroom', { chatroomID: id })
 
     }
 
@@ -215,6 +169,7 @@ const NewChat = ({ navigation }) => {
                         value={search}
                         placeholderTextColor={'gray'}
                         autoFocus
+                        returnKeyType='search'
                     />
 
 
