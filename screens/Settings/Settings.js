@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, Image, StyleSheet, LogBox } from 'react-native'
+import { View, Text, ScrollView, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth, db, getSchool, getUserSnapshot } from '../../Firebase/firebase'
+import { auth, db, getSchool } from '../../Firebase/firebase'
 import { useNavigation } from '@react-navigation/native'
 import SettingsListItem from '../../components/SettingsListItem'
 import moment from 'moment'
@@ -19,12 +19,10 @@ const Settings = () => {
         return getSchool(userData?.school.id)
 
     }
-    const signOut = () => {
-        auth.signOut().then(() => {
-            navigation.navigate('Login')
-        }).catch((error) => {
 
-        })
+
+    const signOut = () => {
+        //log user out 
     }
     useEffect(() => {
         //get and set the user data and the user's school data

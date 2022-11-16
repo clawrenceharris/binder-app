@@ -3,9 +3,9 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import { assets, Colors } from '../constants'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import ChatMessage from '../components/ChatMessage'
-import { ImageBackground } from 'react-native'
+
 import ChatInput from '../components/ChatInput'
-import { GiftedChat } from 'react-native-gifted-chat'
+
 import { auth, db } from '../Firebase/firebase'
 import Header from '../components/Header'
 import firebase from 'firebase/compat'
@@ -15,11 +15,9 @@ import GroupProfileCircle from '../components/GroupProfileCircle'
 import { faker } from '@faker-js/faker'
 import moment from 'moment'
 import CallButton from '../components/CallButton'
-import { getDisplayName } from '../utils'
-import Drawer from 'react-native-draggable-view'
 import ChatModal from '../components/ChatModal'
 import * as Haptics from 'expo-haptics'
-import ConfirmationModal from '../components/ConfirmationModal'
+
 
 
 

@@ -1,29 +1,18 @@
-import { View, Text, StyleSheet, ImageBackground, Image, Modal, FlatList, Button, AsyncStorage, TouchableOpacity, TouchableWithoutFeedback, TextInput } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { assets, Colors } from '../constants'
 import useColorScheme from '../hooks/useColorScheme'
-import QuickActions from '../components/QuickActions'
-import ClassProfileCircle from '../components/ClassProfileCircle'
 import { UserProfileCircle } from '../components'
-import CircleButton from '../components/CircleButton'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { SHADOWS, SIZES } from '../constants/Theme'
-import { DrawerActions, useNavigation } from '@react-navigation/native'
+import { SHADOWS } from '../constants/Theme'
+import { DrawerActions } from '@react-navigation/native'
 import ProfileTag from '../components/ProfileTag'
 import ModalComponent from '../components/Modal'
 import moment from 'moment'
-import { ColorSpace } from 'react-native-reanimated'
-import ClassListItem from '../components/ClassListItem'
-import Classes from '../constants/data/Classes'
-import ProfileListBox from '../components/ProfileListBox'
-import ClassChatListItem from '../components/ClassChatListItem'
-import ChatRooms from '../constants/data/ChatRooms'
 import { auth, db, updateCollection, updateUserProfile } from '../Firebase/firebase'
 import { getDisplayName, getZodiacSign, openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
 import OptionsModal from '../components/OptionsModal'
-import BackButton from '../components/BackButton'
 import Header from '../components/Header'
 //route.params = class, user
 const CurrentUserProfile = ({ navigation }) => {
@@ -244,9 +233,15 @@ const CurrentUserProfile = ({ navigation }) => {
 
 
                     <View style={{ alignItems: 'center', marginTop: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                        <Text
+                        {userData?.firstName || userData?.lastName ? <Text
                             onPress={() => { setShowEditNameModal(true) }}
                             style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>
+                            :
+                            <Text
+                                onPress={() => { setShowEditNameModal(true) }}
+                                style={{ color: 'gray', fontFamily: 'Kanit' }}>Display Name</Text>
+
+                        }
                         <TouchableWithoutFeedback
                             onPress={() => { setShowEditNameModal(true) }} >
 

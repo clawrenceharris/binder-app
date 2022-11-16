@@ -240,7 +240,9 @@ export default function ClassesScreen({ currentUser }) {
                         <Button
                             background={'white'}
                             margin={30}
-                            title={'Join a School'} onPress={() => navigation.navigate('SchoolSettings', { school: null })} condition={true} />
+                            title={'Join a School'}
+                            onPress={() => navigation.navigate('SchoolSettings', { school: null })}
+                            condition={true} />
 
                     </View>}
 
