@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { assets, Colors } from '../constants'
@@ -14,18 +14,15 @@ import { getDisplayName, getZodiacSign, openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
 import OptionsModal from '../components/OptionsModal'
 import Header from '../components/Header'
-//route.params = class, user
+
+
 const CurrentUserProfile = ({ navigation }) => {
-    const colorScheme = useColorScheme()
+
     const [showModal, setShowModal] = useState(false)
     const [modal, setModal] = useState(null)
-    const [image, setImage] = useState(null)
     const [showImageOptionsModal, setShowImageOptionsModal] = useState(false)
     const [showEditNameModal, setShowEditNameModal] = useState(false)
-    const [showMore, setShowMore] = useState(false)
     const [userData, setUserData] = useState(null)
-
-
 
     const user = auth.currentUser
 
@@ -299,21 +296,9 @@ const CurrentUserProfile = ({ navigation }) => {
                         <Image source={assets.camera_o} style={{ width: 28, height: 28, tintColor: Colors.light.primary }} />
                         <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>Add a New Post</Text>
                     </View>
-
-
-
-
-
                 </ScrollView>
 
             </View>
-
-
-
-
-
-
-
         </View >
 
 
@@ -344,9 +329,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%'
-
-
-
     },
 
     sectionTitle: {
