@@ -1,16 +1,12 @@
-import { View, Text, Image, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import BackButton from '../../components/BackButton'
 import { assets, Colors } from '../../constants'
-import { SHADOWS, SIZES } from '../../constants/Theme'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { descriptions, styles } from '.'
 import Button from '../../components/Button'
-import { AddUserToSchool, auth, db, updateCollection } from '../../Firebase/firebase'
+import { AddUserToSchool, auth, db } from '../../Firebase/firebase'
 import Header from '../../components/Header'
 import { faker } from '@faker-js/faker'
-import firebase from 'firebase/compat'
-import ModalComponent from '../../components/Modal'
 import ConfirmationModal from '../../components/ConfirmationModal'
 
 const SchoolSettings = ({ route }) => {
@@ -35,9 +31,7 @@ const SchoolSettings = ({ route }) => {
         isClass: false
     }
     const onSavePress = () => {
-        console.log(school.id)
         AddUserToSchool(school.id, auth.currentUser.uid)
-
         navigation.goBack()
     }
     useEffect(() => {
@@ -72,7 +66,7 @@ const SchoolSettings = ({ route }) => {
                 showModal={showModal}
                 onConfirmPress={onSavePress}
                 message={`Saving this school means you will leave ${route.params?.school?.name} and you won't be able to see their feed or chats anymore.`}
-                cancelText='Cancel'
+                cancelText="Cancel"
                 confirmText="Yes, I'm Sure 👍"
 
             />

@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { ChatRoom, Class } from '../types'
 import useColorScheme from '../hooks/useColorScheme'
@@ -9,7 +9,6 @@ import ClassProfileCircle from './ClassProfileCircle'
 import ModalComponent from './Modal'
 import { SHADOWS } from '../constants/Theme'
 import { assets } from '../constants'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
 
 
 const SchoolListItem = ({ school, onPress }) => {

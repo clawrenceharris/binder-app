@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import useColorScheme from '../hooks/useColorScheme'
 import Colors from '../constants/Colors'
@@ -7,7 +7,7 @@ import ActivePeople from './ActivePeople'
 import ClassProfileCircle from './ClassProfileCircle'
 import { SHADOWS } from '../constants/Theme'
 import { assets } from '../constants'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
+
 
 
 const SchoolListItemToJoin = ({ school, isSelected, onSelect, buttonTitle = 'Add' }) => {
