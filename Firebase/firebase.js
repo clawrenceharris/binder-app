@@ -66,195 +66,10 @@ export function changeEmail(currentPassword, newEmail) {
 
 }
 
-export function updateCollection(collection, id, data) {
-    db.collection(collection).doc(id).update({
-        ...data
-    })
-
-}
-
-export function RemoveUserFromClass(classID, userUid) {
-
-    updateCollection('classes', classID, { users: firebase.firestore.FieldValue.arrayRemove(db.collection('users').doc(userUid)) });
-    updateCollection('users', userUid, { classes: firebase.firestore.FieldValue.arrayRemove(db.collection('classes').doc(classID)) });
-}
-
-
-export function AddUserToClass(classID, userUid) {
-    updateCollection('classes', classID, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(userUid)) });
-    updateCollection('users', userUid, { classes: firebase.firestore.FieldValue.arrayUnion(db.collection('classes').doc(classID)) });
-}
-
-
-export function RemoveUserFromSchool(schoolID, userUid) {
-    var user = null
-    db.collection('users')
-        .doc(userUid)
-        .get()
-        .then((doc) => {
-            updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayRemove(doc.data()) });
-        })
-
-    updateCollection('users', userUid, { school: null });
-}
-
-
-export function AddUserToSchool(schoolID, userUid) {
-    var user = null
-    db.collection('users')
-        .doc(userUid)
-        .get()
-        .then((doc) => {
-            updateCollection('users', userUid, { classes: [] })
-            updateCollection('users', userUid, { chatrooms: [] })
-
-            updateCollection('schools', schoolID, { users: firebase.firestore.FieldValue.arrayUnion(doc.data()) });
-        })
-
-    updateCollection('users', userUid, { school: db.collection('schools').doc(schoolID) });
-
-}
 
 
 
 
-// export function getUserSnapshot(userUid = auth.currentUser.uid, setUser) {
-//     db
-//         .collection('users')
-//         .doc(userUid)
-//         .onSnapshot((doc) => {
-//             setUser(doc.data())
-//         })
-
-
-// }
-
-
-// export async function getSchools(setSchools) {
-//     var schools = []
-//     var query = await db
-//         .collection('schools')
-//         .get()
-
-//     query.forEach((doc) => {
-//         schools.push(doc.data())
-//     })
-
-//     setSchools(schools)
-// }
-
-
-
-
-
-// export async function getClasses(setClasses) {
-//     var classes = []
-//     var query = await db
-//         .collection('classes')
-//         .get()
-
-//     query.forEach((doc) => {
-//         classes.push(doc.data())
-//     })
-
-//     setClasses(classes)
-// }
-
-// export function getUser(userUid = auth.currentUser.uid, setUser) {
-//     db
-//         .collection('users')
-//         .doc(userUid)
-//         .get()
-//         .then(doc => {
-//             setUser(doc.data())
-//         })
-//         .catch((error) => {
-//             console.log(error);
-//         })
-
-
-
-// }
-
-
-
-// export function getSchool(schoolID, setSchool) {
-//     db
-//         .collection('schools')
-//         .doc(schoolID)
-//         .get()
-//         .then((doc) => {
-//             setSchool(doc.data())
-//         })
-//         .catch((error) => {
-//             console.log(error);
-//         })
-
-// }
-
-
-
-// export function getUserSchool(userUid, setSchool) {
-//     db
-//         .collection('users')
-//         .doc(userUid)
-//         .onSnapshot((doc) => {
-//             if (doc.data().school) {
-
-//                 db
-//                     .collection('schools')
-//                     .doc(doc.data().school.id)
-//                     .get()
-//                     .then((doc) => {
-//                         setSchool(doc.data())
-//                     })
-//             }
-
-//         })
-
-// }
-
-
-
-// export function getClass(classID, setClass) {
-//     db
-//         .collection('classes')
-//         .doc(classID)
-//         .get()
-//         .then((doc) => {
-//             setClass(doc.data())
-//         })
-
-
-// }
-
-
-// export function getClassSnapshot(classID, setClass) {
-//     db
-//         .collection('classes')
-//         .doc(classID)
-//         .onSnapshot((doc) => {
-//             setClass(doc.data())
-//         })
-
-
-// }
-
-
-// export function getUsers(collection, docId, orderBy = 'lastActive', setUsers) {
-
-//     db
-//         .collection(collection).doc(docId)
-//         .orderBy(orderBy)
-//         .get()
-//         .then(doc => {
-//             setUsers(doc.data().users)
-//         })
-
-
-
-
-// }
 
 
 
@@ -287,6 +102,121 @@ export function signUp(email, password, name, photoURL, school) {
 
 
 }
+
+
+export function updateCollection(collection, id, data) {
+    db.collection(collection).doc(id).update({
+        ...data
+    })
+
+}
+
+export function RemoveUserFromClass(classID, userUid) {
+
+    updateCollection('classes', classID,
+        {
+            users: firebase.firestore.FieldValue.arrayRemove(db.collection('users').doc(userUid))
+        });
+    updateCollection('users', userUid,
+        {
+            classes: firebase.firestore.FieldValue.arrayRemove(db.collection('classes').doc(classID))
+        });
+}
+
+
+export function AddUserToClass(classID, userUid) {
+    updateCollection('classes', classID, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(userUid)) });
+    updateCollection('users', userUid, { classes: firebase.firestore.FieldValue.arrayUnion(db.collection('classes').doc(classID)) });
+}
+
+
+export function RemoveUserFromSchool(schoolID, userUid) {
+
+
+    updateCollection('schools', schoolID,
+        {
+            users: firebase.firestore.FieldValue.arrayRemove(db.collection('users').doc(userUid))
+        });
+
+
+    updateCollection('users', userUid, { school: null });
+}
+
+
+export function AddUserToSchool(schoolID, userUid) {
+
+
+    updateCollection('users', userUid,
+        {
+            classes: [],
+            chatrooms: []
+        })
+    updateCollection('schools', schoolID,
+        {
+            users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(userUid))
+        });
+
+
+    updateCollection('users', userUid,
+        {
+            school: db.collection('schools').doc(schoolID)
+        });
+
+}
+
+
+export function getData(collectionPath, docId, setData) {
+    if (collectionPath?.length) {
+        db.collection(collectionPath)
+            .doc(docId)
+            .get()
+            .then(doc => {
+                console.log("HI")
+                setData(doc.data())
+            }).catch((error) => console.log(error))
+    }
+
+}
+
+//converts an array of document references into an array of the data objects found in each document
+export function getDataArray(docRefs, collectionPath, setData) {
+    const array = []
+    docRefs?.forEach(item => {
+        db.collection(collectionPath)
+            .doc(item?.id)
+            .get()
+            .then(doc => {
+                array.push(doc.data())
+                setData(array)
+            })
+
+    })
+}
+
+export function getDataSnapshot(collectionPath, docId, setData) {
+    if (collectionPath?.length) {
+
+        const subscriber = db.collection(collectionPath)
+            .doc(docId)
+            .onSnapshot(doc => {
+                setData(doc.data())
+
+            })
+        return () => subscriber()
+
+    }
+
+}
+
+// export function getUsersInSchool(collectionPath, schoolId, setData) {
+//     db.collection('schools')
+//         .doc(schoolId)
+//         .get()
+//         .then(doc => {
+//             doc.data().users.forEach(item=> getData('users', item.id, setData))
+//             setData(doc.data())
+//         }).catch((error) => console.log(error))
+// }
 
 
 

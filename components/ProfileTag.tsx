@@ -10,9 +10,9 @@ const ProfileTag = ({ icon, title, onPress, ...props }) => {
     return (
         <TouchableWithoutFeedback onPress={onPress}>
             <View style={{
-                backgroundColor: '#333',
+                backgroundColor: '#00000010',
                 borderWidth: 1,
-                borderColor: '#464646',
+                borderColor: '#00000030',
                 borderRadius: 50,
                 flexDirection: 'row',
                 alignItems: 'center',

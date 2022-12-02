@@ -43,14 +43,13 @@ const ChatModal = (props) => {
             .get()
             .then(doc => setUserData(doc.data()))
 
-
     }, [props.message, props.visible])
 
     const getColor = () => {
-        const users = props?.users.filter(item => item.uid === props.message?.user)
+        const users = props?.users.filter(item => item?.uid === props.message?.user)
         if (users.length) {
             const user = users[0]
-            return user.color
+            return user?.color
         }
         else return Colors.light.accent
     }
@@ -62,17 +61,12 @@ const ChatModal = (props) => {
             visible={showModal}>
 
             <View style={{ backgroundColor: '#00000085', flex: 1, alignItems: 'center', padding: 10 }} >
-
-
                 <Animated.View style={{ alignSelf: 'center', height: 150, width: '100%', padding: 20, marginTop: '100%', transform: [{ scale: scaleValue }] }}>
-
 
                     <View style={{ backgroundColor: '#333', width: '100%', paddingHorizontal: 20, paddingTop: 10, paddingBottom: 10, borderRadius: 15, marginBottom: 20 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            {reactions.map((item) => <Text onPress={() => props.onReactionPress(item)} style={{ fontSize: 28 }}>{item}</Text>)}
+                            {reactions.map((item, index) => < Text key={index.toString()} onPress={() => props.onReactionPress(item)} style={{ fontSize: 28 }}>{item}</Text>)}
                         </View>
-
-
                     </View>
 
 
@@ -99,7 +93,6 @@ const ChatModal = (props) => {
                         redIndex={props.message?.user != auth.currentUser.uid ? 2 : null}
 
                     />
-
 
                     <TouchableOpacity
                         activeOpacity={1}

@@ -31,6 +31,7 @@ import camera from '../assets/icons/camera.png'
 import person from '../assets/icons/person.png'
 import loading from '../assets/icons/loading.png'
 import group from '../assets/icons/group.png'
+import logo_cube from '../assets/icons/logo.png'
 
 import image01 from '../assets/images/image01.jpeg'
 
@@ -111,6 +112,7 @@ export default {
     person04,
     book,
     add_class,
+    logo_cube,
     grad_cap,
     loading,
     school_outlined,

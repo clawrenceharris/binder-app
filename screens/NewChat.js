@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TextInput, StyleSheet, Image } from 'react-nati
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { assets, Colors } from '../constants'
-import { auth, db, getUsers } from '../Firebase/firebase'
+import { auth, db, getData, getUsers } from '../Firebase/firebase'
 import UserListItem from '../components/UserListItem'
 import FilterTag from '../components/FilterTag'
 import SelectionButton from '../components/SelectionButton'
@@ -12,6 +12,7 @@ import Button from '../components/Button'
 import firebase from 'firebase/compat'
 import { faker } from '@faker-js/faker'
 import { useRoute } from '@react-navigation/native'
+import useColorScheme from '../hooks/useColorScheme'
 const NewChat = ({ navigation }) => {
 
     const [search, setSearch] = useState('')
@@ -25,9 +26,12 @@ const NewChat = ({ navigation }) => {
     const [groupName, setGroupName] = useState('')
     const [isGroup, setIsGroup] = useState(false)
     const [currentUser, setCurrentUser] = useState(null)
+    const colorScheme = useColorScheme()
+    const [reload, setReload] = useState(false)
+    console.log("Length", users.length)
 
     useEffect(() => {
-        // const array = []
+        const array = []
         db.collection('users')
             .doc(auth.currentUser.uid)
             .get()
@@ -39,10 +43,23 @@ const NewChat = ({ navigation }) => {
                         .doc(doc.data().school.id)
                         .get()
                         .then(doc => {
-                            setUsers(doc.data()?.users)
-                            if (!results.length)
-                                setResults(doc.data()?.users)
+
+                            doc.data().users.forEach(user => {
+                                db.collection('users')
+                                    .doc(user.id)
+                                    .get()
+                                    .then(doc => {
+                                        if (doc.id != auth.currentUser.uid) {
+                                            array.push(doc)
+                                            setResults(array)
+                                            setUsers(array)
+
+                                        }
+                                    })
+
+                            })
                             setSchool(doc.data())
+
                             if (!filters.length && school) {
                                 setFilters([school?.id])
 
@@ -54,26 +71,42 @@ const NewChat = ({ navigation }) => {
 
 
 
-    }, [school])
+
+    }, [reload])
+
+    const getDataToShow = () => results.length ? results : users
+
+
 
 
     const handleNewChat = () => {
-        const id = selectedUsers.map(user => user.uid).join("")
-        const defaultGroupName = selectedUsers.map(item => getDisplayName(item.firstName, item.lastName)).join(", ")
+
+        const id = selectedUsers.map(user => user.data().uid).join("-")
+        const defaultGroupName = selectedUsers.map(item => item.data().displayName).join(", ")
+
+        const users = []
+        selectedUsers.forEach(user => users.push(user.id))
 
         db.collection('chatrooms').doc(id).get().then(doc => {
             if (!doc.exists) {
+
                 db.collection('chatrooms').doc(id).set({
                     id: id,
                     type: selectedUsers.length > 1 ? 'group' : 'private',
-                    name: selectedUsers.length < 2 ? '' // if we only selected one user to chat with
-                        : groupName ? groupName : "Group: " + defaultGroupName, //else if group name is defined then set that as the name otherwise, use the default group name
+                    name: selectedUsers.length > 1 ?
+                        groupName ? groupName : "Group: " + defaultGroupName //if group name is defined then set that as the name otherwise, use the default group name
+                        : selectedUsers[0].data().displayName,
 
 
-                    users: [...selectedUsers, currentUser],
-                    messages: []
 
-                })
+                    users: users,
+                    chats: []
+
+
+                }, { merge: true })
+
+
+
                 db.collection('users')
                     .doc(auth.currentUser.uid)
                     .update({ chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(id)) })
@@ -89,27 +122,29 @@ const NewChat = ({ navigation }) => {
     }
 
     const handleSearch = (value) => {
+        let filteredData = []
         setSearch(value)
         if (!value.length) {
             return setResults(users)
         }
-
-        const filteredData = users.filter(item =>
-            getDisplayName(item?.firstName, item?.lastName).toLowerCase().includes(value.toLowerCase()
-
-            ))
-
+        filteredData = users.filter(item => item.data().displayName.toLowerCase().includes(value.toLowerCase()))
 
         if (filteredData.length) {
+            console.log("There is data")
             setResults(filteredData)
         }
 
         else {
-            setResults(filteredData)
+            setResults([])
         }
 
+
+
+
     }
-    const isSelected = (item) => { return selectedUsers.includes(item) }
+    const isSelected = (item) => {
+        return selectedUsers.includes(item)
+    }
 
     const onFilterSelect = (item) => {
         if (filters.includes(item?.id)) {
@@ -144,13 +179,19 @@ const NewChat = ({ navigation }) => {
         setSelectedUsers([...selectedUsers, item]); // add item to selected items array
 
     }
-
+    const reloadUseEffect = () => {
+        // setReload(true)
+    }
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+
+        <View style={{ flex: 1, backgroundColor: Colors[colorScheme].background }}>
+
             <Header
                 title='New Chat'
                 direction='vertical'
                 isModal
+                textStyle={{ color: Colors[colorScheme].tint }}
+                style={{ backgroundColor: Colors[colorScheme].background }}
 
             />
 
@@ -170,6 +211,7 @@ const NewChat = ({ navigation }) => {
                         placeholderTextColor={'gray'}
                         autoFocus
                         returnKeyType='search'
+                        onFocus={reloadUseEffect}
                     />
 
 
@@ -183,8 +225,10 @@ const NewChat = ({ navigation }) => {
                             style={{ flexDirection: 'row', position: 'absolute', top: 7, left: 50, width: '85%' }}>
 
                             {selectedUsers.map((item, index) =>
-                                <View style={{ paddingVertical: 5, paddingHorizontal: 15, borderRadius: 50, backgroundColor: '#272727', marginLeft: 10 }}>
-                                    <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{getDisplayName(item.firstName, item.lastName)}</Text>
+                                <View
+                                    key={index.toString()}
+                                    style={{ paddingVertical: 5, paddingHorizontal: 15, borderRadius: 50, backgroundColor: '#00000070', marginLeft: 10 }}>
+                                    <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{item.data().displayName}</Text>
                                 </View>
 
                             )}
@@ -204,9 +248,9 @@ const NewChat = ({ navigation }) => {
                 {selectedUsers.length < 2 && !isGroup ?
                     <TouchableWithoutFeedback onPress={() => { setIsGroup(true) }}>
 
-                        <View style={{ width: '100%', height: 60, backgroundColor: '#272727', borderWidth: 2, borderColor: Colors.light.primary, borderRadius: 15, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, justifyContent: 'space-between' }}>
+                        <View style={{ width: '100%', height: 60, backgroundColor: Colors[colorScheme].primary, borderRadius: 15, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, justifyContent: 'space-between' }}>
 
-                            <Text style={{ color: 'white', fontFamily: 'KanitSemiBold', fontSize: 16 }}>New Group Chat</Text>
+                            <Text style={{ color: 'white', fontFamily: 'KanitSemiBold', fontSize: 16 }}>{"New Group Chat"}</Text>
                             <Image source={assets.group} style={{ width: 28, height: 28, tintColor: 'white' }} />
 
                         </View>
@@ -263,48 +307,80 @@ const NewChat = ({ navigation }) => {
                     )}
 
                 </ScrollView>
+
+                {results
+                    .filter(item => item?.id !== auth.currentUser.uid).length === 0 && search &&
+                    <Text style={{ color: 'gray', fontFamily: 'Kanit', alignSelf: 'center', textAlign: 'center', margin: 20 }}>{"No users were found by this name.\n\n If you can't find who you're looking for, you can invite them to Binder using their phone number!"}</Text>
+
+                }
+
+
                 <ScrollView>
 
-                    {results.filter(item => item.uid != auth.currentUser.uid).map((item, index) =>
-                        <TouchableWithoutFeedback onPress={() => onSelect(item)}>
+                    {results
 
-                            <View
-                                style={{ paddingHorizontal: 10 }}
-                                key={index.toString()}>
-                                <UserListItem
-                                    user={item}
-                                    isTop={index === 0}
-                                    isBottom={index === results.length - 2}
-                                />
+                        .map((item, index) =>
 
-                                <View style={{ position: 'absolute', right: 20, top: 20 }}>
-                                    <SelectionButton
-                                        onSelect={() => onSelect(item)}
+                            <TouchableWithoutFeedback onPress={() => onSelect(item)}>
+
+                                <View
+
+                                    style={{ paddingHorizontal: 10, marginBottom: 10 }}
+                                    key={index.toString()}>
+
+                                    <UserListItem
+                                        user={item}
+                                        onPress={() => onSelect(item)}
                                         isSelected={isSelected(item)}
+
                                     />
+
+
+
+
                                 </View>
+                            </TouchableWithoutFeedback>
 
-                            </View>
-                        </TouchableWithoutFeedback>
+                        )}
+                    {/* {users
+                        .filter(item => item.uid !== auth.currentUser.uid).length === 0 && !search &&
+                        <Text style={{ color: 'gray', fontFamily: 'Kanit', alignSelf: 'center', textAlign: 'center' }}>{"No one else has joined " + school?.name + " yet. \nTry inviting people!"}</Text>
 
-                    )}
+                    } */}
 
 
                 </ScrollView>
             </View>
-            <View style={{ marginVertical: 50 }}>
+            {users.filter(item => item?.id !== auth.currentUser.uid).length > 0 ?
+                <View style={{ marginVertical: 50 }}>
 
-                <Button
-                    background={Colors.light.primary}
-                    tint='white'
-                    onPress={handleNewChat}
-                    width='50%'
-                    title={selectedUsers.length <= 1 && !isGroup ? 'Chat' : 'Group Chat'}
+                    <Button
+                        background={Colors.light.primary}
+                        tint='white'
+                        onPress={handleNewChat}
+                        style={{ width: '50%' }}
+                        title={selectedUsers.length <= 1 && !isGroup ? 'Chat' : 'Group Chat'}
 
-                    condition={selectedUsers.length > 0}
+                        disabled={selectedUsers.length === 0}
 
-                />
-            </View>
+                    />
+                </View>
+                :
+                <View style={{ marginVertical: 50 }}>
+
+                    <Button
+                        background={'white'}
+                        tint='black'
+                        onPress={() => { }}
+                        style={{ width: '50%' }}
+                        title={'Invite Friends'}
+
+                        disabled={false}
+
+                    />
+                </View>
+
+            }
 
         </View>
     )
@@ -314,7 +390,7 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 18,
         color: 'white',
-        backgroundColor: '#454545',
+        backgroundColor: '#00000030',
         borderRadius: 25,
         width: '100%',
         marginVertical: 20,

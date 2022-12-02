@@ -6,7 +6,7 @@ const descriptions = {
     email: 'This makes it easier for you to recover your account and for people to find you.',
     gpa: 'Your GPA is your grade point average. We use you unweighted GPA to help pair you with recommended study partners. You can choose to leave this field blank',
     name: "This is how you'll appear and how people can find you on Binder, so choose a name your classmates know you by.",
-    birthday: "You must be at least 12 years old to use Binder. We'll use this information to determine your age, Zodiac Sign, and let your classmates know when your special day arrives.",
+    birthday: "We'll use this information to determine your age, Zodiac Sign, and let your classmates know when your special day arrives.",
     school: "This makes it easier for us to show you the right classes, recommend study partners, inform you about school events and more!"
 
 
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 
     finePrint: {
         fontFamily: 'Kanit',
-        color: 'lightgray',
+        color: 'darkgray',
         fontSize: 11,
         textAlign: 'center',
     },
@@ -46,33 +46,34 @@ const styles = StyleSheet.create({
     screenTitle: {
         color: 'white',
         fontFamily: 'KanitMedium',
-        fontSize: 24,
-        alignSelf: 'center'
+        fontSize: 28,
+        alignSelf: 'center',
+        width: '90%',
+        textAlign: 'center'
     },
 
     birthdayInputContainer: {
-        alignItems: 'center',
         width: '100%',
-        padding: 20,
-        marginTop: 40,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
     },
+
     input: {
-        borderBottomColor: 'lightgray',
-        borderBottomWidth: 2,
         width: '100%',
         fontSize: 20,
-        padding: 5,
+        padding: 10,
+        fontFamily: 'Kanit',
         color: 'white',
-        
+        backgroundColor: '#00000020',
+        borderRadius: 15
     },
 
     description: {
         fontFamily: 'Kanit',
-        color: 'gray',
         fontSize: 14,
         textAlign: 'center',
-        margin: 5
+        color: 'white',
+        marginTop: 10
     },
 
 })

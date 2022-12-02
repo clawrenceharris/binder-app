@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { assets, Colors } from '../constants'
 import useColorScheme from '../hooks/useColorScheme'
-import { UserProfileCircle } from '../components'
+import { ProfileButton } from '../components'
 import { SHADOWS } from '../constants/Theme'
 import { DrawerActions } from '@react-navigation/native'
 import ProfileTag from '../components/ProfileTag'
@@ -14,6 +14,7 @@ import { getDisplayName, getZodiacSign, openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
 import OptionsModal from '../components/OptionsModal'
 import Header from '../components/Header'
+import { NewImageBadge } from '../components/ProfileBadges'
 
 
 const CurrentUserProfile = ({ navigation }) => {
@@ -23,16 +24,18 @@ const CurrentUserProfile = ({ navigation }) => {
     const [showImageOptionsModal, setShowImageOptionsModal] = useState(false)
     const [showEditNameModal, setShowEditNameModal] = useState(false)
     const [userData, setUserData] = useState(null)
-
+    const colorScheme = useColorScheme()
     const user = auth.currentUser
 
-
+    console.log(userData)
     useEffect(() => {
-        const subscriber = db.collection('users').doc(auth.currentUser.uid).onSnapshot(doc => {
-            setUserData(doc.data())
+        const subscriber = db.collection('users')
+            .doc(auth.currentUser.uid)
+            .onSnapshot(doc => {
+                setUserData(doc.data())
 
 
-        })
+            })
 
         return () => subscriber()
     }, [])
@@ -50,7 +53,7 @@ const CurrentUserProfile = ({ navigation }) => {
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Birthday</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>{"Birthday"}</Text>
 
             </View>
             <View>
@@ -61,7 +64,7 @@ const CurrentUserProfile = ({ navigation }) => {
             <TouchableOpacity
                 onPress={() => { setShowModal(false) }}
                 style={{ height: 50, backgroundColor: '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
-                <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>Close</Text>
+                <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>{"Close"}</Text>
             </TouchableOpacity>
 
 
@@ -142,7 +145,6 @@ const CurrentUserProfile = ({ navigation }) => {
     const headerCenter = () => (
         <TouchableOpacity onPress={() => { navigation.navigate('Achievements') }}>
             <Image source={assets.badge} style={{ width: 25, height: 25, tintColor: Colors.dark.tint }} />
-
         </TouchableOpacity>
     )
 
@@ -165,29 +167,35 @@ const CurrentUserProfile = ({ navigation }) => {
             updateCollection('users', auth.currentUser.uid, { photoURL: result });
         }
     }
+
+    const onTakePicturePress = () => {
+        navigation.navigate('Camera', { canRecord: false })
+    }
+
+
     return (
 
-        <View style={{ backgroundColor: '#333333', flex: 1 }}>
+        <View style={{ backgroundColor: Colors[colorScheme].background, flex: 1 }}>
 
             <ModalComponent renderContent={modal} showModal={showModal} toValue={-900} animated height={280} width={250} />
 
             <EditNameModal
-                firstName={userData?.firstName}
-                lastName={userData?.lastName}
+                name={userData?.displayName}
                 onCancelPress={() => {
                     setShowEditNameModal(false)
                 }}
                 showModal={showEditNameModal}
-                onSavePress={() => {
-                    setShowEditNameModal(false)
-
+                onSavePress={(value) => {
+                    setShowEditNameModal(false);
+                    updateUserProfile((value), userData?.photoURL);//updates firbase user
+                    updateCollection('users', auth.currentUser.uid, { displayName: value });//updates user collection
                 }}
             />
 
 
             <OptionsModal
                 options={['Take Picture', 'Choose From Library']}
-                onOptionPress={[onLibraryPress, onLibraryPress]}
+                onOptionPress={[onTakePicturePress, onLibraryPress]}
                 showModal={showImageOptionsModal}
                 onCancelPress={() => { setShowImageOptionsModal(false) }}
             />
@@ -197,54 +205,57 @@ const CurrentUserProfile = ({ navigation }) => {
                 direction={'horizontal'}
                 title={'Settings'}
                 headerCenter={headerCenter()}
-                shadow
+                style={{ backgroundColor: Colors[colorScheme].accent, height: 150 }}
                 headerRight={headerRight()}
                 headerLeft={headerLeft()}
             />
+            <View style={{ backgroundColor: Colors[colorScheme].accent, zIndex: 0, alignItems: 'center', height: 200 }}>
 
-            <View style={{ paddingHorizontal: 20 }}>
+                <View style={{ position: 'absolute' }}>
 
-                <ScrollView showsVerticalScrollIndicator={false} style={{ height: '100%' }}>
-
-
-                    <View style={{ alignItems: 'center', marginTop: 40 }}>
-
-
-                        <TouchableWithoutFeedback onPress={() => { setShowImageOptionsModal(true) }}>
-                            <View>
-
-                                <View style={{ borderRadius: 100, padding: 8, backgroundColor: '#333', justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: -1, right: -5, zIndex: 1 }}>
-                                    <Image source={assets.add_image} style={{ width: 20, height: 20, tintColor: Colors.light.primary }} />
-
-                                </View>
-
-                                <UserProfileCircle user={auth.currentUser} showStudyBuddy={false} showStoryBoder size={120} showName={false} bold showActive={false} />
-
-                            </View>
-
-                        </TouchableWithoutFeedback>
-
-                    </View>
+                    <TouchableWithoutFeedback onPress={() => { setShowImageOptionsModal(true) }}>
+                        <View>
 
 
 
+                            <ProfileButton
+                                onPress={() => setShowImageOptionsModal(true)}
+                                size={120}
+                                defaultImage={assets.person}
+                                badgeContainerStyle={{ backgroundColor: Colors.light.accent, top: '75%', left: '70%' }}
+                                badge={NewImageBadge()}
+                                showsName={true}
+
+                            />
+
+                        </View>
+
+                    </TouchableWithoutFeedback>
 
                     <View style={{ alignItems: 'center', marginTop: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                        {userData?.firstName || userData?.lastName ? <Text
-                            onPress={() => { setShowEditNameModal(true) }}
-                            style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>
+                        {userData?.displayName ?
+                            <Text
+                                onPress={() => setShowEditNameModal(true)}
+                                style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>
+
+                                {userData.displayName}
+                            </Text>
                             :
                             <Text
-                                onPress={() => { setShowEditNameModal(true) }}
-                                style={{ color: 'gray', fontFamily: 'Kanit' }}>Display Name</Text>
+                                onPress={() => setShowEditNameModal(true)}
+                                style={{ color: '#00000080', fontFamily: 'Kanit', fontSize: 16 }}>
+
+                                {'Display Name'}
+
+                            </Text>
 
                         }
                         <TouchableWithoutFeedback
-                            onPress={() => { setShowEditNameModal(true) }} >
+                            onPress={() => setShowEditNameModal(true)} >
 
                             <Image
 
-                                source={assets.pencil} style={{ width: 15, height: 15, tintColor: '#6F6F6F', marginLeft: 10 }}
+                                source={assets.pencil} style={{ width: 15, height: 15, tintColor: '#00000080', marginLeft: 10 }}
                             />
                         </TouchableWithoutFeedback>
 
@@ -254,8 +265,21 @@ const CurrentUserProfile = ({ navigation }) => {
 
 
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingVertical: 20, flexDirection: 'row', marginTop: 20 }}>
+                </View>
 
+            </View>
+            <View style={{ paddingHorizontal: 20, backgroundColor: Colors[colorScheme].background, height: '100%', borderRadius: 25, marginTop: -20, zIndex: 1 }}>
+
+                <ScrollView showsVerticalScrollIndicator={false} style={{ height: '100%' }}>
+
+
+
+
+
+
+
+
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingVertical: 20, flexDirection: 'row', marginTop: 20 }}>
 
 
                         <View style={{ marginLeft: 10 }}>
@@ -277,24 +301,24 @@ const CurrentUserProfile = ({ navigation }) => {
                     </ScrollView>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                        <Text style={[styles.sectionTitle, { color: '#DEDEDE' }]}>Props</Text>
+                        <Text style={[styles.sectionTitle, { color: '#DEDEDE' }]}>{"Props"}</Text>
 
 
                     </View>
-                    <View style={{ alignItems: "center", flexDirection: 'row', padding: 20, width: '100%', backgroundColor: '#5B5B5B', ...SHADOWS.dark, borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
+                    <View style={{ alignItems: "center", flexDirection: 'row', padding: 20, width: '100%', backgroundColor: '#00000020', borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
 
                         <Image source={assets.shines} style={{ width: 28, height: 28, tintColor: 'white' }} />
-                        <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>View Your Props</Text>
+                        <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>{"View Your Props"}</Text>
 
 
                         <Image source={assets.right_arrow} style={{ width: 20, height: 20, tintColor: 'gray', right: 10, position: 'absolute' }} />
 
                     </View>
 
-                    <Text style={[styles.sectionTitle, { color: '#DEDEDE' }]}>Your Posts</Text>
-                    <View style={{ flexDirection: 'row', padding: 20, alignItems: 'center', width: '100%', backgroundColor: '#5B5B5B', ...SHADOWS.dark, borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
+                    <Text style={[styles.sectionTitle, { color: Colors[colorScheme].gray }]}>{"Your Posts"}</Text>
+                    <View style={{ flexDirection: 'row', padding: 20, alignItems: 'center', width: '100%', backgroundColor: '#00000020', borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
                         <Image source={assets.camera_o} style={{ width: 28, height: 28, tintColor: Colors.light.primary }} />
-                        <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>Add a New Post</Text>
+                        <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>{"Add a New Post"}</Text>
                     </View>
                 </ScrollView>
 

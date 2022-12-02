@@ -13,10 +13,12 @@ import { getDisplayNameOrYou } from '../utils';
 
 
 const DeskItemPreview = ({ item, onLongPress, margin, onMorePress, deskCategory, showBookmarked }) => {
-    console.log(deskItemData?.sectionNumber)
+
+
     const navigation = useNavigation();
     const [deskItemData, setDeskItemData] = useState(null)
     const [owner, setOwner] = useState(null)
+
     useEffect(() => {
         const subscriber = db.collection(deskCategory.toLowerCase())
             .doc(item.id)
@@ -70,6 +72,7 @@ const DeskItemPreview = ({ item, onLongPress, margin, onMorePress, deskCategory,
                 </View>
 
             </View>
+
             <TouchableOpacity
                 activeOpacity={1}
                 onLongPress={() => onLongPress(deskItemData)}

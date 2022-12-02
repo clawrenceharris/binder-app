@@ -1,5 +1,4 @@
 import ClassesScreen from './ClassesScreen'
-import Calendar from './Calendar'
 import Classmates from './Classmates'
 import Chats from './Feed'
 import Chatroom from './Chatroom'
@@ -25,7 +24,6 @@ import SignUpPhoto from './SignUp/SignUpPhoto'
 
 export {
     ClassesScreen,
-    Calendar,
     Classmates,
     Chats,
     Chatroom,

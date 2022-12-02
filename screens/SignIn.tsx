@@ -1,17 +1,16 @@
-import { View, Text, SafeAreaView, TouchableWithoutFeedback } from 'react-native'
-import React, { useEffect } from 'react'
-import { TextInput } from 'react-native'
+import { View, Text, SafeAreaView, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import React from 'react'
 import { assets, Colors } from '../constants'
 import { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { Image } from 'react-native'
-import { StyleSheet } from 'react-native'
-import { TouchableOpacity } from 'react-native'
 import CustomInput from '../components/CustomInput'
-import { auth, db, signIn } from '../Firebase/firebase'
+import { auth } from '../Firebase/firebase'
 import Button from '../components/Button'
+import BackButton from '../components/BackButton'
+import useColorScheme from '../hooks/useColorScheme'
 const SignIn = ({ navigation }) => {
+  const colorScheme = useColorScheme()
   const { control, handleSubmit, watch } = useForm();
   const password = watch('password')
   const email = watch('email')
@@ -23,16 +22,16 @@ const SignIn = ({ navigation }) => {
   const rewordError = (error) => {
     console.log(error.message)
     if (error.message == 'Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).') {
-      return 'Email or password is incorrect'
+      return 'The email or password you entered is incorrect.'
     }
 
     else if (error.message == 'Firebase: The password is invalid or the user does not have a password. (auth/wrong-password).')
-      return 'Email or password is incorrect'
+      return 'The email or password you entered is incorrect.'
     else if (error.message == 'Firebase: The email address is badly formatted. (auth/invalid-email).') {
-      return 'Email or password is incorrect'
+      return 'The email or password you entered is incorrect.'
     }
     else if (error.message == 'Firebase: A network AuthError (such as timeout, interrupted connection or unreachable host) has occurred. (auth/network-request-failed).') {
-      return 'Failed to connect to network. Please make sure you are connected to the internet.'
+      return 'Failed to connect to a network. Please make sure you are connected to the internet.'
     }
     else return 'Sorry, something went wrong. Please try agian later.'
   }
@@ -60,26 +59,31 @@ const SignIn = ({ navigation }) => {
 
   return (
 
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#333' }}>
-      <TouchableWithoutFeedback onPress={() => { navigation.goBack() }}>
-        <Image source={assets.left_arrow} style={{ width: 25, height: 25, tintColor: Colors.light.primary, margin: 20 }} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
+      <View style={{ height: '25%' }}>
+        <BackButton
+          direction={'horizontal'}
+          color={'white'}
+          margin={20}
+          navigation={navigation}
 
-      </TouchableWithoutFeedback>
+        />
+        <Text style={styles.screenTitle}>{"Log in to your account"}</Text>
+      </View>
 
-      <View style={{ padding: 20, alignItems: 'center' }}>
 
-        <Text style={styles.screenTitle}>Log in to your account</Text>
+      <View style={{ padding: 20, alignItems: 'center', backgroundColor: 'white', height: '100%', borderRadius: 15 }}>
+
 
         {error && <Text style={styles.errorMessage}>{error}</Text>}
 
 
-        <View style={{ alignItems: 'center', width: '100%', padding: 20, marginTop: 10 }}>
+        <View style={{ alignItems: 'center', width: '100%', margin: 20 }}>
           <View style={{ width: '100%' }}>
-            <Text style={styles.textInputTitle}>EMAIL</Text>
             <CustomInput
               control={control}
               name="email"
-              placeholder=""
+              placeholder="Email"
               secureTextEntry={false}
               rules={{ required: 'Username is required' }}
               keyboardType='email-address'
@@ -87,11 +91,10 @@ const SignIn = ({ navigation }) => {
           </View>
 
           <View style={{ width: '100%', marginTop: 15 }}>
-            <Text style={styles.textInputTitle}>PASSWORD</Text>
             <CustomInput
               control={control}
               name="password"
-              placeholder=""
+              placeholder="Password"
               secureTextEntry
               rules={{ required: 'Username is required' }}
 
@@ -102,25 +105,23 @@ const SignIn = ({ navigation }) => {
 
 
 
+
         <Button
           title={'Log In'}
-          icon={loading ? <Image source={assets.loading} style={{ width: 20, height: 20, tintColor: 'white' }} /> : null}
-          background={styles.continueBtn.backgroundColor}
-          tint={'white'}
-          margin={styles.continueBtn.marginTop}
           onPress={handleSubmit(onSignInPressed)}
-          condition={email && password}
-          width={styles.continueBtn.width}
+          style={{ borderRadius: 15 }}
+          disabled={!email || !password}
+
+
         />
 
 
-
         <View style={{ flexDirection: 'row', margin: 20, alignSelf: 'center' }}>
-          <Text style={{ color: 'white' }}>Don't have an account?</Text>
+          <Text style={{ color: 'darkgray', fontFamily: 'Kanit' }}>{"Don't have an account?"}</Text>
           <Text
-            style={{ color: Colors.light.primary, fontWeight: 'bold', marginLeft: 5 }}
+            style={{ color: Colors.light.primary, marginLeft: 5, fontFamily: 'KanitSemiBold' }}
             onPress={() => { navigation.navigate('SignUpEmailPassword') }}
-          >Sign Up</Text>
+          >{"Sign Up"}</Text>
 
         </View>
 
@@ -133,7 +134,7 @@ const SignIn = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   continueBtn: {
-    borderRadius: 25,
+    borderRadius: 15,
     backgroundColor: Colors.light.primary,
     padding: 15,
     width: '70%',
@@ -172,7 +173,8 @@ const styles = StyleSheet.create({
   screenTitle: {
     color: 'white',
     fontFamily: 'KanitMedium',
-    fontSize: 24,
+    fontSize: 30,
+    width: '60%',
     alignSelf: 'center'
   },
 

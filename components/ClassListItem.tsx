@@ -1,87 +1,74 @@
-import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
-import { chatroom, Class } from '../types'
+import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback, ViewStyle, TouchableOpacity } from 'react-native'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import useColorScheme from '../hooks/useColorScheme'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 import ActivePeople from './ActivePeople'
-import ClassProfileCircle from './ClassProfileCircle'
+import ProfileButton from './ProfileButton'
 import ModalComponent from './Modal'
 import { SHADOWS } from '../constants/Theme'
 import { auth, db, updateCollection } from '../Firebase/firebase'
 import firebase from 'firebase/compat'
+import { assets } from '../constants'
+import { Class } from '../types'
 
-const ClassListItem = ({ Class, onLongPress }) => {
+
+interface Props {
+    onPress: () => void
+    Class: Class
+    onLongPress?: () => void
+    type: 'selectable' | undefined
+    isSelected?: boolean
+    onSelect?: () => void
+    style: ViewStyle
+
+
+}
+
+const ClassListItem: FC<Props> = (props) => {
     const colorScheme = useColorScheme()
-    const navigation = useNavigation()
-    const [longPressed, setLongPressed] = useState(false)
-    const snapPoints = ['40%', '15%', '100%']
-    const [classData, setClassData] = useState(null)
-    const onPress = () => {
-        navigation.navigate('Classroom', { chatroomID: classData.id })
-    }
-    const date = new Date().getMinutes()
-    useEffect(() => {
-        //if this class id is equal to the users class id
-        const subscriber = db.collection('classes')
-            .doc(Class.id)
-            .onSnapshot(doc => {
-                setClassData(doc.data())
-
-                //update active users
-                doc.data().users?.forEach((user) => {
-
-                    db.collection('users').doc(user.id)
-                        .onSnapshot(doc => {
-
-                            if (doc.data()?.lastActive.toDate().getMinutes() <= 2) {
-                                updateCollection('classes', Class.id, { active: firebase.firestore.FieldValue.arrayUnion(user) })
-                            } else {
-                                updateCollection('classes', Class.id, { active: firebase.firestore.FieldValue.arrayRemove(user) })
-
-                            }
-                        })
-                })
-
-            })
-
-        return () => {
-            subscriber()
-        }
-    }, [])
-
 
     return (
-
-
         <TouchableWithoutFeedback
-            onPress={onPress}
-            onLongPress={() => onLongPress(Class)}
+            onPress={props.onPress}
+            onLongPress={props.onLongPress}
         >
-            <View style={{ marginBottom: 20 }}>
-                <View style={{ backgroundColor: 'white', borderRadius: 15, ...SHADOWS.dark, shadowOpacity: 0.6, shadowRadius: 2 }}>
-                    <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
-                        <View style={{ margin: 10 }}>
-                            <ClassProfileCircle Class={Class} story={[]} showStoryBoder={false} size={40} showName bold chatroom={Class.chatroom} />
+            <View style={[{}, { ...props.style }]}>
+                <View style={{ marginBottom: 20, padding: 10, backgroundColor: 'white', borderRadius: 15, ...SHADOWS.light, shadowOpacity: 0.6, shadowRadius: 2, flexDirection: 'row', alignItems: 'center' }}>
+                    <ProfileButton
+                        defaultImage={assets.book}
+                        onPress={props.onPress}
+                        size={40}
+                        nameStyle={{ color: Colors.light.accent }}
+                        imageStyle={{ width: 5, height: 5 }}
+                    />
 
-                        </View>
-                        <View>
-                            <Text style={[styles.className, { color: Colors.light.accent }]}>{classData?.name}</Text>
+                    <View>
+                        <Text style={[styles.className, { color: Colors.light.accent }]}>{props.Class?.name}</Text>
 
-                            <ActivePeople userCount={classData?.users?.length} activeCount={classData?.active?.length} />
-
-                        </View>
+                        {props.type !== 'selectable' && <ActivePeople userCount={props.Class?.users?.length} activeCount={props.Class?.active?.length} />}
 
                     </View>
+                    {props.type === 'selectable' && <TouchableOpacity
+                        onPress={props.onSelect}
+                        activeOpacity={0.7}
+                        style={{ position: 'absolute', right: 10 }}>
 
+                        <View style={!props.isSelected && styles.addButtonContainer}>
+                            {!props.isSelected ? <Text style={{ color: 'white', fontFamily: 'KanitMedium' }}>{"Add"}</Text>
+                                :
+                                <View style={styles.selected}>
+                                    <Image source={assets.check} style={{ width: 28, height: 28, tintColor: Colors.light.accent }} />
+                                </View>
+
+                            }
+                        </View>
+                    </TouchableOpacity>}
                 </View>
 
-                {/* <View style={[styles.container, { ...SHADOWS.dark, backgroundColor: '#F2F2F2', shadowColor: '#272727' }]}>
-
-                    <Text style={{ fontFamily: 'KanitMedium', fontSize: 20, color: 'lightgray' }}>No Recent Activity</Text>
-
-                </View> */}
             </View>
+
+
 
 
         </TouchableWithoutFeedback>
@@ -96,11 +83,32 @@ const styles = StyleSheet.create({
     },
 
 
-
-
-    messageContent: {
-        marginLeft: 10
+    selected: {
+        width: 35,
+        height: 35,
+        borderRadius: 100,
+        borderColor: Colors.light.accent,
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
+
+
+    addButtonContainer: {
+        alignSelf: 'flex-end',
+        padding: 8,
+        width: 60,
+        height: 35,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor:
+            Colors.light.accent,
+        borderRadius: 50,
+
+
+    },
+
+
     container: {
         flexDirection: 'row',
         padding: 10,
@@ -118,7 +126,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: Colors.light.tint,
         marginBottom: 5,
-        fontFamily: 'Kanit'
+        fontFamily: 'Kanit',
+        marginLeft: 10,
+        width: '95%'
 
 
 

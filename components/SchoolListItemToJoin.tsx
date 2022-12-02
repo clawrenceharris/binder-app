@@ -4,13 +4,14 @@ import useColorScheme from '../hooks/useColorScheme'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 import ActivePeople from './ActivePeople'
-import ClassProfileCircle from './ClassProfileCircle'
+import ProfileButton from './ProfileButton'
 import { SHADOWS } from '../constants/Theme'
 import { assets } from '../constants'
 
 
 
 const SchoolListItemToJoin = ({ school, isSelected, onSelect, buttonTitle = 'Add' }) => {
+    const colorScheme = useColorScheme()
 
     return (
         <View style={styles.mainContainer}>
@@ -18,7 +19,7 @@ const SchoolListItemToJoin = ({ school, isSelected, onSelect, buttonTitle = 'Add
 
                 <View style={styles.headerLeft}>
                     <Image source={assets.school} style={{ width: 28, height: 28, tintColor: Colors.light.primary, marginBottom: 5 }} />
-                    <Text style={[styles.className, { color: Colors.light.primary, marginLeft: 10, width: '72%' }]}>{school.name} </Text>
+                    <Text style={[styles.className, { color: Colors.light.primary, marginLeft: 10, width: '72%' }]}>{school?.name} </Text>
                 </View>
 
 
@@ -39,16 +40,7 @@ const SchoolListItemToJoin = ({ school, isSelected, onSelect, buttonTitle = 'Add
             </View>
 
 
-            <View style={styles.bottomContainer}>
-                {school.location && <View style={{ flexDirection: 'row' }}>
 
-                    <Image source={assets.pin} style={{ width: 15, height: 15, tintColor: 'gray' }} />
-                    <Text style={{ fontFamily: 'Kanit', fontSize: 12, color: 'gray', marginLeft: 5 }}>{school.location}</Text>
-                </View>
-
-                }
-
-            </View>
         </View>
 
 
@@ -57,6 +49,14 @@ const SchoolListItemToJoin = ({ school, isSelected, onSelect, buttonTitle = 'Add
 }
 const styles = StyleSheet.create({
 
+    headerContainer: {
+        padding: 10,
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
     avatar: {
         width: 60,
         height: 60
@@ -93,18 +93,7 @@ const styles = StyleSheet.create({
     mainContainer: {
         marginBottom: 30,
     },
-    bottomContainer: {
-        flexDirection: 'row',
-        padding: 10,
-        alignItems: 'center',
-        borderBottomRightRadius: 25,
-        borderBottomLeftRadius: 25,
-        zIndex: -1,
-        backgroundColor: '#F2F2F2',
-        shadowColor: '#272727',
-        shadowRadius: 2,
 
-    },
     className: {
         fontSize: 18,
         color: Colors.light.tint,
@@ -115,18 +104,7 @@ const styles = StyleSheet.create({
 
     },
 
-    headerContainer: {
-        padding: 10,
-        flexDirection: 'row',
-        backgroundColor: 'white',
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
-        ...SHADOWS.light,
-        shadowOpacity: 0.6,
-        shadowRadius: 2,
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
+
 
     headerLeft: {
         flexDirection: 'row',

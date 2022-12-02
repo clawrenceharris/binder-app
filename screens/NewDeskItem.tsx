@@ -14,6 +14,7 @@ import { auth, db } from '../Firebase/firebase'
 import firebase from 'firebase/compat'
 import { faker } from '@faker-js/faker'
 import FilterTag from '../components/FilterTag'
+import useColorScheme from '../hooks/useColorScheme'
 const NewDeskItem = ({ navigation }) => {
     const [title, setTitle] = useState('')
     const [sectionNumber, setSectionNumber] = useState('')
@@ -26,7 +27,7 @@ const NewDeskItem = ({ navigation }) => {
     const [selectedClass, setSelectedClass] = useState(null)
     const [description, setDescription] = useState('')
     const [images, setImages] = useState([])
-
+    const colorScheme = useColorScheme()
     const [cardFront, setCardFront] = useState('')
     const [cardBack, setCardBack] = useState('')
 
@@ -166,7 +167,7 @@ const NewDeskItem = ({ navigation }) => {
 
     }
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+        <View style={{ flex: 1, backgroundColor: Colors[colorScheme].background }}>
 
             <OptionsModal
                 options={['Take Picture', 'Choose From Library']}
@@ -179,7 +180,9 @@ const NewDeskItem = ({ navigation }) => {
                 navigation={navigation}
                 title={'New ' + deskCategory}
                 direction={'vertical'}
-                shadow
+
+                textStyle={{ color: Colors[colorScheme].tint }}
+                style={{ backgroundColor: Colors[colorScheme].background }}
 
             />
             <ScrollView
@@ -214,7 +217,7 @@ const NewDeskItem = ({ navigation }) => {
                     <Image source={assets.pencil} style={{ width: 30, height: 30, tintColor: 'lightgray', margin: 10 }} />
 
                     <TextInput
-                        style={styles.titleInput}
+                        style={[styles.titleInput, { color: Colors[colorScheme].tint }]}
                         placeholder='Title'
                         value={title}
                         onChangeText={setTitle}
@@ -233,14 +236,14 @@ const NewDeskItem = ({ navigation }) => {
                         value={sectionType}
                         onChange={item => { setSectionType(item.value) }}
                         placeholderStyle={{ color: 'darkgray', fontFamily: 'Kanit' }}
-                        style={{ width: '30%', borderRadius: 15, backgroundColor: '#272727', padding: 10 }}
+                        style={{ width: '30%', borderRadius: 15, backgroundColor: 'lightgray', padding: 10 }}
                         maxHeight={400}
-                        containerStyle={{ backgroundColor: '#272727', borderWidth: 0, borderRadius: 15 }}
+                        containerStyle={{ backgroundColor: 'lightgray', borderWidth: 0, borderRadius: 15 }}
                         labelField="label"
                         valueField="value"
-                        itemContainerStyle={{ backgroundColor: '#272727', borderRadius: 15 }}
-                        itemTextStyle={{ fontFamily: 'Kanit', color: 'darkgray' }}
-                        selectedTextStyle={{ color: 'darkgray' }}
+                        itemContainerStyle={{ backgroundColor: 'lightgray', borderRadius: 15 }}
+                        itemTextStyle={{ fontFamily: 'Kanit', color: Colors[colorScheme].tint }}
+                        selectedTextStyle={{ color: Colors[colorScheme].tint }}
                         fontFamily='Kanit'
                         showsVerticalScrollIndicator={false}
                         autoScroll={false}
@@ -265,21 +268,22 @@ const NewDeskItem = ({ navigation }) => {
 
 
 
-                {deskCategory !== 'Flashcards' ? <Text style={styles.sectionHeaderText}>Images</Text> :
+                {
+                    deskCategory !== 'Flashcards' ? <Text style={styles.sectionHeaderText}>{"Images"}</Text> :
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
-                        <Text style={styles.sectionHeaderText}>{'Card ' + (cards.length + 1)}</Text>
-                        {cardFront.trim() && cardBack.trim() &&
+                            <Text style={styles.sectionHeaderText}>{'Card ' + (cards.length + 1)}</Text>
+                            {cardFront.trim() && cardBack.trim() &&
 
-                            <Text
-                                onPress={() => {
-                                    cards.push({ cardFront: cardFront, cardBack: cardBack });
-                                    setCardBack('');
-                                    setCardFront('');
-                                }}
-                                style={{ fontFamily: 'KanitMedium', color: Colors.light.primary, fontSize: 18, marginVertical: 20 }}>{'Save Card'}</Text>}
-                    </View>
+                                <Text
+                                    onPress={() => {
+                                        cards.push({ cardFront: cardFront, cardBack: cardBack });
+                                        setCardBack('');
+                                        setCardFront('');
+                                    }}
+                                    style={{ fontFamily: 'KanitMedium', color: Colors.light.primary, fontSize: 18, marginVertical: 20 }}>{'Save Card'}</Text>}
+                        </View>
 
                 }
                 <ScrollView
@@ -300,7 +304,7 @@ const NewDeskItem = ({ navigation }) => {
 
                                 <View
                                     key={index.toString()}
-                                    style={{ marginRight: 20, width: 150, height: 150, backgroundColor: 'gray', borderRadius: 15, justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+                                    style={styles.imageContainer}>
 
                                     <Image source={{ uri: image }} style={{ width: '100%', height: '100%' }} />
                                     <TouchableOpacity
@@ -313,7 +317,7 @@ const NewDeskItem = ({ navigation }) => {
 
                             <TouchableOpacity
                                 onPress={() => setShowImageOptionsModal(true)}
-                                style={{ width: 150, height: 150, backgroundColor: 'gray', borderRadius: 15, justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+                                style={{ width: 150, height: 150, backgroundColor: 'lightgray', borderRadius: 15, justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
 
                                 <Image source={assets.add} style={{ width: 40, height: 40, tintColor: 'darkgray' }} />
 
@@ -361,7 +365,7 @@ const NewDeskItem = ({ navigation }) => {
                             <View style={styles.cardContainerLeft}>
 
                                 <TextInput
-                                    style={{ flexDirection: 'row', fontFamily: 'Kanit', fontSize: 24, color: 'white' }}
+                                    style={{ flexDirection: 'row', fontFamily: 'Kanit', fontSize: 24, color: Colors[colorScheme].tint }}
                                     placeholder={"Term"}
                                     value={cardFront.trimStart()}
                                     onChangeText={setCardFront}
@@ -379,7 +383,7 @@ const NewDeskItem = ({ navigation }) => {
                             <View style={styles.cardContainerRight}>
 
                                 <TextInput
-                                    style={{ flexDirection: 'row', fontFamily: 'Kanit', fontSize: 16, color: 'white', padding: 5 }}
+                                    style={{ flexDirection: 'row', fontFamily: 'Kanit', fontSize: 16, color: Colors[colorScheme].tint, padding: 5 }}
                                     placeholder={"Definition"}
                                     value={cardBack.trimStart()}
                                     multiline
@@ -405,7 +409,7 @@ const NewDeskItem = ({ navigation }) => {
                 <TextInput
                     multiline
                     numberOfLines={50}
-                    style={styles.descriptionInput}
+                    style={[styles.descriptionInput, { color: Colors[colorScheme].tint }]}
                     placeholder={'Add a Description'}
                     value={description}
                     onChangeText={setDescription}
@@ -423,20 +427,20 @@ const NewDeskItem = ({ navigation }) => {
                 <View style={{ marginBottom: 100 }}>
                     <Text style={styles.sectionHeaderText}>{'Privacy'}</Text>
 
-                    <View style={{ borderRadius: 15, padding: 15, backgroundColor: '#272727' }}>
+                    <View style={{ borderRadius: 15, padding: 15, backgroundColor: 'lightgray' }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>Public</Text>
+                            <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].tint, fontSize: 17, width: '50%' }}>Public</Text>
                             <ToggleSwitch onToggle={() => setIsPublic(!isPublic)} isOn={isPublic} onColor={Colors.light.primary} size={'large'} offColor={'#646464'} />
                         </View>
 
-                        <Text style={{ fontFamily: 'Kanit', color: 'lightgray' }}>{isPublic ? 'Anyone can see these ' + deskCategory : 'Only you can see these ' + deskCategory} </Text>
+                        <Text style={{ fontFamily: 'Kanit', color: 'gray' }}>{isPublic ? 'Anyone can see these ' + deskCategory : 'Only you can see these ' + deskCategory} </Text>
                     </View>
 
                     <Text style={{ fontFamily: 'Kanit', color: 'gray', margin: 10 }}>{'Manage who can see your ' + deskCategory + ' by making them Public or Private'}</Text>
                 </View>
 
 
-            </ScrollView>
+            </ScrollView >
             <View style={{ padding: 20 }}>
                 <Button
                     background={Colors.light.accent}
@@ -449,16 +453,16 @@ const NewDeskItem = ({ navigation }) => {
                 />
 
             </View>
-        </View>
+        </View >
     )
 }
 
 const styles = StyleSheet.create({
     cardContainerRight: {
-        marginLeft: 20,
+        marginLeft: 10,
         width: 180,
         height: 150,
-        backgroundColor: 'gray',
+        backgroundColor: 'lightgray',
         borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
@@ -469,7 +473,7 @@ const styles = StyleSheet.create({
     cardContainerLeft: {
         width: 180,
         height: 150,
-        backgroundColor: 'gray',
+        backgroundColor: 'lightgray',
         borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
@@ -477,12 +481,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
 
+    imageContainer: {
+        marginRight: 20,
+        width: 150,
+        height: 150,
+        backgroundColor: 'gray',
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden'
+    },
+
     sectionNumberInput: {
         marginLeft: 20,
         fontFamily: 'Kanit',
         fontSize: 16,
-        color: 'white',
-        backgroundColor: '#272727',
+        backgroundColor: 'lightgray',
         borderRadius: 15,
         paddingHorizontal: 30,
         height: 60
@@ -491,8 +505,7 @@ const styles = StyleSheet.create({
     descriptionInput: {
         fontFamily: 'Kanit',
         fontSize: 16,
-        color: 'white',
-        backgroundColor: '#272727',
+        backgroundColor: 'lightgray',
         borderRadius: 15,
         padding: 10,
         height: 100

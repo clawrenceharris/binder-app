@@ -30,25 +30,25 @@ import Settings from '../screens/Settings/Settings';
 import AchievementsScreen from '../screens/Achievements';
 import SchoolSettings from '../screens/Settings/SchoolSettings';
 import DeskPrivacy from '../screens/Settings/DeskPrivacy';
-import SearchSelect from '../screens/SearchSelect';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Feed from '../screens/Feed';
 import NewChat from '../screens/NewChat';
 import NewDeskItem from '../screens/NewDeskItem';
 import DeskItem from '../screens/DeskItem';
 import BookmarkedItems from '../screens/BookmarkedItems';
+import AddClasses from '../screens/AddClasses';
 
 const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
 
-export default function Navigation() {
+export default function Navigation({ colorScheme }) {
 
   return (
 
     <NavigationContainer>
-      <RootNavigator />
+      <RootNavigator theme={colorScheme === 'light' ? DefaultTheme : DarkTheme} />
     </NavigationContainer>
   );
 }
@@ -75,7 +75,7 @@ function Classroom({ route }) {
 }
 
 
-function RootNavigator() {
+function RootNavigator({ theme }) {
   return (
 
 
@@ -114,15 +114,6 @@ function RootNavigator() {
           name="SignUpPhoto"
           component={SignUpPhoto} />
 
-        <Stack.Screen
-          name="SearchSelect"
-          component={SearchSelect}
-          options={{
-            gestureDirection: "vertical",
-            presentation: 'modal'
-
-          }}
-        />
 
 
         <Stack.Screen
@@ -224,6 +215,15 @@ function RootNavigator() {
 
         }}
 
+      />
+      <Stack.Screen
+        name="AddClasses"
+        component={AddClasses}
+        options={{
+          gestureDirection: "vertical",
+          presentation: 'modal'
+
+        }}
       />
 
       <Stack.Screen

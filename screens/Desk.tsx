@@ -2,19 +2,18 @@ import { View, Text, SafeAreaView, Image, TouchableOpacity, FlatList } from 'rea
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { assets, Colors } from '../constants'
-import { UserProfileCircle } from '../components'
+import { ProfileButton } from '../components'
 import { auth, db } from '../Firebase/firebase'
 import firebase from 'firebase/compat'
-import NotePost from '../components/NotePost'
-import NotesComponent from '../components/ScrollableImages'
-import NotesMessage from '../components/NotesPreview'
-import NotesPreview from '../components/NotesPreview'
 import OptionsModal from '../components/OptionsModal'
 import { Dropdown } from 'react-native-element-dropdown'
 import FlashcardsPreview from '../components/FlashcardsPreview'
 import { haptics } from '../utils'
 import ConfirmationModal from '../components/ConfirmationModal'
 import DeskItemPreview from '../components/DeskItemPreview'
+import MoreButton from '../components/MoreButton'
+import useColorScheme from '../hooks/useColorScheme'
+import { ActivityBadge } from '../components/ProfileBadges'
 
 const Desk = ({ navigation }) => {
     const [deskData, setDeskData] = useState(null)
@@ -23,7 +22,7 @@ const Desk = ({ navigation }) => {
     const [deskCategory, setDeskCategory] = useState('Notes')
     const [showDeskItemModal, setShowDeskItemModal] = useState(false)
     const [selectedDeskItem, setSelectedDeskItem] = useState(null)
-
+    const colorScheme = useColorScheme()
     const data = [
         { label: 'Notes', value: 'Notes' },
         { label: 'Flashcards', value: 'Flashcards' },
@@ -35,23 +34,25 @@ const Desk = ({ navigation }) => {
 
 
     const headerLeft = () => (
-        <UserProfileCircle
-            user={auth.currentUser}
-            size={40} showName={false}
-            showStoryBoder bold={false}
-            showStudyBuddy={false}
-            showActive
-            navigation={navigation}
+        <ProfileButton
+            defaultImage={assets.person}
+            onPress={function (): void {
+                navigation.openDrawer()
+            }}
+
+            badgeContainerStyle={{ backgroundColor: Colors.light.accent, top: '55%', left: '65%' }}
+            badge={ActivityBadge()}
+
+            showsName={true}
+
+
         />
 
     )
 
     const headerRight = () => (
-        <TouchableOpacity
-            onPress={() => setShowModal(true)}
-            style={{ backgroundColor: '#272727', width: 40, height: 40, borderRadius: 50, alignItems: 'center', padding: 5, justifyContent: 'center' }}>
-            <Image source={assets.more} style={{ width: 20, height: 20, tintColor: 'white' }} />
-        </TouchableOpacity>
+        <MoreButton onPress={() => setShowModal(true)} />
+
     )
 
     console.log("Show", showConfirmationModal)
@@ -187,48 +188,51 @@ const Desk = ({ navigation }) => {
         return []
     }
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+        <View style={{ flex: 1 }}>
             <Header
                 title={'Desk'}
-                shadow
                 headerLeft={headerLeft()}
                 headerRight={headerRight()}
                 navigation={navigation}
+                style={{ backgroundColor: Colors.light.accent, height: 200, zIndex: 0 }}
 
             />
-            <View style={{ padding: 20 }}>
+            <View style={{ padding: 20, backgroundColor: Colors[colorScheme].background, height: '100%', borderRadius: 25, marginTop: -30 }}>
+                <View style={{ flexDirection: 'row' }}>
 
-                <Dropdown
-                    data={data}
-                    value={deskCategory}
-                    onChange={item => { setDeskCategory(item.value) }}
-                    placeholderStyle={{ color: 'darkgray', fontFamily: 'Kanit' }}
-                    style={{ width: '100%', borderRadius: 15, backgroundColor: '#272727', padding: 10 }}
-                    maxHeight={400}
-                    containerStyle={{ backgroundColor: '#272727', borderWidth: 0, borderRadius: 15 }}
-                    labelField="label"
-                    valueField="value"
-                    itemContainerStyle={{ backgroundColor: '#272727', borderRadius: 15 }}
-                    itemTextStyle={{ fontFamily: 'Kanit', color: 'darkgray' }}
-                    selectedTextStyle={{ fontFamily: 'KanitBold', color: Colors.light.primary }}
-                    fontFamily='Kanit'
-                    showsVerticalScrollIndicator={false}
-                    autoScroll={false}
-                    placeholder={deskCategory}
-                />
 
-                <TouchableOpacity
-                    onPress={onNewPress}
-                    style={{ backgroundColor: Colors.light.accent, borderRadius: 50, justifyContent: 'center', alignItems: 'center', padding: 10, flexDirection: 'row', marginTop: 10, width: '60%' }}>
-                    <Image source={assets.add} style={{ width: 20, height: 20, tintColor: 'white' }} />
-                    <Text style={{ fontFamily: 'KanitSemiBold', color: 'white', fontSize: 18, marginLeft: 10 }}>{"New " + deskCategory}</Text>
-                </TouchableOpacity>
+                    <Dropdown
+                        data={data}
+                        value={deskCategory}
+                        onChange={item => { setDeskCategory(item.value) }}
+                        placeholderStyle={{ color: 'darkgray', fontFamily: 'Kanit' }}
+                        style={{ flex: 1, borderRadius: 15, backgroundColor: '#00000030', padding: 10 }}
+                        maxHeight={400}
+                        containerStyle={{ backgroundColor: 'lightgray', borderWidth: 0, borderRadius: 15 }}
+                        labelField="label"
+                        valueField="value"
+                        itemContainerStyle={{ backgroundColor: 'lightgray', borderRadius: 15 }}
+                        itemTextStyle={{ fontFamily: 'Kanit', color: Colors[colorScheme].tint }}
+                        selectedTextStyle={{ fontFamily: 'KanitBold', color: Colors[colorScheme].accent }}
+                        fontFamily='KanitSemiBold'
+                        showsVerticalScrollIndicator={false}
+                        autoScroll={false}
+                        placeholder={deskCategory}
+                    />
+
+                    <TouchableOpacity
+                        onPress={onNewPress}
+                        style={{ backgroundColor: Colors.light.accent, borderRadius: 15, justifyContent: 'center', alignItems: 'center', marginLeft: 20, padding: 10, flexDirection: 'row' }}>
+                        <Image source={assets.add} style={{ width: 20, height: 20, tintColor: 'white' }} />
+                        <Text style={{ fontFamily: 'KanitSemiBold', color: 'white', fontSize: 18, marginLeft: 10 }}>{"New"}</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <OptionsModal
                     showModal={showModal}
                     options={['Bookmarked ' + deskCategory, 'New ' + deskCategory, 'Desk Settings', 'Clear Desk']}
                     redIndex={2}
-                    toValue={-300}
+                    toValue={-350}
                     onCancelPress={() => setShowModal(false)}
                     onOptionPress={[onBookmarkedPress, onNewPress, onDeskSettingsPress, onClearDeskPress]}
                 />
@@ -255,60 +259,63 @@ const Desk = ({ navigation }) => {
 
 
                 <Text style={{ fontFamily: 'Kanit' }}></Text>
+
+
+                {getData()?.length === 0 && <Text style={{ color: 'gray', fontFamily: 'Kanit', alignSelf: 'center' }}>{"This is Desk is empty. "}</Text>}
+
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <FlatList
+
+                        style={{ height: '51%' }}
+                        data={getData()}
+                        getItemLayout={getItemLayout}
+                        numColumns={2}
+                        keyExtractor={(item) => item.id}
+                        horizontal={false}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator
+                        renderItem={({ item }) =>
+                            deskCategory === 'Flashcards' ?
+
+                                <View>
+                                    <FlashcardsPreview
+                                        margin={10}
+                                        flashcards={item}
+
+                                        onLongPress={(deskItem) => {
+
+                                            haptics('light')
+                                            setSelectedDeskItem(deskItem);
+                                            setShowDeskItemModal(true)
+                                        }} />
+                                </View>
+                                :
+
+                                <View>
+                                    <DeskItemPreview
+                                        margin={10}
+                                        item={item}
+                                        onMorePress={(deskItem) => {
+                                            setSelectedDeskItem(deskItem);
+                                            setShowDeskItemModal(true);
+                                        }}
+                                        onLongPress={(deskItem) => {
+                                            haptics('light')
+                                            setSelectedDeskItem(deskItem);
+                                            setShowDeskItemModal(true)
+                                        }}
+
+                                        deskCategory={deskCategory}
+                                    />
+                                </View>
+                        }
+
+                    />
+
+
+                </View>
+
             </View>
-
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <FlatList
-
-                    style={{ height: '51%' }}
-                    data={getData()}
-                    getItemLayout={getItemLayout}
-                    numColumns={2}
-                    keyExtractor={(item) => item.id}
-                    horizontal={false}
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator
-                    renderItem={({ item }) =>
-                        deskCategory === 'Flashcards' ?
-
-                            <View>
-                                <FlashcardsPreview
-                                    margin={10}
-                                    flashcards={item}
-
-                                    onLongPress={(deskItem) => {
-
-                                        haptics('light')
-                                        setSelectedDeskItem(deskItem);
-                                        setShowDeskItemModal(true)
-                                    }} />
-                            </View>
-                            :
-
-                            <View>
-                                <DeskItemPreview
-                                    margin={10}
-                                    item={item}
-                                    onMorePress={(deskItem) => {
-                                        setSelectedDeskItem(deskItem);
-                                        setShowDeskItemModal(true);
-                                    }}
-                                    onLongPress={(deskItem) => {
-                                        haptics('light')
-                                        setSelectedDeskItem(deskItem);
-                                        setShowDeskItemModal(true)
-                                    }}
-
-                                    deskCategory={deskCategory}
-                                />
-                            </View>
-                    }
-
-                />
-
-
-            </View>
-
 
 
 

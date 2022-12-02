@@ -1,35 +1,35 @@
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import { Colors } from '../constants'
-export default class SelectionButton extends React.Component {
-    constructor(props) {
-        super(props);
+import useColorScheme from '../hooks/useColorScheme'
+const SelectionButton = (props) => {
+    const colorScheme = useColorScheme()
 
-    }
 
-    render() {
-        const styles = StyleSheet.create({
-            selectionBtn: {
-                padding: 5,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: 30,
-                height: 30,
-                borderColor: 'lightgray',
-                borderWidth: 1,
-                borderRadius: 100,
-                backgroundColor: this.props.isSelected ? Colors.light.primary : 'transparent'
-            }
-        })
-        return (
+    const styles = StyleSheet.create({
+        selectionBtn: {
+            padding: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 30,
+            height: 30,
+            borderColor: Colors[colorScheme].tint + "50",
+            borderWidth: 1,
+            borderRadius: 100,
+            backgroundColor: props.isSelected ? Colors[colorScheme].primary : 'transparent'
+        }
+    })
+    return (
 
-            <TouchableOpacity
-                onPress={this.props.onSelect}
-                activeOpacity={this.props.activeOpacity}>
-                <View style={styles.selectionBtn} />
-            </TouchableOpacity>
+        <TouchableOpacity
+            onPress={props.onSelect}
+            activeOpacity={props.activeOpacity}>
+            <View style={styles.selectionBtn} />
+        </TouchableOpacity>
 
-        )
-    }
+    )
+
 }
+
+export default SelectionButton
 

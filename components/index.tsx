@@ -1,3 +1,3 @@
 import ChatListItem from './ChatListItem';
-import UserProfileCircle from './UserProfileCircle';
-export { ChatListItem, UserProfileCircle }
+import ProfileButton from './ProfileButton';
+export { ChatListItem, ProfileButton }

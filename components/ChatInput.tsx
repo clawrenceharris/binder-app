@@ -1,27 +1,36 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView, Keyboard } from "react-native"
+import React, { FC, useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, ScrollView } from "react-native"
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { assets, Colors } from '../constants';
 import { Image } from 'react-native';
-import { SHADOWS } from '../constants/Theme';
-import { useNavigation } from '@react-navigation/native';
+import { Chatroom, ChatroomUser } from '../types';
+import { auth, db } from '../Firebase/firebase';
+import { getDisplayNameOrYou } from '../utils';
 import useColorScheme from '../hooks/useColorScheme';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { getDisplayName } from '../utils';
-import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
-
-const ChatInput = (props) => {
 
 
-    const [message, setMessage] = useState('')
-    const [search, setSearch] = useState('')
-    const [results, setResults] = useState([])
+interface Props {
+    chatroom: Chatroom;
+    onSendPress: (type: string, message: string) => void
+    onCameraPress: () => void
+    onChangeMessage: (value: string) => void
+    message: string
+
+}
+
+const ChatInput: FC<Props> = (props) => {
+    const colorScheme = useColorScheme()
+    const [message, setMessage] = useState(props.message)
 
 
     const onChatBubblePress = () => {
 
         console.log("chat bubble pressed")
     }
+    useEffect(() => {
+        setMessage(props.message)
+
+    }, [props.message])
 
 
     const onSendPress = (content) => {
@@ -30,33 +39,9 @@ const ChatInput = (props) => {
         setMessage('');
     }
 
-
-
-
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"} >
-
-            <ScrollView
-
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={{ flexDirection: 'row', marginBottom: 5, backgroundColor: 'transparent', padding: 5 }}>
-
-                {props.chatroom?.type != 'private' &&
-                    props.users?.map((item, index) =>
-
-                        <View style={{ paddingVertical: 2, paddingHorizontal: 10, borderRadius: 50, borderColor: item.color, marginLeft: 10, borderWidth: 2, alignItems: 'center' }}>
-                            <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 12 }}>{getDisplayName(item.firstName, item.lastName)}</Text>
-                        </View>
-
-                    )}
-
-
-
-            </ScrollView>
-
 
             <View style={styles.container}>
 
@@ -71,24 +56,13 @@ const ChatInput = (props) => {
                     <TextInput
 
                         placeholder={`Message...`}
-                        style={styles.textInput}
+                        style={[styles.textInput, { color: Colors[colorScheme].tint }]}
                         multiline
                         value={message}
 
                         enablesReturnKeyAutomatically
-                        onChangeText={(value) => {
-                            setMessage(value);
-
-                            message.split(" ").forEach(item => {
-                                if (item[0] === '@') {
-                                    handleSearch(item)
-                                    setSearch(item)
-                                    setIsSearching(true)
-                                }
-
-                            })
-                        }}
-                        placeholderTextColor={'lightgray'}
+                        onChangeText={(value) => { setMessage(value); props.onChangeMessage(value) }}
+                        placeholderTextColor={'#00000070'}
                         selectionColor={Colors.light.accent}
                         autoFocus
 
@@ -107,27 +81,20 @@ const ChatInput = (props) => {
 
                             <Text style={{
                                 fontWeight: 'bold', fontSize: 16, color: Colors.light.accent, marginRight: 10, fontFamily: 'KanitMedium'
-                            }} >Send</Text>
+                            }} >{"Send"}</Text>
                         </TouchableOpacity>
                     }
 
 
                 </View>
                 <TouchableOpacity onPress={onChatBubblePress}>
-                    <View style={styles.specialChatButton}
-                    >
+                    <View style={styles.specialChatButton}>
                         <Image source={assets.chat_bubble} style={{ width: 24, height: 24, tintColor: "white" }} />
                     </View>
                 </TouchableOpacity>
 
 
             </View>
-
-
-
-
-
-
         </KeyboardAvoidingView >
 
     )
@@ -152,14 +119,13 @@ const styles = StyleSheet.create({
         marginRight: 10,
         maxHeight: 160,
         flex: 1,
-        backgroundColor: '#272727',
+        backgroundColor: '#00000010',
         alignItems: 'center',
 
     },
     textInput: {
         marginHorizontal: 10,
         flex: 1,
-        color: 'white',
         fontFamily: 'Kanit',
         fontSize: 16
     },
@@ -192,5 +158,3 @@ const styles = StyleSheet.create({
 })
 
 export default ChatInput
-
-

@@ -1,38 +1,58 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Notes from '../constants/data/Notes';
 import { Colors } from '../constants/index';
 import moment from 'moment';
 import { auth, db } from '../Firebase/firebase';
 import { getDisplayName } from '../utils';
 import DeskItemPreview from './DeskItemPreview';
+import useColorScheme from '../hooks/useColorScheme';
+import { SHADOWS, SIZES } from '../constants/Theme';
+import { Chat, ChatroomUser } from '../types';
 
 
+interface Props {
+    chat: Chat;
+    previousChat: Chat;
+    user: ChatroomUser;
+    onLongPress: () => void;
+    onChatSelected: () => void;
+    showsTime: boolean
 
-const ChatMessage = ({ chat, previousMessage, user, showTimestamp, onLongPress, onChatSelected }) => {
+}
+
+
+const ChatMessage: FC<Props> = (props) => {
     const [userData, setUserData] = useState(null)
     const [chatData, setChatData] = useState(null)
-    console.log()
+    const colorScheme = useColorScheme()
+    const isEmojiText = (chat) => {
+        const emojiRegex = /\p{Emoji}/u;
+
+
+        for (let i = 0; i < chat.length; i++) {
+            if (emojiRegex.test(chat) === false) {
+                return false
+            }
+        }
+
+        return true
+    }
     const isMyMessage = () => {
-        return chatData?.user === auth.currentUser.uid
+        return props.chat?.user.uid === auth.currentUser.uid
     }
 
     const isSameMessage = () => {
-        if (previousMessage)
-            return chatData?.user === previousMessage.user
+        if (props.previousChat)
+            return props.chat?.user === props.previousChat.user
         return false
 
 
     }
 
     useEffect(() => {
-        const subscriber = db.collection('chats')
-            .doc(chat.id)
-            .onSnapshot(doc => {
-                setChatData(doc.data())
-            })
 
-        return () => subscriber()
+
 
 
     }, [])
@@ -40,23 +60,24 @@ const ChatMessage = ({ chat, previousMessage, user, showTimestamp, onLongPress, 
 
 
     const isNotes = () => {
-        return chatData?.contentType === 'notes'
+        return props.chat.contentType === 'notes'
     }
 
     const isPoll = () => {
-        return chatData?.contentType === 'poll'
+        return props.chat.contentType === 'poll'
     }
 
     const isBurningQuestion = () => {
-        return chatData?.contentType === 'burning question'
+        return props.chat.contentType === 'burning question'
     }
     const isTextMessage = () => {
-        return chatData?.contentType === 'text'
+        return props.chat.contentType === 'text'
     }
+
     useEffect(() => {
 
         const subscriber = db.collection('users')
-            .doc(chatData?.user)
+            .doc(props.chat.user.uid)
             .onSnapshot(doc => {
                 setUserData(doc.data())
             })
@@ -67,8 +88,8 @@ const ChatMessage = ({ chat, previousMessage, user, showTimestamp, onLongPress, 
     }, [])
 
     const getColor = () => {
-        if (user) {
-            return user.color
+        if (props.chat.user) {
+            return props.user.color
         }
         else {
             return 'white'
@@ -100,79 +121,70 @@ const ChatMessage = ({ chat, previousMessage, user, showTimestamp, onLongPress, 
 
         },
 
-        midContainer: {
-            marginLeft: 10
-        },
-
         text: {
             fontFamily: 'KanitMedium',
             marginLeft: 10,
-            color: 'white',
+            color: Colors[colorScheme].tint,
             fontSize: 16
         },
 
-        profileImage: {
-            width: 40,
-            height: 40,
-            marginLeft: 10
+        middleContainer: {
+            marginBottom: 20,
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '100%',
+            backgroundColor: 'lightgray',
+            ...SHADOWS[colorScheme],
+            borderRadius: 10
         }
-
-
     })
-
-
-    const getReactions = () => {
-        if (chatData?.reactions?.length > 0) {
-            return chatData?.reactions[0].reaction
-        }
-        return ' '
-    }
 
     return (
         <View>
 
-            {!chatData?.system ?
+            {!props.chat.isSystem ?
 
                 <TouchableOpacity
                     activeOpacity={1}
-                    onLongPress={() => onChatSelected(chatData)}
+                    onLongPress={() => onChatSelected(chat)}
                     delayLongPress={100}>
 
                     <React.Fragment>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            {isMyMessage() ?
+                                <Text style={styles.name}>{'You'}</Text>
 
-                        {isMyMessage() ?
-                            <Text style={styles.name}>You</Text>
+                                :
 
-                            :
-
-                            <Text style={[styles.name]}>{getDisplayName(userData?.firstName, userData?.lastName)}</Text>}
-
-
+                                <Text style={[styles.name]}>{userData?.displayName}</Text>}
 
 
-                        <View style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'center', width: '90%' }}>
+                            {props.showsTime && <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 12 }}>{moment(props.chat.createdAt).format('LT')}</Text>}
+
+
+                        </View>
 
 
 
-                            {isTextMessage() && <View style={styles.messageIndicator} />}
+                        <View
+                            style={[styles.middleContainer]}>
+
+
+
+                            <View style={styles.messageIndicator} />
 
 
                             <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
-                                {isMyMessage() && <Text style={styles.text}>{chatData?.text}</Text>}
-                                {!isMyMessage() && <Text style={styles.text}>{chatData?.text}</Text>}
+                                {isEmojiText(chat?.text) ? <Text style={[styles.text, { fontSize: 48 }]}>{chat?.text}</Text> : <Text style={styles.text}>{chat?.text}</Text>
+
+
+                                }
 
 
 
 
 
-                                {showTimestamp && <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 12, marginRight: -20 }}>{moment(chatData?.createdAt.toDate()).format('LT')}</Text>}
                             </View>
-
-
-
-
-
-
 
 
                             {isNotes() && isMyMessage() &&
@@ -184,15 +196,24 @@ const ChatMessage = ({ chat, previousMessage, user, showTimestamp, onLongPress, 
 
                                     }
                                 }>
-                                    <DeskItemPreview item={Notes[0]} />
+                                    <DeskItemPreview
+                                        item={Notes[0]}
+                                        onLongPress={undefined}
+                                        margin={undefined}
+                                        onMorePress={undefined}
+                                        deskCategory={undefined}
+                                        showBookmarked={undefined} />
 
                                 </View>
 
                             }
 
-                            {isPoll() && <DeskItemPreview item={Notes[0]} />}
-                            {isBurningQuestion() && <DeskItemPreview item={Notes[0]} />}
-                        </View>
+                            {isPoll() && <DeskItemPreview item={Notes[0]} onLongPress={undefined} margin={undefined} onMorePress={undefined} deskCategory={undefined} showBookmarked={undefined} />}
+                            {isBurningQuestion() && <DeskItemPreview item={Notes[0]} onLongPress={undefined} margin={undefined} onMorePress={undefined} deskCategory={undefined} showBookmarked={undefined} />}
+                        </View >
+
+
+
                         {chatData?.reactions?.length > 0 && <View style={{ flexDirection: 'row', borderRadius: 25, paddingHorizontal: 5, marginTop: -10 }}>
 
                             {chatData?.reactions.map((item, index) =>

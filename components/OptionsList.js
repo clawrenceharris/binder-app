@@ -21,7 +21,7 @@ const OptionsList = (props) => {
             case 'Desk Settings': return assets.settings;
             case 'Mute': return assets.bell;
             case 'Copy': return assets.copy;
-
+            case 'Bookmarked':
 
         }
         return null

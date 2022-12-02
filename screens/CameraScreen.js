@@ -17,7 +17,7 @@ import Classes from '../constants/data/Classes'
 import ClassChatListItem from '../components/ClassChatListItem'
 import { SHADOWS } from '../constants/Theme'
 import CameraHeader from '../components/CameraHeader'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import ClassProfileCircle from '../components/ClassProfileCircle'
 import * as ImagePicker from 'expo-image-picker'
 import ModalComponent from '../components/Modal'
@@ -27,7 +27,7 @@ import { haptics } from '../utils'
 
 const MAX_VIDEO_DURATION = 10000
 
-const CameraScreen = ({ route }) => {
+const CameraScreen = ({ navigation }) => {
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
     const [hasAudioPermission, setHasAudioPermission] = useState(null);
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
@@ -40,7 +40,7 @@ const CameraScreen = ({ route }) => {
     const [openCameraModal, setOpenCameraModal] = useState()
     const cameraRef = useRef(null)
     const [isCameraReady, setIsCameraReady] = useState(false)
-    const navigation = useNavigation();
+    const route = useRoute();
     const [galleryItems, setGalleryItems] = useState([])
     const [pressOut, setPressOut] = useState(null)
     const [lastTap, setLastTap] = useState(null);
@@ -162,7 +162,7 @@ const CameraScreen = ({ route }) => {
 
             }
 
-            else if (result.type == 'image' && result != null) {
+            else if (result != null && result.type == 'image') {
                 route.params.setImage(result.uri)
                 navigation.goBack()
 

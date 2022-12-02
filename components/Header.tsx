@@ -2,14 +2,13 @@ import { View, Text, StyleSheet, SafeAreaView } from 'react-native'
 import React from 'react'
 import BackButton from './BackButton'
 import { SHADOWS, SIZES } from '../constants/Theme'
-import { assets } from '../constants'
+import { assets, Colors } from '../constants'
+import useColorScheme from '../hooks/useColorScheme'
 
 const Header = (props) => {
+    const colorScheme = useColorScheme()
     const styles = StyleSheet.create({
-        shadows: {
-            ...SHADOWS.light,
-            shadowColor: '#272727'
-        },
+
 
         title: {
             fontFamily: 'KanitMedium',
@@ -50,12 +49,13 @@ const Header = (props) => {
         }
     })
     return (
-        <View style={[styles.mainContainer, props.shadow && styles.shadows]}>
+        <View style={[styles.mainContainer, { ...props.style }]}>
             <View style={styles.leftContainer}>
                 {!props.headerLeft ?
-                    !props.isModal && <BackButton
+                    !props.isModal &&
+                    <BackButton
                         navigation={props.navigation}
-                        color={'white'}
+                        color={props.color || Colors[colorScheme].background}
                         direction={props.direction ? props.direction : 'horizontal'} />
                     :
                     props.headerLeft
@@ -68,7 +68,7 @@ const Header = (props) => {
                 {!props.headerCenter ?
                     <View style={{ alignItems: 'center' }} >
                         {props.isModal && <View style={{ width: '80%', height: 5, borderRadius: 25, backgroundColor: 'gray', marginBottom: 10 }} />}
-                        <Text style={styles.title}>{props.title}</Text>
+                        <Text style={[styles.title, { ...props.textStyle }]}>{props.title}</Text>
 
                     </View>
                     :

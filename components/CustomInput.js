@@ -38,11 +38,13 @@ const CustomInput = ({ rules, control, name, placeholder, secureTextEntry, keybo
 
 const styles = StyleSheet.create({
     input: {
-        borderBottomWidth: 2,
         width: '100%',
         fontSize: 20,
-        padding: 5,
-        color: 'white'
+        padding: 10,
+        fontFamily: 'Kanit',
+        color: 'black',
+        backgroundColor: '#EFEFEF',
+        borderRadius: 15
     },
 
     erroMessage: {

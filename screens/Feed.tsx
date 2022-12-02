@@ -8,10 +8,11 @@ import { SHADOWS } from '../constants/Theme'
 import { Image } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import useColorScheme from '../hooks/useColorScheme'
-import { UserProfileCircle } from '../components'
+import { ProfileButton } from '../components'
 import Header from '../components/Header'
 import { db } from '../Firebase/firebase'
 import BackButton from '../components/BackButton'
+import Button from '../components/Button'
 
 
 
@@ -47,51 +48,30 @@ export default function Feed() {
     )
 
     return (
-        <View style={{ backgroundColor: '#333', height: '100%' }}>
+        <View style={{ flex: 1, backgroundColor: Colors.light.accent }}>
             <Header
+                navigation={navigation}
                 title={'Feed'}
-                shadow
-                headerLeft={headerLeft()}
-                direction={'horizontal'}
+                style={{ backgroundColor: Colors.light.accent }}
+
+
             />
-            {/* {users?.length > 1 ? <ScrollView showsVerticalScrollIndicator={false}>
 
-                <Text style={styles.subHeaderTitle}>Classmates</Text>
+            <View style={{ padding: 20 }}>
+                <Text style={{ fontFamily: 'Kanit', color: 'white', textAlign: 'center' }}>{"This is the classroom feed for " + classData?.name + ". Post anything in your Desk like Notes or Flashcards and more!"}</Text>
 
-                <FlatList
-                    data={[]}
-                    horizontal
-                    renderItem={({ item }) => <UserProfileCircle user={item} size={50} showStoryBoder showName bold={false} showStudyBuddy margin={25} flexDirection='column' />}
-                    keyExtractor={(item) => item.id}
-
-                    showsHorizontalScrollIndicator={false}
-
-
+                <Button
+                    title={'Make a Post'}
+                    onPress={function (): void {
+                        alert('This feature is not yet ready for use. Check again later.')
+                    }}
+                    style={{ marginTop: '50%' }}
 
                 />
 
-                <Text style={styles.subHeaderTitle}>Messages</Text>
-
-                <FlatList
-                    data={[]}
-                    renderItem={({ item }) => <ClassChatListItem Class={Classes[route.params.class.id]} />}
-                    keyExtractor={(item) => item.id}
-                    scrollEnabled={false}
-
-                    style={{ paddingHorizontal: 10 }}
+            </View>
 
 
-                />
-
-
-            </ScrollView>
-
-                : <Text style={{ fontFamily: 'Kanit', color: 'gray', alignSelf: 'center', marginTop: '50%', fontSize: 20 }}>It's just you in here.🙈</Text>
-            }
-
-            <TouchableOpacity style={[styles.addChatBtn, { ...SHADOWS.dark }]}>
-                <Image source={assets.new_chat} style={{ tintColor: 'white', width: 35, height: 35 }} />
-            </TouchableOpacity> */}
 
         </View>
     )

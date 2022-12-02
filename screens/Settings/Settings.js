@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth, db, getSchool } from '../../Firebase/firebase'
+import { auth, db } from '../../Firebase/firebase'
 import { useNavigation } from '@react-navigation/native'
 import SettingsListItem from '../../components/SettingsListItem'
 import moment from 'moment'
@@ -15,15 +15,14 @@ const Settings = () => {
     const [secondSchoolData, setSecondSchoolData] = useState(null)
 
     const navigation = useNavigation()
-    const getSchoolData = () => {
-        return getSchool(userData?.school.id)
+
+
+    const onLogoutPress = () => {
+        //TODO: log user out using firebase
 
     }
 
 
-    const signOut = () => {
-        //log user out 
-    }
     useEffect(() => {
         //get and set the user data and the user's school data
         const subscriber = db.collection('users')
@@ -63,9 +62,8 @@ const Settings = () => {
                 <View style={styles.sectionContainer}>
 
 
-                    <Text style={styles.sectionTitle}>Account Settings</Text>
+                    <Text style={styles.sectionTitle}>{'Account Settings'}</Text>
                     <SettingsListItem
-
                         title='Name'
                         value={auth.currentUser?.displayName}
                         isTop={true}
@@ -99,7 +97,7 @@ const Settings = () => {
 
                 <View style={styles.sectionContainer}>
 
-                    <Text style={styles.sectionTitle}>School Settings</Text>
+                    <Text style={styles.sectionTitle}>{'School Settings'}</Text>
 
                     <SettingsListItem
                         title='School'
@@ -128,7 +126,7 @@ const Settings = () => {
 
 
                 <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Desk Settings</Text>
+                    <Text style={styles.sectionTitle}>{'Desk Settings'}</Text>
 
                     <SettingsListItem
                         title='Desk Privacy'
@@ -152,7 +150,7 @@ const Settings = () => {
                     backgroundColor={Colors.light.red}
                     tint={'white'}
                     width={'100%'}
-                    onPress={() => { auth.signOut() }}
+                    onPress={onLogoutPress}
                     margin={20}
                     condition={true}
                 />

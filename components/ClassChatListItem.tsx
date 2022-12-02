@@ -5,11 +5,10 @@ import { assets, Colors } from '../constants'
 import moment from "moment";
 
 import { useNavigation } from '@react-navigation/native'
-import UserProfileCircle from './UserProfileCircle'
-import ClassProfileCircle from './ClassProfileCircle';
+import ProfileButton from './ProfileButton'
 
 
-const ClassChatListItem = ({ Class, chatroom }) => {
+const ClassChatListItem = ({ Class, chatroom, onPress }) => {
     const colorScheme = useColorScheme();
     const navigation = useNavigation();
     const isMyMessage = () => {
@@ -17,18 +16,13 @@ const ClassChatListItem = ({ Class, chatroom }) => {
     }
 
     const message = chatroom.messages[chatroom.messages.length - 1];
-    const onClick = () => {
-        navigation.navigate("chatroom", {
-            class: Class, chatroom: chatroom
-        })
-    }
+
 
     return (
-        <TouchableOpacity onPress={onClick}>
+        <TouchableOpacity onPress={onPress}>
             <View style={[styles.chatContainer, { borderBottomColor: colorScheme === 'light' ? '#F4F4F4' : '#292929', margin: 10 }]} >
                 <View style={styles.leftContainer}>
-                    {chatroom.type === 'group' && <ClassProfileCircle Class={Class} story={[]} showStoryBoder size={40} showName bold />}
-                    {chatroom.type === 'private' && <UserProfileCircle user={chatroom.users[0]} showStudyBuddy showStoryBoder={false} size={50} showName={false} bold />}
+                    <ProfileButton />
 
                     {/*class name and details*/}
                     <View style={styles.midContainer}>
@@ -49,7 +43,6 @@ const ClassChatListItem = ({ Class, chatroom }) => {
                 </View>
 
                 <Text style={styles.date}>{moment(message.timestamp).format("MMM, DD")}</Text>
-
 
             </View >
         </TouchableOpacity>

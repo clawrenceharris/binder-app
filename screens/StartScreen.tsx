@@ -1,28 +1,36 @@
-import { View, Text, Button, SafeAreaView, Image, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { assets, Colors } from '../constants'
+import Button from '../components/Button'
+import { SHADOWS } from '../constants/Theme'
 
 const StartScreen = ({ navigation }) => {
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#333', alignItems: 'center' }}>
-            <Text style={{ fontFamily: 'KanitSemiBold', fontSize: 30, color: 'white', marginTop: 20, alignSelf: 'flex-start', margin: 20 }}>Welcome to</Text>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent, alignItems: 'center', justifyContent: 'space-evenly' }}>
+            <View style={{ height: 70 }} />
+
+
             <Image source={assets.logo} style={{ width: 180, height: 180 }} />
+            <View style={{ width: '100%', alignItems: 'center', padding: 50 }}>
+                <Button
+                    onPress={() => navigation.navigate('SignIn')}
+                    style={{ marginTop: 20, width: '100%', borderRadius: 15, ...SHADOWS.dark, shadowColor: '#73017B' }}
+                    title={'Log In'}
 
-            <View style={{ marginTop: '20%', width: '100%', alignItems: 'center' }}>
+                />
+                <Button
+                    onPress={() => navigation.navigate('SignUpEmailPassword')}
+                    style={{ marginTop: 20, width: '100%', backgroundColor: 'white', borderRadius: 15, ...SHADOWS.dark, shadowColor: '#73017B' }}
+                    tint={'black'}
+                    title={'Sign Up'}
 
-                <TouchableOpacity
-                    onPress={() => { navigation.navigate('SignIn') }}
-                    style={{ width: '50%', backgroundColor: Colors.light.primary, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 25 }}>
-                    <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white' }}>Log In</Text>
+                />
 
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                    onPress={() => { navigation.navigate('SignUpEmailPassword') }}
-                    style={{ marginTop: 20, width: '50%', backgroundColor: Colors.light.primary, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 25 }}>
-                    <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white' }}>Sign Up</Text>
 
-                </TouchableOpacity>
+
+
+
             </View>
 
         </SafeAreaView>

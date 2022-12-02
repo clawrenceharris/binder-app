@@ -9,7 +9,6 @@ import { CameraScreen, Chats, ClassesScreen, Profile } from '../screens';
 import Desk from '../screens/Desk';
 import Playground from '../screens/Playground';
 import { SHADOWS, SIZES } from '../constants/Theme';
-import { UserProfileCircle } from '../components';
 import { createDrawerNavigator, useIsDrawerOpen } from '@react-navigation/drawer';
 import Chat from '../screens/Chat';
 import CurrentUserProfile from '../screens/CurrentUserProfile';
@@ -20,18 +19,13 @@ import EditNameModal from '../components/EditNameModal';
 
 const Drawer = createDrawerNavigator();
 
-
-
-
-
-
 function ChatScreen({ navigation }) {
     return (
         <Drawer.Navigator
             initialRouteName="Chat"
             drawerStyle={{
                 backgroundColor: '#333',
-                width: '80%',
+                width: '100%',
             }}
             drawerType={'slide'}
             drawerContent={() => {
@@ -59,7 +53,7 @@ function Home({ navigation }) {
             initialRouteName="Classes"
             drawerStyle={{
                 backgroundColor: '#333',
-                width: '80%',
+                width: '100%',
             }}
             drawerType={'slide'}
             drawerContent={() => {
@@ -87,15 +81,12 @@ function DeskScreen({ navigation }) {
             initialRouteName="Desk"
             drawerStyle={{
                 backgroundColor: '#333',
-                width: '80%',
+                width: '100%',
             }}
             drawerType={'slide'}
             drawerContent={() => {
                 return (
                     <CurrentUserProfile navigation={navigation} />
-
-
-
                 )
             }}>
             <Drawer.Screen name='Desk' component={Desk} />
@@ -109,7 +100,8 @@ function DeskScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     shadow: {
-        shadowColor: 'black',
+        shadowColor: 'lightgray',
+
         shadowOffset: {
             width: 0,
             height: 10
@@ -123,8 +115,9 @@ const styles = StyleSheet.create({
 
 
 
-const NewPostButton = ({ children, onPress }) => (
-    <TouchableOpacity
+const NewPostButton = ({ children, onPress }) => {
+    const colorScheme = useColorScheme()
+    return (<TouchableOpacity
         style={{ top: -20, justifyContent: 'center', alignItems: 'center', ...styles.shadow, shadowColor: 'lightgray', elevation: 5 }}
         onPress={onPress}
     >
@@ -133,29 +126,22 @@ const NewPostButton = ({ children, onPress }) => (
 
         </View>
 
-    </TouchableOpacity>
-)
+    </TouchableOpacity>)
+}
 
 
 
 
 
 
-export default function BottomTabNavigator({ currentUser }) {
+
+
+
+export default function BottomTabNavigator() {
     const colorScheme = useColorScheme();
     const BottomTab = createBottomTabNavigator();
     const ICON_SIZE = 28
-    function getTabBarVisibility(route) {
-        const routeName = route.state
-            ? route.state.routes[route.state.index].name
-            : '';
 
-        if (routeName === 'Post') {
-            return false;
-        }
-
-        return true;
-    }
     return (
 
         <BottomTab.Navigator
@@ -172,7 +158,6 @@ export default function BottomTabNavigator({ currentUser }) {
                     left: 20,
                     right: 20,
                     borderRadius: 20,
-                    ...SHADOWS.dark,
 
                 },
                 tabBarActiveTintColor: Colors.light.primary,
@@ -240,7 +225,7 @@ export default function BottomTabNavigator({ currentUser }) {
                             style={{ tintColor: 'white', width: 30, height: 30, top: 7 }} />
                     ),
                     tabBarButton: (props) => (
-                        <NewPostButton {...props} />
+                        <NewPostButton onPress={() => { }} {...props} />
                     )
                 }}
             />

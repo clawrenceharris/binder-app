@@ -10,12 +10,13 @@ export const COLORS = {
 };
 
 export const SIZES = {
-    base: 8,
-    small: 12,
-    font: 14,
+
+    small: 14,
     medium: 16,
     large: 18,
     extraLarge: 24,
+    huge: 28,
+    extraHuge: 36,
     header: 110
 };
 
@@ -34,10 +35,10 @@ export const SHADOWS = {
             width: 0,
             height: 3,
         },
-        shadowOpacity: 1,
-        shadowRadius: 20,
+        shadowOpacity: 0.8,
+        shadowRadius: 4,
 
-        elevation: 0.2,
+        elevation: 3,
     },
     medium: {
         shadowColor: 'black',

@@ -7,13 +7,14 @@ import { descriptions, styles } from '.'
 import { db } from '../../Firebase/firebase'
 import { faker } from '@faker-js/faker'
 import Button from '../../components/Button'
+import BackButton from '../../components/BackButton'
 
 const SignUpSchool = ({ navigation }) => {
     const route = useRoute()
     const [school, setSchool] = useState(null)
     const [data, setData] = useState([])
 
-    console.log(school)
+
 
     const defaultData = {
         id: faker.datatype.uuid(),
@@ -68,21 +69,26 @@ const SignUpSchool = ({ navigation }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#333' }}>
-            <TouchableWithoutFeedback onPress={onBackPressed}>
-                <Image source={assets.left_arrow} style={{ width: 28, height: 28, tintColor: Colors.light.primary, margin: 20 }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
+            <View>
 
-            </TouchableWithoutFeedback>
+            </View>
+            <BackButton
+                navigation={navigation}
+                margin={20}
 
-            <View style={{ padding: 30 }}>
+            />
+            <Text style={styles.screenTitle}>{"What school do you go to?"}</Text>
 
-                <Text style={styles.screenTitle}>{"What school do you go to?"}</Text>
+
+            <View style={{ padding: 30, justifyContent: 'space-evenly' }}>
+
                 <Text style={styles.description}>{descriptions.school}</Text>
                 <View style={{ alignItems: 'flex-start', width: '100%', marginTop: 30 }}>
 
                     {!school ? <TouchableOpacity
                         onPress={() => { navigation.navigate('SearchSelect', { ...routeParams, update: setSchool }) }}
-                        style={{ alignSelf: 'center', flexDirection: 'row', backgroundColor: Colors.light.accent, borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
+                        style={{ alignSelf: 'center', flexDirection: 'row', backgroundColor: '#00000070', borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
 
                         <Image source={assets.school} style={{ width: 28, height: 28, tintColor: 'white' }} />
                         <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>Select a School</Text>
@@ -94,10 +100,10 @@ const SignUpSchool = ({ navigation }) => {
                                 onPress={() => {
                                     navigation.navigate('SearchSelect', { ...routeParams, update: setSchool })
                                 }}
-                                style={{ flexDirection: 'row', backgroundColor: Colors.light.accent, borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                style={{ flexDirection: 'row', backgroundColor: '#00000070', borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={assets.pencil} style={{ width: 20, height: 20, tintColor: 'white' }} />
-                                <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>{school.name}</Text>
+                                <Text style={{ fontSize: 20, fontFamily: 'KanitMedium', color: 'white', marginLeft: 10 }}>{school.name}</Text>
                             </TouchableOpacity>
 
 
@@ -109,18 +115,13 @@ const SignUpSchool = ({ navigation }) => {
                 </View>
 
 
-                <View style={{ alignItems: 'center' }}>
-                    <Button
-                        title={'Continue'}
-                        condition={school != null}
-                        background={Colors.light.primary}
-                        tint={'white'}
-                        margin={styles.continueBtn.marginTop}
-                        onPress={onNextPressed}
-                        width={styles.continueBtn.width}
+                <Button
+                    title={'Continue'}
+                    onPress={onNextPressed}
+                    style={{ borderRadius: 15, margin: 40 }}
+                    disabled={!school}
+                />
 
-                    />
-                </View>
 
             </View>
         </SafeAreaView>

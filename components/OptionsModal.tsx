@@ -11,16 +11,12 @@ const OptionsModal = (props) => {
     const modalHeight = 150
     const { width, height } = useWindowDimensions();
 
-    const padding = 40
-
-
-
     function slideIn() {
         Animated.timing(
             translateValue,
             {
 
-                toValue: props.toValue ? props.toValue : -1 * (modalHeight + 60 + padding),
+                toValue: props.toValue ? props.toValue : -1 * (modalHeight + 100),
                 duration: 400,
                 useNativeDriver: true,
 

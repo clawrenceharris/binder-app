@@ -1,23 +1,17 @@
-import { View, Text, StyleSheet, ImageBackground, Image, Modal, FlatList, Button, AsyncStorage, TouchableOpacity, TouchableWithoutFeedback, TextInput } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, TextInput } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { assets, Colors } from '../constants'
 import useColorScheme from '../hooks/useColorScheme'
 import QuickActions from '../components/QuickActions'
-import ClassProfileCircle from '../components/ClassProfileCircle'
-import { UserProfileCircle } from '../components'
-import CircleButton from '../components/CircleButton'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { SHADOWS, SIZES } from '../constants/Theme'
+import { ProfileButton } from '../components'
+import { SHADOWS } from '../constants/Theme'
 import { useNavigation } from '@react-navigation/native'
 import ProfileTag from '../components/ProfileTag'
 import ModalComponent from '../components/Modal'
 import moment from 'moment'
-import { ColorSpace } from 'react-native-reanimated'
 import ClassListItem from '../components/ClassListItem'
 import Classes from '../constants/data/Classes'
-import ProfileListBox from '../components/ProfileListBox'
-import ClassChatListItem from '../components/ClassChatListItem'
 import ChatRooms from '../constants/data/ChatRooms'
 import { auth, updateUserProfile } from '../Firebase/firebase'
 import { openMediaLibrary } from '../utils'
@@ -271,29 +265,32 @@ const Profile = ({ route }) => {
 
 
                 <View style={{ alignItems: 'center' }}>
-                    {!isCurrentUser() ?
-
-                        <TouchableOpacity >
-                            <UserProfileCircle user={route.params.user} showStudyBuddy={false} showStoryBoder size={80} showName bold showActive={false} />
-
-                        </TouchableOpacity>
-
-                        :
-                        <TouchableWithoutFeedback onPress={() => { setShowImageOptionsModal(true) }}>
-                            <View>
-
-                                <View style={{ borderRadius: 100, padding: 8, backgroundColor: '#333', justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: -1, right: -5, zIndex: 1 }}>
-                                    <Image source={assets.add_image} style={{ width: 20, height: 20, tintColor: Colors.light.primary }} />
-
-                                </View>
 
 
-                                <UserProfileCircle user={user} showStudyBuddy={false} showStoryBoder size={120} showName bold showActive={false} />
+
+                    <ProfileButton />
+
+
+
+
+
+                    <TouchableWithoutFeedback onPress={() => { setShowImageOptionsModal(true) }}>
+                        <View>
+
+                            <View style={{ borderRadius: 100, padding: 8, backgroundColor: '#333', justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: -1, right: -5, zIndex: 1 }}>
+                                <Image source={assets.add_image} style={{ width: 20, height: 20, tintColor: Colors.light.primary }} />
+
                             </View>
 
-                        </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={() => { setShowImageOptionsModal(true) }}>
+                                <ProfileButton />
 
-                    }
+                            </TouchableWithoutFeedback>
+                        </View>
+
+                    </TouchableWithoutFeedback>
+
+
 
 
                 </View>

@@ -38,8 +38,8 @@ const GPASetttings = ({ route }) => {
 
             <View style={[styles.mainContainer]}>
                 <View>
-                    <Text style={{ fontFamily: 'KanitMedium', color: 'white', fontSize: 20, textAlign: 'center' }}>What was your unweighted GPA on your last transcript?</Text>
-                    <View style={{ width: 20, height: 20, borderColor: 'white', borderWidth: 2, borderRadius: 100, justifyContent: 'center', alignItems: 'center', position: 'absolute', right: 55, bottom: 5 }}>
+                    <Text style={{ fontFamily: 'KanitMedium', color: 'white', fontSize: 20, textAlign: 'center' }}>{"What was your unweighted GPA on your last transcript?"}</Text>
+                    <View style={{ width: 20, height: 20, borderColor: 'white', borderWidth: 2, borderRadius: 100, justifyContent: 'center', alignItems: 'center', position: 'absolute', right: 100, bottom: 5 }}>
 
                         <Image source={assets.info} style={{ width: 10, height: 10, tintColor: 'white' }} />
 

@@ -15,12 +15,12 @@ import ModalComponent from '../../components/Modal'
 import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet'
 import { styles } from '.'
 import Button from '../../components/Button'
+import BackButton from '../../components/BackButton'
 
 const SignUpEmailPassword = ({ navigation }) => {
     const { control, handleSubmit, watch } = useForm();
     const password = watch('password')
     const email = watch('email')
-    const colorScheme = useColorScheme()
     const [error, setError] = useState('')
     // const [email, setEmail] = useState('')
     // const [password, setPassword] = useState('')
@@ -42,6 +42,7 @@ const SignUpEmailPassword = ({ navigation }) => {
 
     const onSignUpPressed = (data) => {
         //validate user
+
         auth
             .createUserWithEmailAndPassword(data.email, data.password)
             .then(userCredentials => {
@@ -58,17 +59,16 @@ const SignUpEmailPassword = ({ navigation }) => {
                 db.collection("users").doc(user.uid)
                     .set({
                         uid: user.uid,
-                        firstName: null,
-                        lastName: null,
-                        photoURL: null,
+                        displayName: '',
+                        photoURL: '',
                         birthday: null,
-                        gpa: null,
-                        gradYear: null,
+                        gpa: '',
+                        gradYear: '',
                         school: null,
-                        lastActive: null,
-                        studyBuddies: null,
-                        friends: null,
-                        classes: null
+                        lastActive: new Date(),
+                        studyBuddies: [],
+                        friends: [],
+                        classes: []
 
 
 
@@ -96,23 +96,28 @@ const SignUpEmailPassword = ({ navigation }) => {
     return (
 
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#333' }}>
-            <TouchableWithoutFeedback onPress={() => { navigation.goBack() }}>
-                <Image source={assets.left_arrow} style={{ width: 25, height: 25, tintColor: Colors.light.primary, margin: 20 }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
+            <View style={{ height: '25%' }}>
+                <BackButton
+                    direction={'horizontal'}
+                    color={'white'}
+                    margin={20}
+                    navigation={navigation}
 
-            </TouchableWithoutFeedback>
+                />
+                <Text style={styles.screenTitle}>{"Sign up with your email and password"}</Text>
+            </View>
 
-            <View style={{ padding: 20, alignItems: 'center' }}>
 
-                <Text style={styles.screenTitle}>Sign up with email and password</Text>
+            <View style={{ padding: 20, alignItems: 'center', backgroundColor: 'white', height: '100%', borderRadius: 15 }}>
+
                 {error && <Text style={styles.errorMessage}>{error}</Text>}
-                <View style={{ alignItems: 'center', width: '100%', padding: 20, marginTop: 10 }}>
+                <View style={{ alignItems: 'center', width: '100%', margin: 20 }}>
                     <View style={{ width: '100%' }}>
-                        <Text style={styles.textInputTitle}>EMAIL</Text>
                         <CustomInput
                             control={control}
                             name="email"
-                            placeholder=""
+                            placeholder="Email"
                             secureTextEntry={false}
                             rules={{ required: 'Username is required' }}
                             keyboardType='email-address'
@@ -120,11 +125,10 @@ const SignUpEmailPassword = ({ navigation }) => {
                     </View>
 
                     <View style={{ width: '100%', marginTop: 15 }}>
-                        <Text style={styles.textInputTitle}>PASSWORD</Text>
                         <CustomInput
                             control={control}
                             name="password"
-                            placeholder=""
+                            placeholder="Password"
                             secureTextEntry
                             rules={{ required: 'Username is required' }}
                             keyboardType=''
@@ -139,24 +143,22 @@ const SignUpEmailPassword = ({ navigation }) => {
 
 
 
-
-
-                <Button
-                    title={'Accept & Continue'}
-                    background={styles.continueBtn.backgroundColor}
-                    tint={'white'}
-                    margin={styles.continueBtn.marginTop}
+                <TouchableOpacity
                     onPress={handleSubmit(onSignUpPressed)}
-                    condition={email && password}
-                    width={styles.continueBtn.width}
-                />
+                    style={{ width: '100%', backgroundColor: Colors.light.primary, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 15 }}>
+                    <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white' }}>{"Accept & Continue"}</Text>
 
-                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                    <Text style={{ color: 'white' }}>Already have an account?</Text>
+                </TouchableOpacity>
+
+
+
+                <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 20 }}>
+                    <Text style={{ color: 'darkgray', fontFamily: 'Kanit' }}>{"Already have an account?"}</Text>
                     <Text
-                        style={{ color: Colors.light.primary, fontWeight: 'bold', marginLeft: 5 }}
-                        onPress={() => { navigation.navigate('SignIn') }}
-                    >Log In</Text>
+                        style={{ color: Colors.light.primary, fontWeight: 'bold', marginLeft: 5, fontFamily: 'KanitBold' }}
+                        onPress={() => { navigation.navigate('SignIn') }}>
+                        {"Log In"}
+                    </Text>
 
                 </View>
 
@@ -165,6 +167,7 @@ const SignUpEmailPassword = ({ navigation }) => {
 
     )
 }
+
 
 
 export default SignUpEmailPassword

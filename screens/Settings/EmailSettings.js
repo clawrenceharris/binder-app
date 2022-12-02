@@ -22,6 +22,8 @@ const EmailSettings = ({ route }) => {
     const [showModal, setShowModal] = useState(false)
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+
+
     const getMessage = (message) => {
         if (message == 'Firebase: The email address is already in use by another account. (auth/email-already-in-use).') {
             return 'This email address already exists'
@@ -44,15 +46,6 @@ const EmailSettings = ({ route }) => {
         return user.reauthenticateWithCredential(cred);
     }
 
-    function changePassword(currentPassword, newPassword) {
-        reauthenticate(currentPassword).then(() => {
-            var user = auth.currentUser;
-            user.updatePassword(newPassword).then(() => {
-                console.log("Password updated!");
-                sendEmailVerification(auth.currentUser)
-            }).catch((error) => { console.log(error); });
-        }).catch((error) => { console.log(error); });
-    }
 
 
 
@@ -63,6 +56,7 @@ const EmailSettings = ({ route }) => {
                 setErrorMessage('')
                 setSuccessMessage("");
                 setSuccessMessage("Email successfully updated!");
+
             }).catch((error) => {
                 setErrorMessage(getMessage(error.message))
             });
@@ -101,7 +95,7 @@ const EmailSettings = ({ route }) => {
                         <View style={{ borderBottomWidth: 1, borderBottomColor: 'white', marginBottom: 20, paddingBottom: 10 }}>
                             <Text style={{ alignSelf: 'center', color: 'white', fontFamily: "KanitMedium", fontSize: 18 }}>Password</Text>
                         </View>
-                        <Text style={styles.description}>For security, enter your password first.</Text>
+                        <Text style={styles.description}>{"For security, enter your password first."}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <TextInput
                                 placeholder='Password'
@@ -140,6 +134,7 @@ const EmailSettings = ({ route }) => {
 
 
             </View>
+
             {!verificationPending ? <Text style={styles.description}>{descriptions.email}</Text> :
 
                 <Text style={styles.description}>{"⚠️ We've sent a verification email to you. Please open the link to finish verifying your address."}</Text>}
@@ -147,7 +142,7 @@ const EmailSettings = ({ route }) => {
             <View style={{ marginTop: 30 }}>
                 {verificationPending && <Text
                     onPress={() => { }}
-                    style={{ color: Colors.light.primary }}>Resend Verification Email</Text>}
+                    style={{ color: Colors.light.primary }}>{"Resend Verification Email"}</Text>}
 
             </View>
 
@@ -169,7 +164,7 @@ const EmailSettings = ({ route }) => {
                 <TouchableOpacity
                     activeOpacity={1}
                     onPress={email !== route.params.value ? handleSave : () => { }}>
-                    <Text style={{ position: 'absolute', bottom: -12, right: 10, color: email !== route.params.value ? Colors.light.primary : 'gray', fontFamily: "KanitMedium", fontSize: 16 }}>Save</Text>
+                    <Text style={{ position: 'absolute', bottom: -12, right: 10, color: email !== route.params.value ? Colors.light.primary : 'gray', fontFamily: "KanitMedium", fontSize: 16 }}>{"Save"}</Text>
 
                 </TouchableOpacity>
 
@@ -179,13 +174,13 @@ const EmailSettings = ({ route }) => {
             <Text style={styles.successMessage}>{successMessage}</Text>
 
             <View style={{ marginTop: 20, borderRadius: 15, borderWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 15, borderColor: '#646464', backgroundColor: '#272727' }}>
-                <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>Show this email on my profile</Text>
+                <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>{"Show this email on my profile"}</Text>
                 <ToggleButton onToggle={() => { setCurrentState(!currentState) }} currentState={currentState} />
 
             </View>
 
             <View style={{ marginTop: 20, borderRadius: 15, borderWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 15, borderColor: '#646464', backgroundColor: '#272727' }}>
-                <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>Let others find me using this email</Text>
+                <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>{"Let others find me using this email"}</Text>
                 <ToggleButton onToggle={() => { setCurrentState(!currentState) }} currentState={currentState} />
 
             </View>
