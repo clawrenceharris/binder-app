@@ -1,133 +1,123 @@
 import { View, Text, StyleSheet, FlatList, ScrollView, Keyboard, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { assets, Colors } from '../constants'
-import { DrawerActions, useNavigation, useRoute } from '@react-navigation/native'
-import ChatMessage from '../components/ChatMessage'
+import Chat from '../components/ChatMessage'
 import ChatInput from '../components/ChatInput'
-import { auth, db, updateCollection } from '../Firebase/firebase'
+import { auth, db } from '../Firebase/firebase'
 import Header from '../components/Header'
 import firebase from 'firebase/compat'
 import BackButton from '../components/BackButton'
 import { ProfileButton } from '../components'
-import { faker } from '@faker-js/faker'
 import moment from 'moment'
 import CallButton from '../components/CallButton'
 import ChatModal from '../components/ChatModal'
-import { getDisplayNameOrYou, haptics } from '../utils'
+import { getDisplayNameOrYou } from '../utils'
 import useColorScheme from '../hooks/useColorScheme'
 import { ActivityBadge } from '../components/ProfileBadges'
+import { useNavigation } from '@react-navigation/native'
+import ChatMessage from '../components/ChatMessage'
 
 
 
 
 
 const Chatroom = ({ route }) => {
-    const [message, setMessage] = useState('')
-    const navigation = useNavigation();
+    const [message, setMessage] = useState("")
+    const navigation = useNavigation()
     const [chats, setChats] = useState([])
     const [chatroomData, setChatroomData] = useState(null)
     const [ref, setRef] = useState(null)
-    const { chatroomID } = route.params
+    const { id, name } = route.params
     const colors = [
-        Colors.light.primary,
-        '#FFF02B',
-        Colors.light.red,
-        '#8BFF5D',
-        '#2E52F5',
-        '#F64083',
-        '#F89E3E',
-        '#7FF449'
+        Colors.accent,
+        Colors.yellow,
+        Colors.red,
+        Colors.blue,
+        Colors.red,
+        Colors.green,
+        Colors.pink,
+        Colors.orange
     ]
     const [users, setUsers] = useState([])
     const [showChatModal, setShowChatModal] = useState(false)
     const [selectedChat, setSelectedChat] = useState(null)
     const [showTimestamp, setShowTimestamp] = useState(false)
+    const [deskItem, setDeskItem] = useState(null)
     const colorScheme = useColorScheme()
+    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+    useLayoutEffect(() => {
+
+        const subscriber = db.collection('chatrooms')
+            .doc(id)
+            .collection('chats')
+            .orderBy("createdAt", "asc")
+            .onSnapshot(snapshot => {
+                setChats(
+                    snapshot.docs.map((doc) => ({
+                        id: doc.id,
+                        data: doc.data()
+                    }))
+                )
+            })
+        return subscriber
+    }, [route])
 
     useEffect(() => {
 
-
-        const usersWithColor = []
-        const usersData = []
-
-        const subscriber = db.collection('chatrooms')
-            .doc(chatroomID)
-            .onSnapshot(doc => {
-
+        // set the chatroom data
+        db.collection('chatrooms')
+            .doc(id)
+            .get()
+            .then(doc => {
                 setChatroomData(doc.data())
 
-                const users = doc.data()?.users
-
-                users?.forEach(user => {
-
-                    db.collection('users')
-                        .doc(user.id)
-                        .get()
-                        .then(doc => {
-                            usersData.push(doc.data())
-                            setUsers(usersData)
-
-                        })
-                })
-
-                let index = 0
-                for (let i = 0; i < users?.length; i++) {
-                    if (index === colors.length) {
-                        index = 0
-                    }
-                    usersWithColor.push({
-                        user: usersData[i],
-                        color: colors[index]
-
-                    })
-                    index++
-                    setUsers(usersWithColor)
-                }
 
 
             })
 
-        //sort the chats by time they were sent    
-        //chats.sort((a, b) => a?.createdAt > b?.createdAt ? 1 : -1)
-
-
-        return () => subscriber()
 
 
     }, [])
 
 
     const onSendPress = (contentType, text) => {
-        const chatID = faker.datatype.uuid()
+
         //add the chat object to this chatroom
         db.collection('chatrooms')
-            .doc(chatroomID)
-            .update({
+            .doc(id)
+            .collection('chats')
+            .add({
 
-                chats: firebase.firestore.FieldValue.arrayUnion({
-                    id: chatID,
-                    createdAt: new Date(),
-                    contentType: contentType,
-                    text: text,
-                    user: auth.currentUser.uid,
-                    reactions: [],
-                })
+                createdAt: new Date(),
+                contentType: contentType,
+                text: text,
+                deskItem: null,
+                user: db.collection('users').doc(auth.currentUser.uid),
+                reactions: [],
+                isSystem: false
             })
+
+
+
+    }
+    const onDeskItemSendPress = (contentType, deskItem, text) => {
+        //add the chat object to this chatroom
         db.collection('chatrooms')
-            .doc(chatroomID)
-            .get()
-            .then((doc) => {   // on successful message update
-                doc.data().users.forEach(user => { // for each user in the chatroom
-                    updateCollection(
-                        'users',
-                        user,
-                        {
-                            chatrooms: firebase.firestore.FieldValue.arrayUnion(db.collection('chatrooms').doc(chatroomData.id))
-                        })
-
-                })
+            .doc(id)
+            .collection('chats')
+            .add({
+                createdAt: new Date(),
+                contentType: contentType,
+                text: text,
+                deskItem: deskItem,
+                user: db.collection('users').doc(auth.currentUser.uid),
+                reactions: [],
+                isSystem: false
 
             })
+
+
     }
     const getDefaultImage = () => {
         switch (chatroomData?.type) {
@@ -152,12 +142,13 @@ const Chatroom = ({ route }) => {
             <ProfileButton
                 defaultImage={getDefaultImage()}
                 onPress={function (): void {
-                    navigation.navigate('Profile')
+                    navigation.navigate('Profile', { user: chatroomData?.users[0] })
                 }}
-                badgeContainerStyle={{ backgroundColor: chatroomData?.type === 'private' && Colors.light.accent, top: chatroomData?.type === 'private' && '55%', left: chatroomData?.type === 'private' && '65%' }}
+                badgeContainerStyle={{ backgroundColor: chatroomData?.type === 'private' && Colors.primary, top: chatroomData?.type === 'private' && '55%', left: chatroomData?.type === 'private' && '65%' }}
                 badge={chatroomData?.type === 'private' && ActivityBadge()}
-                name={chatroomData?.name}
+                name={name}
                 showsName
+                containerStyle={{ marginLeft: 5 }}
 
 
             />
@@ -171,36 +162,7 @@ const Chatroom = ({ route }) => {
 
 
     const onDeletePress = () => {
-        setShowChatModal(false)
-
-        const chatID = faker.datatype.uuid()
-
-        db.collection('chats')
-            .doc(chatID)
-            .set({
-                text: "This chat was unsent by the sender 🙈",
-                system: true,
-                //set timestamp for this systme message is same as the selected message so that the ordering stays the same
-                createdAt: selectedChat.createdAt
-            })
-
-
-        //removes the selected chat reference from the chatroom 
-        db.collection('chatrooms')
-            .doc(chatroomData?.id)
-            .update({
-                chats: firebase.firestore.FieldValue.arrayRemove(db.collection('chats').doc(selectedChat.id))
-            })
-        db.collection('chats').doc(selectedChat.id).delete()
-
-
-        //appends a system chat to inform users that a chat has been unsent
-        db.collection('chatrooms')
-            .doc(chatroomData?.id)
-            .update({
-                chats: firebase.firestore.FieldValue.arrayUnion(db.collection('chats').doc(chatID))
-
-            })
+        console.log("delete pressed")
     }
 
     const onReportPress = () => {
@@ -223,14 +185,20 @@ const Chatroom = ({ route }) => {
     }
 
     const onReactionPress = (reaction) => {
-        const reactionObject = { reaction: reaction, userUID: auth.currentUser.uid }
-        setShowChatModal(false)
-        console.log("You reacted with " + reactionObject.reaction)
-
-        db.collection('chats')
+        console.log('reaction: ' + reaction)
+        db.collection('chatrooms')
+            .doc(id)
+            .collection('chats')
             .doc(selectedChat.id)
             .update({
-                reactions: firebase.firestore.FieldValue.arrayUnion(reactionObject)
+                reactions: firebase.firestore.FieldValue.arrayUnion({
+                    reaction: reaction,
+                    user: {
+                        uid: auth.currentUser.uid,
+                        displayName: auth.currentUser.displayName,
+                        photoURL: auth.currentUser.photoURL
+                    }
+                })
             })
     }
 
@@ -240,19 +208,19 @@ const Chatroom = ({ route }) => {
         <View style={{ flex: 1, backgroundColor: Colors[colorScheme].background }}>
             <Header
 
-                style={{ backgroundColor: Colors.light.accent, height: 200, zIndex: -2 }}
+                style={{ backgroundColor: Colors.primary, height: 170, zIndex: -2 }}
                 headerLeft={headerLeft()}
                 headerRight={<CallButton />}
                 border
             />
-            {chatroomData?.type === 'class' &&
+            {/* {chatroomData?.type === 'class' &&
 
-                <View style={{ padding: 5, backgroundColor: Colors.light.primary, borderTopWidth: 2, borderColor: 'white' }}>
+                <View style={{ padding: 5, backgroundColor: Colors.accent, borderTopWidth: 2, borderColor: 'white' }}>
                     <Text style={{ color: 'white', fontFamily: 'Kanit', textAlign: 'right' }}>
                         {"Swipe left to see the classroom feed! 👉"}
                     </Text>
 
-                </View>}
+                </View>} */}
 
             <ChatModal
                 visible={showChatModal}
@@ -268,87 +236,62 @@ const Chatroom = ({ route }) => {
 
             />
 
-            <View style={{ flex: 1, marginTop: -30, borderRadius: 25, backgroundColor: Colors[colorScheme].background, zIndex: -1, overflow: 'hidden' }}>
+            <View style={{ flex: 1, marginTop: -30, borderRadius: 15, backgroundColor: Colors[colorScheme].background, zIndex: -1, overflow: 'hidden' }}>
                 <ScrollView
-                    style={{ marginTop: 20 }}
+                    style={{ marginHorizontal: 10 }}
                     onContentSizeChange={() => ref.scrollToEnd({ animated: true })}
                     ref={setRef}
                     onScrollBeginDrag={() => {
-                        Keyboard.dismiss();
+                        //Keyboard.dismiss();
                         setShowTimestamp(true)
 
                     }}
+                    keyboardDismissMode='interactive'
 
                     onScrollEndDrag={() => setTimeout(() => setShowTimestamp(false), 2000)}>
 
-                    {chats && chats.length ?
+                    {chats?.length ?
                         <Text style={{ fontFamily: 'Kanit', color: 'gray', alignSelf: 'center', margin: 20 }}>
-                            {moment(chats[0]?.createdAt?.toDate()).calendar()}
+                            {moment(chats[0]?.data?.createdAt?.toDate()).calendar()}
                         </Text>
                         :
                         <Text style={{ fontFamily: 'Kanit', color: 'gray', alignSelf: 'center', margin: 20 }}>
                             {'Today'}
                         </Text>}
 
-                    <FlatList
-                        data={chatroomData?.chats}
-                        style={{ padding: 10 }}
 
-                        renderItem={({ item }) =>
+                    {chats.map(({ id, data }, index) => (
+
+                        <View key={id} style={{ marginBottom: index === chats.length - 1 ? 30 : 0 }}>
                             <ChatMessage
-                                chat={item}
-                                onChatSelected={(chat) => {
-                                    setShowChatModal(true)
-                                    setSelectedChat(chat)
-                                    haptics('light')
-                                }}
+                                chat={data}
+                                onDeskItemPress={() => navigation.navigate("DeskItem", { deskItem: data.deskItem, deskType: data.contentType })}
+                                onLongPress={() => { setSelectedChat(data); setShowChatModal(true) }}
+                                previousChat={chats[index - 1]}
+                                showsTime={showTimestamp}
+                                index={index}
 
-                                chatroom={chatroomData}
-                                user={users.filter(user => user?.user === item?.user)[0]}
-                                showTimestamp={showTimestamp}
-                                previousMessage={chatroomData?.chats[chatroomData?.chats.length - 2]}
-                                onLongPress={() => { }}
-                            />}
+                            />
+                        </View>
+                    ))}
 
-                        scrollEnabled={false}
-                    />
+
 
                 </ScrollView>
 
             </View>
-            <ScrollView
-
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={{ flexDirection: 'row', marginBottom: 5, backgroundColor: 'transparent', padding: 5, position: 'absolute', bottom: 100, width: '100%' }}
-                contentContainerStyle={{ alignItems: 'center' }}
-            >
-                <Text>{"@ someone!"}</Text>
-                {chatroomData?.type != 'private' &&
-
-                    users?.map((item, index) => {
-
-                        return (
-                            <TouchableOpacity onPress={() => setMessage(message + ' @' + item.displayName)} >
-                                <View style={{ paddingVertical: 2, paddingHorizontal: 10, borderRadius: 50, borderColor: item?.uid === auth.currentUser.uid ? Colors.light.accent : item?.color, marginLeft: 10, borderWidth: 2, alignItems: 'center' }}>
-                                    <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].gray, fontSize: 12 }}>{getDisplayNameOrYou(item)}</Text>
-                                </View>
-                            </TouchableOpacity>
-
-                        )
-                    }
-                    )}
 
 
 
-            </ScrollView>
 
             <ChatInput
                 onCameraPress={() => { }}
                 onSendPress={onSendPress}
-                chatroom={chatroomData}
                 message={message}
+                deskItem={deskItem}
                 onChangeMessage={setMessage}
+                onDeskPress={() => navigation.navigate('SelectDeskItem', { onSelect: onDeskItemSendPress })}
+
             />
 
         </View >

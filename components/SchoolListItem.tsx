@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, FlatList, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { ChatRoom, Class } from '../types'
+import React, { FC, useRef, useState } from 'react'
+import { ChatRoom, Class, School } from '../types'
 import useColorScheme from '../hooks/useColorScheme'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
@@ -11,7 +11,16 @@ import { SHADOWS } from '../constants/Theme'
 import { assets } from '../constants'
 
 
-const SchoolListItem = ({ school, onPress }) => {
+interface Props {
+    onPress?: () => void;
+    onSelect?: () => void;
+    school: School;
+    isSelected?: boolean;
+
+
+}
+
+const SchoolListItem: FC<Props> = (props) => {
     const colorScheme = useColorScheme()
     const navigation = useNavigation()
     const [longPressed, setLongPressed] = useState(false)
@@ -24,19 +33,39 @@ const SchoolListItem = ({ school, onPress }) => {
     return (
 
 
-        <TouchableOpacity onPress={onPress} >
-            <View style={{ backgroundColor: colorScheme === 'light' ? 'white' : 'white', borderTopRightRadius: 25, borderTopLeftRadius: 25 }}>
-                <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', padding: 10 }}>
 
-                    <Image source={assets.school} style={{ width: 28, height: 28, tintColor: Colors[colorScheme].primary }} />
 
-                    <View>
-                        <Text style={[styles.className, { color: Colors[colorScheme].primary, marginLeft: 10 }]}>{school.name} </Text>
-                        <ActivePeople userCount={school.users.length} activeCount={school.active.length} />
-                    </View>
-                </View>
+        <TouchableOpacity
+            onPress={props.onPress}
+            style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: 'white', borderRadius: 15, marginBottom: 20, justifyContent: 'space-between' }}>
+
+
+            <View style={{ flexDirection: 'row' }}>
+                <Image source={assets.school} style={{ width: 28, height: 28, tintColor: Colors.accent }} />
+
+                <Text style={[styles.className, { color: Colors.accent, marginLeft: 10 }]}>{props.school?.name} </Text>
+                {/* <ActivePeople userCount={props.school.users.length} activeCount={props.school.active.length} /> */}
             </View>
+            <TouchableOpacity onPress={props.onSelect} >
+
+                <View style={!props.isSelected && styles.addBtn}>
+                    {!props.isSelected ? <Text style={{ color: 'white', fontFamily: 'KanitMedium' }}>{"Add"}</Text>
+                        :
+                        <View style={styles.selected}>
+
+                            <Image source={assets.check} style={{ width: 28, height: 28, tintColor: Colors.accent }} />
+                        </View>
+
+                    }
+                </View>
+            </TouchableOpacity>
         </TouchableOpacity>
+
+
+
+
+
+
 
     )
 }
@@ -68,9 +97,28 @@ const styles = StyleSheet.create({
         color: Colors.light.tint,
         marginBottom: 5,
         fontFamily: 'Kanit'
+    },
+    selected: {
+        width: 35,
+        height: 35,
+        borderRadius: 100,
+        borderColor: Colors.accent,
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 
 
+    addBtn: {
+        alignSelf: 'flex-end',
+        padding: 8,
+        width: 60,
+        height: 35,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: Colors.accent,
+        borderRadius: 50
 
-    }
+    },
 })
 export default SchoolListItem

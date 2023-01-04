@@ -12,6 +12,8 @@ import CustomInput from '../../components/CustomInput'
 import Button from '../../components/Button'
 import firebase from 'firebase/compat'
 import { sendEmailVerification } from 'firebase/auth'
+import Header from '../../components/Header'
+import ToggleSwitch from 'toggle-switch-react-native'
 const EmailSettings = ({ route }) => {
     const navigation = useNavigation()
     const [email, setEmail] = useState(route.params.value)
@@ -22,7 +24,7 @@ const EmailSettings = ({ route }) => {
     const [showModal, setShowModal] = useState(false)
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
-
+    const [findMe, setFindMe] = useState(false)
 
     const getMessage = (message) => {
         if (message == 'Firebase: The email address is already in use by another account. (auth/email-already-in-use).') {
@@ -82,8 +84,12 @@ const EmailSettings = ({ route }) => {
     return (
 
 
-        <View style={{ flex: 1, backgroundColor: '#333', padding: 20 }}>
-
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
+            <Header
+                title={'Email'}
+                navigation={navigation}
+                style={{ backgroundColor: Colors.primary }}
+            />
             <ModalComponent
                 width={300}
                 height={300}
@@ -120,71 +126,62 @@ const EmailSettings = ({ route }) => {
                 }
             />
 
+            <View style={{ padding: 20 }}>
 
-            <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center', height: SIZES.header, padding: 5, backgroundColor: '#333' }}>
-                <View style={{ position: 'absolute', left: 0, paddingTop: 30 }}>
-                    <BackButton navigation={navigation} margin={5} color={'white'} direction={'horizontal'} />
+
+
+                {!verificationPending ? <Text style={styles.description}>{descriptions.email}</Text> :
+
+                    <Text style={styles.description}>{"⚠️ We've sent a verification email to you. Please open the link to finish verifying your address."}</Text>}
+
+                <View style={{ marginTop: 30 }}>
+                    {verificationPending && <Text
+                        onPress={() => { }}
+                        style={{ color: Colors.accent }}>{"Resend Verification Email"}</Text>}
 
                 </View>
-                <View style={{ alignItems: 'center', flexDirection: 'column', justifyContent: 'center', paddingTop: 30 }}>
 
-                    <Text style={{ fontFamily: 'KanitMedium', color: 'white', fontSize: 20, marginLeft: 10 }}>Email</Text>
+                <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center' }}>
+
+
+                    <TextInput
+                        returnKeyType='done'
+                        placeholder='Email'
+                        placeholderTextColor={'#6F6F6F'}
+                        style={styles.input}
+                        onChangeText={(value) => { setEmail(value); setErrorMessage(''); setSuccessMessage('') }}
+                        value={email}
+                        selectionColor={Colors.accent}
+
+                    >
+                    </TextInput>
+
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={email !== route.params.value ? handleSave : () => { }}>
+                        <Text style={{ position: 'absolute', bottom: -12, right: 10, color: email !== route.params.value ? Colors.accent : '#00000060', fontFamily: "KanitMedium", fontSize: 16 }}>{"Save"}</Text>
+
+                    </TouchableOpacity>
+
+
+                </View>
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+                <Text style={styles.successMessage}>{successMessage}</Text>
+
+                <View style={{ marginTop: 20, borderRadius: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 15, backgroundColor: '#00000080' }}>
+                    <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>{"Show this email on my profile"}</Text>
+                    <ToggleSwitch isOn={currentState} size={'large'} offColor={Colors.light.gray} onColor={Colors.accent} onToggle={() => setCurrentState(!currentState)} />
 
                 </View>
 
+                <View style={{ marginTop: 20, borderRadius: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 15, backgroundColor: '#00000080' }}>
+                    <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>{"Let others find me using this email"}</Text>
+                    <ToggleSwitch isOn={findMe} size={'large'} offColor={Colors.light.gray} onColor={Colors.accent} onToggle={() => setFindMe(!findMe)} />
 
-            </View>
-
-            {!verificationPending ? <Text style={styles.description}>{descriptions.email}</Text> :
-
-                <Text style={styles.description}>{"⚠️ We've sent a verification email to you. Please open the link to finish verifying your address."}</Text>}
-
-            <View style={{ marginTop: 30 }}>
-                {verificationPending && <Text
-                    onPress={() => { }}
-                    style={{ color: Colors.light.primary }}>{"Resend Verification Email"}</Text>}
-
-            </View>
-
-            <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center' }}>
-
-
-                <TextInput
-                    returnKeyType='done'
-                    placeholder='Email'
-                    placeholderTextColor={'#6F6F6F'}
-                    style={{ color: 'white', padding: 15, fontSize: 18, width: '100%', backgroundColor: '#474747', borderRadius: 10 }}
-                    onChangeText={(value) => { setEmail(value); setErrorMessage(''); setSuccessMessage('') }}
-                    value={email}
-                    selectionColor={Colors.light.primary}
-
-                >
-                </TextInput>
-
-                <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={email !== route.params.value ? handleSave : () => { }}>
-                    <Text style={{ position: 'absolute', bottom: -12, right: 10, color: email !== route.params.value ? Colors.light.primary : 'gray', fontFamily: "KanitMedium", fontSize: 16 }}>{"Save"}</Text>
-
-                </TouchableOpacity>
-
-
-            </View>
-            <Text style={styles.errorMessage}>{errorMessage}</Text>
-            <Text style={styles.successMessage}>{successMessage}</Text>
-
-            <View style={{ marginTop: 20, borderRadius: 15, borderWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 15, borderColor: '#646464', backgroundColor: '#272727' }}>
-                <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>{"Show this email on my profile"}</Text>
-                <ToggleButton onToggle={() => { setCurrentState(!currentState) }} currentState={currentState} />
-
-            </View>
-
-            <View style={{ marginTop: 20, borderRadius: 15, borderWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 15, borderColor: '#646464', backgroundColor: '#272727' }}>
-                <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 17, width: '50%' }}>{"Let others find me using this email"}</Text>
-                <ToggleButton onToggle={() => { setCurrentState(!currentState) }} currentState={currentState} />
-
+                </View>
             </View>
         </View>
+
     )
 }
 

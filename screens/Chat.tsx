@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, StyleSheet, ScrollView, LogBox } from 'react-native'
+import { View, Text, FlatList, Image, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { assets, Colors } from '../constants/index';
 import { SHADOWS, SIZES } from '../constants/Theme';
@@ -14,11 +14,9 @@ import useColorScheme from '../hooks/useColorScheme';
 import { haptics } from '../utils';
 import CircleButton from '../components/CircleButton';
 import { ActivityBadge } from '../components/ProfileBadges';
+import Button from '../components/Button';
 
 export default function Chat({ navigation }) {
-    LogBox.ignoreLogs([
-        'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.'
-    ])
     const [school, setSchool] = useState(null)
     const [showChatModal, setShowChatModal] = useState(false)
     const colorScheme = useColorScheme()
@@ -30,10 +28,10 @@ export default function Chat({ navigation }) {
         <ProfileButton
             defaultImage={assets.person}
             onPress={function (): void {
-                navigation.openDrawer()
+
             }}
 
-            badgeContainerStyle={{ backgroundColor: Colors.light.accent, top: '55%', left: '65%' }}
+            badgeContainerStyle={{ backgroundColor: Colors.primary, top: '55%', left: '65%' }}
             badge={ActivityBadge()}
 
             showsName={true}
@@ -44,17 +42,13 @@ export default function Chat({ navigation }) {
     )
 
     const headerRight = () => (
-        <View style={{ flexDirection: 'row' }}>
-            <View style={{ flexDirection: 'row' }}>
-                <CircleButton
-                    onPress={() => { }}
-                    source={assets.add} />
-                <CircleButton
-                    onPress={() => { }}
-                    style={{ marginLeft: 10 }}
-                    source={assets.more} />
-            </View>
-        </View>
+
+
+        <CircleButton
+            onPress={() => { }}
+            style={{ marginLeft: 10 }}
+            source={assets.more} />
+
     )
 
     const deleteChat = () => {
@@ -71,10 +65,20 @@ export default function Chat({ navigation }) {
     }
 
     useEffect(() => {
+
+        const array = []
         const subscriber = db.collection('users').doc(auth.currentUser.uid)
 
             .onSnapshot(doc => {
-                setChatrooms(doc.data()?.chatrooms)
+                doc.data()?.chatrooms.forEach((item) => {
+                    db.collection('chatrooms')
+                        .doc(item.id)
+                        .get()
+                        .then(doc => {
+                            array.push(doc.data())
+                            setChatrooms(array)
+                        })
+                })
 
                 if (doc.data().school.id) {
                     db.collection('schools').doc(doc.data().school.id)
@@ -86,13 +90,10 @@ export default function Chat({ navigation }) {
                 }
 
             })
-
-
-
         return () => subscriber()
 
 
-    }, [school])
+    }, [])
 
 
     const onPinPress = () => {
@@ -125,15 +126,18 @@ export default function Chat({ navigation }) {
     return (
 
         <View style={{ flex: 1 }} >
-
-
+            <Button
+                onPress={() => { navigation.navigate('NewChat') }}
+                style={{ borderRadius: 50, position: 'absolute', bottom: 30, right: 20, zIndex: 1, width: 60, height: 60, ...SHADOWS[colorScheme] }}
+                icon={<Image source={assets.add} style={{ width: 20, height: 20, tintColor: 'white' }} />}
+            />
             <OptionsModal
                 showModal={showChatModal}
                 toValue={-350}
                 options={selectedChatroom?.type === 'private' ? ['Pin', 'Mute', 'Delete', 'Block'] : ['Pin', 'Mute', 'Delete', 'Leave Group']}
                 onOptionPress={selectedChatroom?.type === 'private' ? [onPinPress, onMutePress, onDeletePress, onBlockPress] : [onPinPress, onMutePress, onDeletePress, onLeavePress]}
                 onCancelPress={() => setShowChatModal(false)}
-                redIndex={[2, 3]}
+
             />
 
 
@@ -148,13 +152,12 @@ export default function Chat({ navigation }) {
                 title='Chat'
                 headerLeft={headerLeft()}
                 headerRight={headerRight()}
-                style={{ backgroundColor: Colors.light.accent, height: 200, zIndex: 0 }}
-                textStyle={{ fontSize: SIZES.huge }}
-                navigation={navigation}
+                style={{ backgroundColor: Colors.primary, height: 170, zIndex: 0 }}
+            // navigation={navigation}
 
             />
 
-            <View style={{ backgroundColor: Colors[colorScheme].background, height: '100%', borderRadius: 25, marginTop: -30, zIndex: 1 }}>
+            <View style={{ backgroundColor: Colors[colorScheme].background, height: '80%', borderRadius: 15, marginTop: -30, padding: 10 }}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                     <Image source={school?.logo ? school.logo : assets.school} style={{ width: 20, height: 20, tintColor: 'gray' }} />
@@ -172,8 +175,9 @@ export default function Chat({ navigation }) {
                                 <ChatListItem
 
                                     chatroom={item}
-                                    onPress={() => {
-                                        navigation.navigate('Chatroom', { chatroomID: item?.id })
+                                    onPress={(name) => {
+                                        console.log("ID", item.id)
+                                        navigation.navigate('Chatroom', { id: item.id, name: name })
                                     }}
                                     onLongPress={(chatroom) => {
                                         haptics('light');
@@ -194,7 +198,13 @@ export default function Chat({ navigation }) {
                         <View style={{ padding: 10, alignItems: 'center', justifyContent: 'center', height: '75%' }}>
 
                             <Text style={{ color: 'darkgray', fontFamily: 'Kanit', fontSize: 18, textAlign: 'center' }}>{`This is where all your chats with ${school?.name} students will appear.`}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ color: 'darkgray', fontFamily: 'Kanit', fontSize: 18, textAlign: 'center' }}>{`Tap   `}</Text>
 
+                                <Image source={assets.add} style={{ width: 15, height: 15, tintColor: Colors.primary }} />
+                                <Text style={{ color: 'darkgray', fontFamily: 'Kanit', fontSize: 18, textAlign: 'center' }}>{` to start chatting! `}</Text>
+
+                            </View>
                         </View>
 
                     }

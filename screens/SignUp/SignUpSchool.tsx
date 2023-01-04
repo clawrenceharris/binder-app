@@ -8,12 +8,12 @@ import { db } from '../../Firebase/firebase'
 import { faker } from '@faker-js/faker'
 import Button from '../../components/Button'
 import BackButton from '../../components/BackButton'
+import Header from '../../components/Header'
 
 const SignUpSchool = ({ navigation }) => {
     const route = useRoute()
     const [school, setSchool] = useState(null)
     const [data, setData] = useState([])
-
 
 
     const defaultData = {
@@ -27,17 +27,10 @@ const SignUpSchool = ({ navigation }) => {
 
     }
 
-    const routeParams = {
-        title: 'Add Schools',
-        defaultData: defaultData,
-        data: data,
-        selectionLimit: 1,
-        isClass: false
-    }
 
     const onNextPressed = () => {
 
-        navigation.navigate('SignUpPhoto', { ...route.params, school: school })
+        navigation.navigate('SignUpPhoto', { ...route.params, school: school[0] })
     }
 
 
@@ -69,17 +62,13 @@ const SignUpSchool = ({ navigation }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
-            <View>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
 
-            </View>
-            <BackButton
+            <Header
                 navigation={navigation}
-                margin={20}
-
+                style={{ backgroundColor: Colors.primary }}
             />
             <Text style={styles.screenTitle}>{"What school do you go to?"}</Text>
-
 
             <View style={{ padding: 30, justifyContent: 'space-evenly' }}>
 
@@ -87,23 +76,23 @@ const SignUpSchool = ({ navigation }) => {
                 <View style={{ alignItems: 'flex-start', width: '100%', marginTop: 30 }}>
 
                     {!school ? <TouchableOpacity
-                        onPress={() => { navigation.navigate('SearchSelect', { ...routeParams, update: setSchool }) }}
+                        onPress={() => { navigation.navigate('AddSchool', { update: setSchool }) }}
                         style={{ alignSelf: 'center', flexDirection: 'row', backgroundColor: '#00000070', borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
 
                         <Image source={assets.school} style={{ width: 28, height: 28, tintColor: 'white' }} />
-                        <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>Select a School</Text>
+                        <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>{"Select a School"}</Text>
                     </TouchableOpacity>
 
                         :
                         <View style={{ alignSelf: 'center' }}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    navigation.navigate('SearchSelect', { ...routeParams, update: setSchool })
+                                    navigation.navigate('AddSchool', { update: setSchool })
                                 }}
                                 style={{ flexDirection: 'row', backgroundColor: '#00000070', borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={assets.pencil} style={{ width: 20, height: 20, tintColor: 'white' }} />
-                                <Text style={{ fontSize: 20, fontFamily: 'KanitMedium', color: 'white', marginLeft: 10 }}>{school.name}</Text>
+                                <Text style={{ fontSize: 20, fontFamily: 'KanitMedium', color: 'white', marginLeft: 10 }}>{school[0]?.name}</Text>
                             </TouchableOpacity>
 
 
@@ -124,7 +113,7 @@ const SignUpSchool = ({ navigation }) => {
 
 
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 

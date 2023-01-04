@@ -18,50 +18,42 @@ const AddClasses = ({ navigation }) => {
     const [classes, setClasses] = useState([])
     const [loading, setLoading] = useState(true)
     const [results, setResults] = useState([])
+
     useEffect(() => {
         const array = []
 
-        school?.classes?.forEach(item => {
-            db.collection('classes')
-                .doc(item.id)
-                .get()
-                .then(doc => {
-                    array.push(doc.data())
-                    setClasses(array)
-                    setResults(array)
-                }).catch((error) => console.log(error))
-        })
+
+        db.collection('schools')
+            .doc(school.id)
+            .collection('classes')
+            .get()
+            .then(query => {
+                setClasses(
+                    query.docs.map((doc) => (
+                        {
+                            data: doc.data()
+                        }
+                    )))
+                setResults(
+                    query.docs.map((doc) => (
+                        {
+                            data: doc.data()
+                        }
+                    )))
+            })
+
+
+
+
+
+
 
     }, [])
 
 
 
-    const headerRight = () => (
-        <Button
-            background='white'
-            tint={Colors.light.primary}
-            title={'Done'}
-            style={{ minHeight: 10, paddingVertical: 5 }}
-            disabled={selectedData.length === 0}
-            onPress={() => {
-                update(selectedData);
-                navigation.goBack();
-
-            }
-            }
-
-        />
 
 
-    )
-
-    const headerLeft = () => (
-        <Text
-            onPress={() => navigation.goBack()}
-            style={{ fontFamily: 'KanitMedium', color: Colors[colorScheme].background, margin: 10, fontSize: 16 }}>
-            {"Cancel"}
-        </Text>
-    )
     function handleSearch(value) {
 
         if (!value.length) {
@@ -69,7 +61,7 @@ const AddClasses = ({ navigation }) => {
         }
 
         const filteredData = classes.filter((item) =>
-            item?.name?.toLowerCase().includes(value.toLowerCase())
+            item.data.name.toLowerCase().includes(value.toLowerCase())
         )
 
         if (filteredData.length) {
@@ -85,17 +77,32 @@ const AddClasses = ({ navigation }) => {
 
     return (
         <View style={{ flex: 1 }}>
+            <Button
+
+                title={'Done'}
+                style={{ position: 'absolute', bottom: 30, width: '50%', zIndex: 2 }}
+                disabled={selectedData.length === 0}
+                onPress={() => {
+                    update(selectedData);
+                    navigation.goBack();
+
+                }
+                }
+
+            />
 
             <Header
                 title={"Add Classes"}
                 navigation={navigation}
                 direction={'vertical'}
-                headerRight={headerRight()}
-                headerLeft={headerLeft()}
-                style={{ backgroundColor: Colors.light.accent, height: 150, zIndex: 0 }}
+
+                style={{ backgroundColor: Colors.primary, height: 150, zIndex: 0 }}
             />
 
-            <View style={{ backgroundColor: Colors.light.accent, height: 100, paddingHorizontal: 20 }}>
+
+
+            <ScrollView
+                style={{ padding: 20, marginTop: -30, borderRadius: 25, backgroundColor: Colors[colorScheme].background, height: '100%' }}>
 
                 <Input
                     onChangeText={(value) => { setSearch(value); handleSearch(value) }}
@@ -103,11 +110,8 @@ const AddClasses = ({ navigation }) => {
                     placeholder={'Search'}
                 />
 
-            </View>
 
 
-            <ScrollView
-                style={{ padding: 20, marginTop: -30, borderRadius: 25, backgroundColor: Colors[colorScheme].background, height: '100%' }}>
                 <Text style={{ fontFamily: 'Kanit', color: 'gray', margin: 20, alignSelf: 'center' }}>{"Add up to 10 classes"}</Text>
                 {results?.length > 0 ?
                     <FlatList
@@ -117,12 +121,12 @@ const AddClasses = ({ navigation }) => {
 
                             <ClassListItem
                                 type={'selectable'}
-                                Class={item}
-                                isSelected={isSelected(selectedData, item)}
-                                onSelect={() => onSelect(selectedData, setSelectedData, item, 10)}
+                                Class={item.data}
+                                isSelected={isSelected(selectedData, item.data)}
+                                onSelect={() => onSelect(selectedData, setSelectedData, item.data, 10)}
                             />
                         }
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item?.id}
                     />
 
                     :

@@ -83,19 +83,19 @@ const AchievementsScreen = ({ navigation }) => {
 
     if (loading) {
         return (
-            <View style={{ flex: 1, backgroundColor: '#333', justifyContent: 'center', alignItems: 'center' }}>
-                <Image source={assets.loading} style={{ width: 30, height: 30, tintColor: 'gray' }} />
+            <View style={{ flex: 1, backgroundColor: Colors.primary, justifyContent: 'center', alignItems: 'center' }}>
+                <Image source={assets.loading} style={{ width: 30, height: 30, tintColor: 'white' }} />
             </View>
         )
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
             <Header
                 navigation={navigation}
                 direction={'vertical'}
                 title={'Settings'}
-                shadow
+                style={{ backgroundColor: Colors.primary }}
                 headerCenter={headerCenter()}
                 headerRight={headerRight()}
 
@@ -103,12 +103,12 @@ const AchievementsScreen = ({ navigation }) => {
 
 
             <ScrollView style={{ padding: 10 }}>
-                <Text style={{ fontFamily: 'Kanit', color: 'gray', textAlign: 'center', margin: 10 }}>
-                    {'Achievements are a fun way to help you gain mastery in all the features Binder has to offer. They also give you and your other classmates valuable insight on each others academic qualities.'}
+                <Text style={{ fontFamily: 'Kanit', color: 'white', textAlign: 'center', margin: 10 }}>
+                    {"Achievements are a fun way to help you gain mastery in all the features Binder has to offer and give you insight on your classmate's academic strengths."}
                 </Text>
                 <Text
                     onPress={() => { }}
-                    style={{ fontFamily: 'KanitMedium', color: Colors.light.primary, textAlign: 'center' }}>{'Learn More'}</Text>
+                    style={{ fontFamily: 'KanitMedium', color: Colors.accent, textAlign: 'center' }}>{'Learn More'}</Text>
 
 
                 {/* Data is sorted by current index(or level number) increasing from top to bottom */}

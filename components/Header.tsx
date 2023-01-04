@@ -13,7 +13,7 @@ const Header = (props) => {
         title: {
             fontFamily: 'KanitMedium',
             color: 'white',
-            fontSize: 22,
+            fontSize: 26,
         },
 
         mainContainer: {
@@ -37,14 +37,14 @@ const Header = (props) => {
 
         rightContainer: {
             position: 'absolute',
-            right: 20,
+            right: 10,
             paddingTop: 30,
 
         },
 
         leftContainer: {
             position: 'absolute',
-            left: 20,
+            left: 10,
             paddingTop: 30
         }
     })

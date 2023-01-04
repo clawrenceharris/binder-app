@@ -10,7 +10,7 @@ import ProfileTag from '../components/ProfileTag'
 import ModalComponent from '../components/Modal'
 import moment from 'moment'
 import { auth, db, updateCollection, updateUserProfile } from '../Firebase/firebase'
-import { getDisplayName, getZodiacSign, openMediaLibrary } from '../utils'
+import { getZodiacSign, openMediaLibrary } from '../utils'
 import EditNameModal from '../components/EditNameModal'
 import OptionsModal from '../components/OptionsModal'
 import Header from '../components/Header'
@@ -48,12 +48,12 @@ const CurrentUserProfile = ({ navigation }) => {
 
     const birthdayModal = () => (
         <View style={{ alignItems: 'center' }}>
-            <View style={styles.emojiContainer}>
+            <View style={[styles.emojiContainer, { ...SHADOWS[colorScheme] }]}>
                 <Text style={{ fontSize: 36 }}>🎂</Text>
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>{"Birthday"}</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: Colors[colorScheme].tint }}>{"Birthday"}</Text>
 
             </View>
             <View>
@@ -62,9 +62,9 @@ const CurrentUserProfile = ({ navigation }) => {
             </View>
 
             <TouchableOpacity
-                onPress={() => { setShowModal(false) }}
-                style={{ height: 50, backgroundColor: '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
-                <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>{"Close"}</Text>
+                onPress={() => { setShowModal(false); console.log("press") }}
+                style={{ height: 50, backgroundColor: '#00000020', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
+                <Text style={{ color: Colors.accent, fontFamily: 'KanitMedium', fontSize: 20 }}>{"Close"}</Text>
             </TouchableOpacity>
 
 
@@ -76,12 +76,12 @@ const CurrentUserProfile = ({ navigation }) => {
     const zodiacSignModal = () => (
 
         <View style={{ alignItems: 'center' }}>
-            <View style={styles.emojiContainer}>
+            <View style={[styles.emojiContainer, { ...SHADOWS[colorScheme] }]}>
                 <Text style={{ fontSize: 36 }}>{getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth(), true)}</Text>
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Astrology</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: Colors[colorScheme].tint }}>{"Astrology"}</Text>
 
             </View>
             <View>
@@ -93,8 +93,8 @@ const CurrentUserProfile = ({ navigation }) => {
 
             <TouchableOpacity
                 onPress={() => { setShowModal(false) }}
-                style={{ height: 50, backgroundColor: '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
-                <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>Close</Text>
+                style={{ height: 50, backgroundColor: '#00000020', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
+                <Text style={{ color: Colors.accent, fontFamily: 'KanitMedium', fontSize: 20 }}>{"Close"}</Text>
             </TouchableOpacity>
 
 
@@ -106,24 +106,24 @@ const CurrentUserProfile = ({ navigation }) => {
 
     const classModal = () => (
         <View style={{ alignItems: 'center' }}>
-            <View style={styles.emojiContainer}>
+            <View style={[styles.emojiContainer, { ...SHADOWS[colorScheme] }]}>
 
                 <Text style={{ fontSize: 36 }}>🎓</Text>
             </View>
 
             <View>
-                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: '#DEDEDE' }}>Graduating Class</Text>
+                <Text style={{ fontFamily: 'KanitBold', fontSize: 18, marginTop: 20, color: Colors[colorScheme].tint }}>{"Graduating Class"}</Text>
 
             </View>
             <View>
-                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>You graduate in {userData?.gradYear}</Text>
+                <Text style={{ fontFamily: 'Kanit', textAlign: 'center', marginTop: 10, color: '#999999' }}>{`You graduate in ${userData?.gradYear}`}</Text>
 
             </View>
 
             <TouchableOpacity
                 onPress={() => { setShowModal(false) }}
-                style={{ height: 50, backgroundColor: '#2B2B2B', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
-                <Text style={{ color: Colors.light.primary, fontFamily: 'KanitMedium', fontSize: 20 }}>Close</Text>
+                style={{ height: 50, backgroundColor: '#00000020', borderRadius: 25, justifyContent: 'center', alignItems: 'center', width: 200, marginTop: 20 }}>
+                <Text style={{ color: Colors.accent, fontFamily: 'KanitMedium', fontSize: 20 }}>{"Close"}</Text>
             </TouchableOpacity>
         </View>
 
@@ -156,7 +156,7 @@ const CurrentUserProfile = ({ navigation }) => {
 
     const getBirthday = () => {
         if (userData?.birthday)
-            return moment(userData?.birthday).format("MMM DD, YYYY")
+            return moment(userData?.birthday?.toDate()).format("MMM DD, YYYY")
         return null
     }
     const onLibraryPress = async () => {
@@ -205,79 +205,69 @@ const CurrentUserProfile = ({ navigation }) => {
                 direction={'horizontal'}
                 title={'Settings'}
                 headerCenter={headerCenter()}
-                style={{ backgroundColor: Colors[colorScheme].accent, height: 150 }}
+                style={{ backgroundColor: Colors.primary, height: 150 }}
                 headerRight={headerRight()}
                 headerLeft={headerLeft()}
             />
-            <View style={{ backgroundColor: Colors[colorScheme].accent, zIndex: 0, alignItems: 'center', height: 200 }}>
-
-                <View style={{ position: 'absolute' }}>
-
-                    <TouchableWithoutFeedback onPress={() => { setShowImageOptionsModal(true) }}>
-                        <View>
+            <View style={{ backgroundColor: Colors.primary, zIndex: 0, alignItems: 'center', height: 200 }}>
 
 
 
-                            <ProfileButton
-                                onPress={() => setShowImageOptionsModal(true)}
-                                size={120}
-                                defaultImage={assets.person}
-                                badgeContainerStyle={{ backgroundColor: Colors.light.accent, top: '75%', left: '70%' }}
-                                badge={NewImageBadge()}
-                                showsName={true}
 
-                            />
 
-                        </View>
+                <ProfileButton
 
+                    onPress={() => setShowImageOptionsModal(true)}
+                    size={120}
+                    defaultImage={assets.person}
+                    badgeContainerStyle={{ backgroundColor: Colors.primary, top: '75%', left: '70%' }}
+                    badge={NewImageBadge()}
+
+                />
+
+
+
+
+
+                <View style={{ alignItems: 'center', marginTop: 10, flexDirection: 'row' }}>
+                    {userData?.displayName ?
+                        <Text
+                            onPress={() => setShowEditNameModal(true)}
+                            style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>
+
+                            {userData.displayName}
+                        </Text>
+                        :
+                        <Text
+                            onPress={() => setShowEditNameModal(true)}
+                            style={{ color: '#00000080', fontFamily: 'Kanit', fontSize: 16 }}>
+
+                            {'Display Name'}
+
+                        </Text>
+
+                    }
+                    <TouchableWithoutFeedback
+                        onPress={() => setShowEditNameModal(true)} >
+
+                        <Image
+
+                            source={assets.pencil} style={{ width: 15, height: 15, tintColor: '#00000080', marginLeft: 10 }}
+                        />
                     </TouchableWithoutFeedback>
 
-                    <View style={{ alignItems: 'center', marginTop: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                        {userData?.displayName ?
-                            <Text
-                                onPress={() => setShowEditNameModal(true)}
-                                style={{ fontSize: 24, fontFamily: 'KanitBold', color: 'white' }}>
-
-                                {userData.displayName}
-                            </Text>
-                            :
-                            <Text
-                                onPress={() => setShowEditNameModal(true)}
-                                style={{ color: '#00000080', fontFamily: 'Kanit', fontSize: 16 }}>
-
-                                {'Display Name'}
-
-                            </Text>
-
-                        }
-                        <TouchableWithoutFeedback
-                            onPress={() => setShowEditNameModal(true)} >
-
-                            <Image
-
-                                source={assets.pencil} style={{ width: 15, height: 15, tintColor: '#00000080', marginLeft: 10 }}
-                            />
-                        </TouchableWithoutFeedback>
-
-                    </View>
-
-
-
-
-
                 </View>
+
+
+
+
+
+
 
             </View>
             <View style={{ paddingHorizontal: 20, backgroundColor: Colors[colorScheme].background, height: '100%', borderRadius: 25, marginTop: -20, zIndex: 1 }}>
 
                 <ScrollView showsVerticalScrollIndicator={false} style={{ height: '100%' }}>
-
-
-
-
-
-
-
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingVertical: 20, flexDirection: 'row', marginTop: 20 }}>
 
@@ -295,35 +285,10 @@ const CurrentUserProfile = ({ navigation }) => {
                             {userData?.birthday && <ProfileTag icon={<Text>{getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth(), true)}</Text>} title={getZodiacSign(userData?.birthday.toDate().getDate(), userData?.birthday.toDate().getMonth())} onPress={() => { setModal(zodiacSignModal()); setShowModal(true); }} />}
 
                         </View>
-
-
-
                     </ScrollView>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                        <Text style={[styles.sectionTitle, { color: '#DEDEDE' }]}>{"Props"}</Text>
-
-
-                    </View>
-                    <View style={{ alignItems: "center", flexDirection: 'row', padding: 20, width: '100%', backgroundColor: '#00000020', borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
-
-                        <Image source={assets.shines} style={{ width: 28, height: 28, tintColor: 'white' }} />
-                        <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>{"View Your Props"}</Text>
-
-
-                        <Image source={assets.right_arrow} style={{ width: 20, height: 20, tintColor: 'gray', right: 10, position: 'absolute' }} />
-
-                    </View>
-
-                    <Text style={[styles.sectionTitle, { color: Colors[colorScheme].gray }]}>{"Your Posts"}</Text>
-                    <View style={{ flexDirection: 'row', padding: 20, alignItems: 'center', width: '100%', backgroundColor: '#00000020', borderRadius: 15, marginTop: 10, shadowColor: '#272727' }}>
-                        <Image source={assets.camera_o} style={{ width: 28, height: 28, tintColor: Colors.light.primary }} />
-                        <Text style={{ color: 'white', fontFamily: 'Kanit', marginLeft: 10, fontSize: 16 }}>{"Add a New Post"}</Text>
-                    </View>
                 </ScrollView>
-
             </View>
-        </View >
+        </View>
 
 
 
@@ -335,15 +300,15 @@ const styles = StyleSheet.create({
 
 
     emojiContainer: {
-        backgroundColor: '#272727',
+        backgroundColor: '#00000010',
         borderRadius: 50,
         width: 80,
         height: 80,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 3,
-        borderColor: '#464646',
-        ...SHADOWS.dark
+        borderColor: '#00000030',
+
     },
 
     classHeader: {

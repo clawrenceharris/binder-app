@@ -2,15 +2,14 @@ import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, use
 import React, { useEffect, useState } from 'react'
 import ProfileButton from './ProfileButton'
 import { db } from '../Firebase/firebase'
-import { getDisplayName } from '../utils'
 import SelectionButton from './SelectionButton'
 import { Colors } from '../constants'
 import { SHADOWS } from '../constants/Theme'
+import { ActivityBadge } from './ProfileBadges'
 
 const UserListItem = ({ user, onPress, isSelected }) => {
 
     const colorScheme = useColorScheme()
-    const [userData, setUserData] = useState(null)
     const styles = StyleSheet.create({
         mainContainer: {
             borderRadius: 15,
@@ -18,7 +17,6 @@ const UserListItem = ({ user, onPress, isSelected }) => {
             backgroundColor: colorScheme === 'light' ? 'white' : '00000090',
             flexDirection: 'row',
             alignItems: 'center',
-            borderRadius: 15,
             ...SHADOWS[colorScheme],
             justifyContent: 'space-between'
 
@@ -26,15 +24,7 @@ const UserListItem = ({ user, onPress, isSelected }) => {
         }
     })
 
-    useEffect(() => {
-        db.collection('users')
-            .doc(user.id)
-            .get()
-            .then(doc => setUserData(doc.data()))
 
-
-
-    }, [])
 
 
     return (
@@ -42,8 +32,14 @@ const UserListItem = ({ user, onPress, isSelected }) => {
         <TouchableWithoutFeedback onPress={onPress}>
             <View style={styles.mainContainer}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <ProfileButton />
-                    <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].tint, marginLeft: 10, fontSize: 18 }}>{userData?.displayName}</Text>
+                    <ProfileButton
+                        imageURL={user?.photoURL || null}
+                        badge={ActivityBadge()}
+                        badgeContainerStyle={{ backgroundColor: 'white', top: '55%', left: '65%' }}
+
+
+                    />
+                    <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].tint, marginLeft: 10, fontSize: 18 }}>{user?.displayName}</Text>
                 </View>
                 <SelectionButton
                     onSelect={onPress}

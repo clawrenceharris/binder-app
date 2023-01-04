@@ -29,10 +29,11 @@ const GPASetttings = ({ route }) => {
 
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
             <Header
                 title={'GPA'}
                 navigation={navigation}
+                style={{ backgroundColor: Colors.primary }}
 
             />
 
@@ -61,7 +62,7 @@ const GPASetttings = ({ route }) => {
                         <TouchableOpacity
                             onPress={() => { onSelect(gpa) }}
                             key={index}
-                            style={{ padding: 20, flexDirection: 'row', marginLeft: 20, width: 150, height: 100, backgroundColor: '#272727', borderRadius: 10, justifyContent: 'space-between', alignItems: 'center' }}>
+                            style={{ padding: 20, flexDirection: 'row', marginLeft: 20, width: 150, height: 100, backgroundColor: '#00000030', borderRadius: 10, justifyContent: 'space-between', alignItems: 'center' }}>
                             <Text style={{ color: 'white', fontFamily: "KanitMedium", fontSize: 16 }}>{gpa}</Text>
                             <SelectionButton
                                 onSelect={() => { onSelect(gpa) }}
@@ -75,11 +76,9 @@ const GPASetttings = ({ route }) => {
                 </ScrollView>
 
                 <Button
-                    background={Colors.light.primary}
-                    tint={'white'}
                     title='Save'
                     onPress={() => { updateCollection('users', auth.currentUser.uid, { gpa: selectedGpa }); navigation.goBack(); }}
-                    condition={selectedGpa != null}
+                    disabled={!selectedGpa}
                     width='100%'
                 />
 

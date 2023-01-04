@@ -23,15 +23,8 @@ const SchoolSettings = ({ route }) => {
         active: null,
     }
 
-    const routeParams = {
-        title: 'Add Schools',
-        defaultData: defaultData,
-        data: data,
-        selectionLimit: 1,
-        isClass: false
-    }
     const onSavePress = () => {
-        AddUserToSchool(school.id, auth.currentUser.uid)
+        AddUserToSchool(school[0].id, auth.currentUser)
         navigation.goBack()
     }
     useEffect(() => {
@@ -60,7 +53,7 @@ const SchoolSettings = ({ route }) => {
 
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
             <ConfirmationModal
                 onCancelPress={() => setShowModal(false)}
                 showModal={showModal}
@@ -75,6 +68,7 @@ const SchoolSettings = ({ route }) => {
                 title='School'
                 navigation={navigation}
                 direction='horizontal'
+                style={{ backgroundColor: Colors.primary }}
 
             />
             <View style={styles.mainContainer}>
@@ -84,22 +78,22 @@ const SchoolSettings = ({ route }) => {
                 <View style={{ marginTop: 30 }}>
 
                     {!school ? <TouchableOpacity
-                        onPress={() => { navigation.navigate('SearchSelect', { ...routeParams, update: setSchool }) }}
-                        style={{ alignSelf: 'center', flexDirection: 'row', backgroundColor: Colors.light.accent, borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
+                        onPress={() => { navigation.navigate('AddSchool', { update: setSchool }) }}
+                        style={{ alignSelf: 'center', flexDirection: 'row', backgroundColor: '#00000070', borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
 
                         <Image source={assets.school} style={{ width: 28, height: 28, tintColor: 'white' }} />
-                        <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>Select a School</Text>
+                        <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>{"Select a School"}</Text>
                     </TouchableOpacity>
 
                         :
 
                         <View style={{ alignSelf: 'center' }}>
                             <TouchableOpacity
-                                onPress={() => { navigation.navigate('SearchSelect', { ...routeParams, update: setSchool }) }}
-                                style={{ flexDirection: 'row', backgroundColor: Colors.light.accent, borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                onPress={() => { navigation.navigate('AddSchool', { update: setSchool }) }}
+                                style={{ alignSelf: 'center', flexDirection: 'row', backgroundColor: '#00000070', borderRadius: 10, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
 
                                 <Image source={assets.pencil} style={{ width: 20, height: 20, tintColor: 'white' }} />
-                                {school && <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>{school?.name}</Text>}
+                                {school && <Text style={{ fontSize: 20, fontFamily: 'KanitBold', color: 'white', marginLeft: 10 }}>{school[0]?.name}</Text>}
                             </TouchableOpacity>
 
 
@@ -111,12 +105,9 @@ const SchoolSettings = ({ route }) => {
 
 
                 <Button
-                    width={'100%'}
-                    background={Colors.light.primary}
-                    tint={'white'}
+                    style={{ margin: 30 }}
                     title={'Save'}
-                    margin={30}
-                    condition={school != route.params.school}
+                    disabled={school === route.params.school}
                     onPress={() => {
                         if (route.params.school != null)
                             setShowModal(true)

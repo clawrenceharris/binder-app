@@ -6,26 +6,13 @@ import useColorScheme from '../hooks/useColorScheme'
 const ModalComponent = (props) => {
     const colorScheme = useColorScheme()
     const translateValue = useRef(new Animated.Value(0)).current
-    const { width, height } = useWindowDimensions();
 
     const [showModal, setshowModal] = useState(props.visible)
 
 
-    useEffect(() => {
-        toggleModal()
-
-    }, [props.visible])
 
 
-    const toggleModal = () => {
-        if (props.visible) {
-            slideIn();
-        }
-        else {
-            setTimeout(() => setshowModal(false), 200)
-            slideOut()
-        }
-    }
+
     function slideIn() {
         Animated.timing(
             translateValue,
@@ -56,22 +43,18 @@ const ModalComponent = (props) => {
     return (
         <Modal
             transparent
-            visible={showModal}>
+            visible={props.showModal}
+            onShow={slideIn}
+            onDismiss={slideOut}
+        >
 
             <View style={{ backgroundColor: '#00000085', flex: 1, alignItems: 'center' }} >
 
 
                 {props.animated ?
                     <Animated.View
-                        style={{ borderColor: 'gray', borderWidth: 1, alignSelf: 'center', height: props.height, backgroundColor: '#333', width: props.width, marginTop: '300%', borderRadius: 25, padding: 20, transform: [{ translateY: translateValue }], }}>
+                        style={{ borderColor: 'gray', borderWidth: 1, alignSelf: 'center', height: props.height, backgroundColor: Colors[colorScheme].background, width: props.width, marginTop: '300%', borderRadius: 25, padding: 20, transform: [{ translateY: translateValue }], }}>
                         {props.renderContent}
-                        {props.showBottomCancelBar &&
-
-                            <TouchableOpacity onPress={toggleModal} style={{ alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: props.width, height: 40, backgroundColor: 'white', marginTop: 50, borderRadius: 25 }}>
-                                <Text style={{ fontFamily: 'KanitMedium', fontSize: 18 }}>{props.cancelText}</Text>
-                            </TouchableOpacity>
-
-                        }
 
 
                     </Animated.View >

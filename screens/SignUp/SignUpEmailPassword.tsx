@@ -16,12 +16,15 @@ import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet'
 import { styles } from '.'
 import Button from '../../components/Button'
 import BackButton from '../../components/BackButton'
+import Header from '../../components/Header'
+import Achievements from '../../constants/data/Achievements'
 
 const SignUpEmailPassword = ({ navigation }) => {
     const { control, handleSubmit, watch } = useForm();
     const password = watch('password')
     const email = watch('email')
     const [error, setError] = useState('')
+    const colorScheme = useColorScheme()
     // const [email, setEmail] = useState('')
     // const [password, setPassword] = useState('')
 
@@ -73,7 +76,18 @@ const SignUpEmailPassword = ({ navigation }) => {
 
 
                     })
+                Achievements.forEach((item) => {
+                    db.collection('users')
+                        .doc(user.uid)
+                        .collection('achievements')
+                        .doc(item.id)
+                        .set({
+                            achievement: db.collection('achievements').doc(item.id),
+                            amountDone: 0,
+                            index: 0
+                        })
 
+                })
                 navigation.navigate('SignUpName', { uid: uid })
 
 
@@ -96,20 +110,16 @@ const SignUpEmailPassword = ({ navigation }) => {
     return (
 
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
-            <View style={{ height: '25%' }}>
-                <BackButton
-                    direction={'horizontal'}
-                    color={'white'}
-                    margin={20}
-                    navigation={navigation}
-
-                />
-                <Text style={styles.screenTitle}>{"Sign up with your email and password"}</Text>
-            </View>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
+            <Header
+                navigation={navigation}
+                style={{ backgroundColor: Colors.primary }}
+            />
+            <Text style={styles.screenTitle}>{"Sign up with your email and password."}</Text>
 
 
-            <View style={{ padding: 20, alignItems: 'center', backgroundColor: 'white', height: '100%', borderRadius: 15 }}>
+
+            <View style={{ paddingHorizontal: 20, paddingVertical: 10, alignItems: 'center', backgroundColor: Colors[colorScheme].background, height: '100%', borderRadius: 15 }}>
 
                 {error && <Text style={styles.errorMessage}>{error}</Text>}
                 <View style={{ alignItems: 'center', width: '100%', margin: 20 }}>
@@ -137,25 +147,27 @@ const SignUpEmailPassword = ({ navigation }) => {
                         />
                     </View>
 
-                    <Text style={[styles.finePrint, { textAlign: 'left' }]}>{'By tapping Accept & Continue, you ackknowledge that you have read the Privacy Policy and agree to our Terms of Service'}</Text>
+                    <Text style={[styles.finePrint, { textAlign: 'left', marginTop: 5 }]}>{'By tapping Accept & Continue, you ackknowledge that you have read the Privacy Policy and agree to our Terms of Service.'}</Text>
 
                 </View>
 
 
 
-                <TouchableOpacity
+                <Button
                     onPress={handleSubmit(onSignUpPressed)}
-                    style={{ width: '100%', backgroundColor: Colors.light.primary, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 15 }}>
-                    <Text style={{ fontFamily: 'KanitBold', fontSize: 20, color: 'white' }}>{"Accept & Continue"}</Text>
+                    title={'Accept & Continue'}
+                    disabled={!email && !password}
+                    style={{ borderRadius: 15 }}
 
-                </TouchableOpacity>
+
+                />
 
 
 
                 <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 20 }}>
                     <Text style={{ color: 'darkgray', fontFamily: 'Kanit' }}>{"Already have an account?"}</Text>
                     <Text
-                        style={{ color: Colors.light.primary, fontWeight: 'bold', marginLeft: 5, fontFamily: 'KanitBold' }}
+                        style={{ color: Colors.accent, fontWeight: 'bold', marginLeft: 5, fontFamily: 'KanitBold' }}
                         onPress={() => { navigation.navigate('SignIn') }}>
                         {"Log In"}
                     </Text>
@@ -163,7 +175,7 @@ const SignUpEmailPassword = ({ navigation }) => {
                 </View>
 
             </View>
-        </SafeAreaView>
+        </View>
 
     )
 }

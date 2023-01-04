@@ -18,9 +18,9 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
-        
+        users: [],
+        announcements: [],
+
 
 
 
@@ -35,8 +35,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
     },
     {
@@ -49,8 +49,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
 
     },
@@ -65,8 +65,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
 
     },
@@ -81,8 +81,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
 
     },
@@ -97,8 +97,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
 
     },
@@ -113,8 +113,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
 
     },
@@ -129,8 +129,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
 
 
@@ -145,8 +145,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
     },
 
@@ -160,8 +160,8 @@ export default [
         building: null,
         room: '102A',
         teacher: faker.name.fullName(),
-        users: null,
-        announcements: null,
+        users: [],
+        announcements: [],
 
 
     },

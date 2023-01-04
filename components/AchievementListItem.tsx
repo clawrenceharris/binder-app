@@ -33,14 +33,17 @@ const AchievementListItem = (props) => {
     return (
         <View>
 
-            <ModalComponent animated showModal={showModal} toValue={-900} width={300} height={350}
+            <ModalComponent animated showModal={showModal} toValue={-900} width={300} height={370}
                 renderContent={(
                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                        <Image source={assets.send} style={{ width: 28, height: 28, tintColor: 'white', position: 'absolute', top: 10, right: 10 }} />
-                        <Text style={{ color: 'white', fontFamily: 'Kanit', fontSize: 16, position: 'absolute', left: 10, top: 10 }}>Hint</Text>
-                        <View style={{ backgroundColor: '#2a2a2a', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#383838' }}>
+
+                        <Image source={assets.send} style={{ width: 28, height: 28, tintColor: '#00000070', position: 'absolute', top: 10, right: 10 }} />
+
+                        <Text style={{ color: '#00000070', fontFamily: 'Kanit', fontSize: 16, position: 'absolute', left: 10, top: 10 }}>{"Hint"}</Text>
+
+                        <View style={{ backgroundColor: '#00000010', borderRadius: 50, width: 80, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#00000020' }}>
                             {isSomeComplete() && <Text style={{ fontSize: 36 }}>{icon}</Text>}
-                            {!isSomeComplete() && <Image source={assets.question_mark} style={{ width: 40, height: 40, tintColor: '#6F6F6F' }} />}
+                            {!isSomeComplete() && <Image source={assets.question_mark} style={{ width: 40, height: 40, tintColor: '#00000080' }} />}
                         </View>
 
 
@@ -53,24 +56,28 @@ const AchievementListItem = (props) => {
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                    <Image source={assets.star} style={{ width: 28, height: 28, tintColor: getAmountDoneProgress(done, index) >= 1 ? Colors.light.accent : 'white' }} />
+                                    <Image source={assets.star} style={{ width: 28, height: 28, tintColor: getAmountDoneProgress(done, index) >= 1 ? Colors.primary : '#00000030' }} />
 
                                     <View style={{ backgroundColor: 'gray', height: 20, width: `100%`, borderRadius: 50, marginLeft: 10 }}>
 
 
-                                        {getAmountDoneProgress(done, index) * 100 > 0 && getAmountDoneProgress(done, index) * 100 < 100 && <View style={{ minWidth: '15%', paddingHorizontal: 5, backgroundColor: Colors.light.accent, height: 20, width: `${getAmountDoneProgress(done, index) * 100}%`, borderRadius: 50 }}>
-                                            <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{`${getAmountDoneProgress(done, index) * 100}%`}</Text>
+                                        {getAmountDoneProgress(done, index) * 100 > 0 && getAmountDoneProgress(done, index) * 100 < 100 &&
 
-                                        </View>}
+                                            <View style={{ minWidth: '15%', paddingHorizontal: 5, backgroundColor: Colors.primary, height: 20, width: `${getAmountDoneProgress(done, index) * 100}%`, borderRadius: 50 }}>
+                                                <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{`${getAmountDoneProgress(done, index) * 100}%`}</Text>
 
-                                        {getAmountDoneProgress(done, index) * 100 >= 100 && <View style={{ paddingHorizontal: 5, backgroundColor: Colors.light.accent, height: 20, width: `100%`, borderRadius: 50 }}>
-                                            <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{`Completed!`}</Text>
+                                            </View>}
 
-                                        </View>}
+                                        {getAmountDoneProgress(done, index) * 100 >= 100 &&
+                                            <View style={{ paddingHorizontal: 5, backgroundColor: Colors.primary, height: 20, width: `100%`, borderRadius: 50 }}>
+                                                <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{`Completed!`}</Text>
 
-                                        {getAmountDoneProgress(done, index) * 100 == 0 && <View style={{ paddingHorizontal: 5, backgroundColor: 'gray', borderRadius: 50 }}>
-                                            <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{`0%`}</Text>
-                                        </View>}
+                                            </View>}
+
+                                        {getAmountDoneProgress(done, index) * 100 == 0 &&
+                                            <View style={{ paddingHorizontal: 5, backgroundColor: 'gray', borderRadius: 50 }}>
+                                                <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{`0%`}</Text>
+                                            </View>}
                                     </View>
 
                                     <Text style={{ position: 'absolute', right: -20, fontFamily: 'Kanit', color: 'darkgray' }}>{amountDone + "/" + done}</Text>
@@ -80,11 +87,8 @@ const AchievementListItem = (props) => {
                         </View>
 
                         <Button
-                            background='white'
-                            tint='black'
+
                             title='Done'
-                            width={'100%'}
-                            condition={true}
                             onPress={() => { setShowModal(false) }}
                         />
 
@@ -135,9 +139,9 @@ const AchievementListItem = (props) => {
                 <TouchableWithoutFeedback onPress={() => { setShowModal(true) }}>
 
                     <View>
-                        <View style={{ margin: 10, padding: 8, backgroundColor: '#2a2a2a', borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ margin: 10, padding: 8, backgroundColor: '#00000030', borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
 
-                            <Text style={{ textAlign: 'center', fontFamily: 'KanitMedium', color: '#6F6F6F', fontSize: 16 }}>{name + " (Level " + (index + 1) + ")"}</Text>
+                            <Text style={{ textAlign: 'center', fontFamily: 'KanitMedium', color: '#00000090', fontSize: 16 }}>{name + " (Level " + (index + 1) + ")"}</Text>
 
                             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
@@ -147,7 +151,7 @@ const AchievementListItem = (props) => {
                                             cx={58}
                                             cy={55}
                                             strokeWidth={STROKE_WIDTH}
-                                            stroke={Colors.light.accent}
+                                            stroke={Colors.primary}
                                             r={RADIUS}
                                             strokeDashoffset={CIRCLE_LENGTH * (1 - (getProgress()))}
                                             strokeLinecap='round'
@@ -159,7 +163,7 @@ const AchievementListItem = (props) => {
                                             cx={58}
                                             cy={55}
                                             strokeWidth={STROKE_WIDTH}
-                                            stroke={'gray'}
+                                            stroke={'#00000070'}
                                             r={RADIUS}
                                             strokeDashoffset={RADIUS}
                                             strokeLinecap='round'
@@ -169,15 +173,15 @@ const AchievementListItem = (props) => {
 
 
                                 </Svg>
-                                <View style={{ flexDirection: 'row', margin: 10, width: 70, height: 70, backgroundColor: '#474747', borderRadius: 100, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 13 }}>
+                                <View style={{ flexDirection: 'row', margin: 10, width: 70, height: 70, backgroundColor: '#00000070', borderRadius: 100, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 13 }}>
 
                                     {isSomeComplete() && <Text style={{ fontSize: 40, color: '#6F6F6F' }}>{icon}</Text>}
-                                    {!isSomeComplete() && <Image source={assets.question_mark} style={{ width: 40, height: 40, tintColor: '#6F6F6F' }} />}
+                                    {!isSomeComplete() && <Image source={assets.question_mark} style={{ width: 40, height: 40, tintColor: '#00000080' }} />}
 
 
                                 </View>
 
-                                <Text style={{ fontFamily: 'Kanit', color: '#6F6F6F', width: '60%' }}>{description + " (" + amountDone + "/" + levelGoals[index] + ")"}</Text>
+                                <Text style={{ fontFamily: 'Kanit', color: '#00000070', width: '60%' }}>{description + " (" + amountDone + "/" + levelGoals[index] + ")"}</Text>
                             </View>
 
                         </View>

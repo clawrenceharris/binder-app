@@ -1,11 +1,15 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity, Image, ViewStyle } from 'react-native'
+import React, { FC } from 'react'
 import { assets } from '../constants'
 
-const MoreButton = ({ style, onPress }) => {
+interface Props {
+    style?: ViewStyle;
+    onPress: () => void;
+}
+const MoreButton: FC<Props> = (props) => {
     return (
         <TouchableOpacity
-            onPress={onPress}
+            onPress={props.onPress}
             style={[{
 
                 backgroundColor: '#00000030',
@@ -15,7 +19,7 @@ const MoreButton = ({ style, onPress }) => {
                 alignItems: 'center',
                 padding: 5,
                 justifyContent: 'center'
-            }, { ...style }]}>
+            }, { ...props.style }]}>
             <Image source={assets.more} style={{ width: 20, height: 20, tintColor: 'white' }} />
 
         </TouchableOpacity>

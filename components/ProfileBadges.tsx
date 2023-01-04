@@ -1,17 +1,17 @@
 import { View, Text, Image } from 'react-native'
 import React from 'react'
-import { assets } from '../constants'
+import { assets, Colors } from '../constants'
 import { SHADOWS, SIZES } from '../constants/Theme'
 
 export const ActivityBadge = () => (
     <View
         style={{
-            backgroundColor: '#8FFD67',
-            width: SIZES.medium,
-            height: SIZES.medium,
+            backgroundColor: Colors.green,
+            width: 10,
+            height: 10,
             borderRadius: 50,
             ...SHADOWS.light,
-            shadowColor: '#73017B'
+            shadowColor: '#00000020'
         }} />
 )
 

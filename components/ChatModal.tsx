@@ -5,6 +5,7 @@ import { auth, db } from '../Firebase/firebase'
 import { getDisplayName, getDisplayNameOrYou } from '../utils'
 import { Colors } from '../constants'
 import moment from 'moment'
+import useColorScheme from '../hooks/useColorScheme'
 
 const ChatModal = (props) => {
 
@@ -13,7 +14,7 @@ const ChatModal = (props) => {
     const scaleValue = useRef(new Animated.Value(0)).current
     const [showModal, setShowModal] = useState(props.visible)
 
-
+    const colorScheme = useColorScheme()
 
     const toggleModal = () => {
         if (props.visible) {
@@ -39,20 +40,13 @@ const ChatModal = (props) => {
         toggleModal();
 
         db.collection('users')
-            .doc(props.message?.user)
+            .doc(props.message?.user.uid)
             .get()
             .then(doc => setUserData(doc.data()))
 
     }, [props.message, props.visible])
 
-    const getColor = () => {
-        const users = props?.users.filter(item => item?.uid === props.message?.user)
-        if (users.length) {
-            const user = users[0]
-            return user?.color
-        }
-        else return Colors.light.accent
-    }
+
     return (
 
 
@@ -63,20 +57,20 @@ const ChatModal = (props) => {
             <View style={{ backgroundColor: '#00000085', flex: 1, alignItems: 'center', padding: 10 }} >
                 <Animated.View style={{ alignSelf: 'center', height: 150, width: '100%', padding: 20, marginTop: '100%', transform: [{ scale: scaleValue }] }}>
 
-                    <View style={{ backgroundColor: '#333', width: '100%', paddingHorizontal: 20, paddingTop: 10, paddingBottom: 10, borderRadius: 15, marginBottom: 20 }}>
+                    <View style={{ backgroundColor: Colors[colorScheme].background, width: '100%', paddingHorizontal: 20, paddingTop: 10, paddingBottom: 10, borderRadius: 15, marginBottom: 20 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             {reactions.map((item, index) => < Text key={index.toString()} onPress={() => props.onReactionPress(item)} style={{ fontSize: 28 }}>{item}</Text>)}
                         </View>
                     </View>
 
 
-                    <View style={{ backgroundColor: '#333', width: '100%', paddingHorizontal: 20, paddingTop: 10, paddingBottom: 10, borderRadius: 15, marginBottom: 20 }}>
+                    <View style={{ backgroundColor: Colors[colorScheme].background, width: '100%', paddingHorizontal: 20, paddingTop: 10, paddingBottom: 10, borderRadius: 15, marginBottom: 20 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ fontFamily: 'KanitMedium', color: getColor(), fontSize: 16 }}>{getDisplayNameOrYou(userData)}</Text>
-                            <Text style={{ fontFamily: 'Kanit', color: 'lightgray', fontSize: 14 }}>{moment(props.message?.createdAt.toDate()).format('LT')}</Text>
+                            <Text style={{ fontFamily: 'KanitMedium', color: '#00000070', fontSize: 16 }}>{getDisplayNameOrYou(userData)}</Text>
+                            <Text style={{ fontFamily: 'Kanit', color: '#00000070', fontSize: 14 }}>{moment(props.message?.createdAt.toDate()).format('LT')}</Text>
                         </View>
 
-                        <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{props?.message?.text}</Text>
+                        <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].tint }}>{props?.message?.text}</Text>
 
                     </View>
                     <OptionsList
@@ -97,8 +91,8 @@ const ChatModal = (props) => {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPress={props.onCancelPress}
-                        style={styles.cancelOption}>
-                        <Text style={{ fontFamily: 'KanitMedium', fontSize: 18, color: 'white' }}>Done</Text>
+                        style={[styles.cancelOption, { backgroundColor: Colors[colorScheme].background }]}>
+                        <Text style={{ fontFamily: 'KanitMedium', fontSize: 18, color: Colors[colorScheme].tint }}>{"Done"}</Text>
 
                     </TouchableOpacity>
 

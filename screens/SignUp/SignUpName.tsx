@@ -8,11 +8,12 @@ import { descriptions, styles } from '.'
 import { updateUserProfile } from '../../Firebase/firebase'
 import Button from '../../components/Button'
 import BackButton from '../../components/BackButton'
+import Input from '../../components/Input'
 
 const SignUpName = ({ navigation }) => {
     const route = useRoute()
     const [displayName, setDisplayName] = useState('')
-
+    const colorScheme = useColorScheme()
     const onNextPressed = () => {
         navigation.navigate('SignUpBirthday', { displayName: displayName, ...route.params })
     }
@@ -22,7 +23,7 @@ const SignUpName = ({ navigation }) => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
             <View style={{ height: '25%', alignItems: 'center', justifyContent: 'center' }}>
 
                 <Text style={styles.screenTitle}>{"Tell us your name"}</Text>
@@ -31,16 +32,14 @@ const SignUpName = ({ navigation }) => {
             </View>
 
 
-            <View style={{ padding: 20, alignItems: 'center', backgroundColor: Colors.light.accent, borderRadius: 15, justifyContent: 'center' }}>
+            <View style={{ padding: 30, justifyContent: 'center', height: '50%' }}>
+
                 <View style={{ width: '100%' }}>
-                    <TextInput
+                    <Input
                         placeholder='Name'
-                        style={styles.input}
+                        style={{ color: 'white' }}
                         value={displayName}
                         onChangeText={setDisplayName}
-                        placeholderTextColor={'#00000090'}
-
-                        selectionColor={Colors.light.primary}
 
                     />
                 </View>
@@ -56,11 +55,8 @@ const SignUpName = ({ navigation }) => {
                 />
 
 
-
-
-
             </View>
-        </SafeAreaView>
+        </View>
 
     )
 }

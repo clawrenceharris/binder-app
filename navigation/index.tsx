@@ -2,8 +2,6 @@
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Colors } from '../constants';
-import BottomTabNavigator from './BottomTabNavigator';
 import {
   Chatroom,
   Chats,
@@ -20,11 +18,9 @@ import {
   NameSettings,
   PasswordSettings,
   GraduationYearSettings,
+  CameraScreen
 } from '../screens';
 
-import { CameraScreen } from '../screens';
-import EditPictureToSend from '../screens/EditPictureToSend';
-import EditVideoToSend from '../screens/EditVideoToSend';
 import StartScreen from '../screens/StartScreen';
 import Settings from '../screens/Settings/Settings';
 import AchievementsScreen from '../screens/Achievements';
@@ -37,6 +33,11 @@ import NewDeskItem from '../screens/NewDeskItem';
 import DeskItem from '../screens/DeskItem';
 import BookmarkedItems from '../screens/BookmarkedItems';
 import AddClasses from '../screens/AddClasses';
+import AddSchool from '../screens/AddSchool';
+import SelectDeskItem from '../screens/SelectDeskItem';
+import NewDeskItemUpload from '../screens/NewDeskItemUpload';
+import BottomTabNavigator from './BottomTabNavigator';
+import DeskItems from '../screens/DeskItems';
 
 const Stack = createNativeStackNavigator();
 
@@ -83,7 +84,8 @@ function RootNavigator({ theme }) {
       initialRouteName='StartScreen'
       screenOptions={{
         headerShown: false,
-        animationDuration: 200
+        animationDuration: 200,
+
 
       }} >
 
@@ -135,7 +137,7 @@ function RootNavigator({ theme }) {
 
       <Stack.Screen
         name="Root"
-        children={() => { return <BottomTabNavigator /> }}
+        component={BottomTabNavigator}
       />
 
 
@@ -227,6 +229,17 @@ function RootNavigator({ theme }) {
       />
 
       <Stack.Screen
+        name="AddSchool"
+        component={AddSchool}
+        options={{
+          gestureDirection: "vertical",
+          presentation: 'modal'
+
+        }}
+      />
+
+
+      <Stack.Screen
         name="Classroom"
         component={Classroom}
       />
@@ -237,13 +250,13 @@ function RootNavigator({ theme }) {
         component={Chats}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Camera"
         component={CameraScreen}
         options={{
           gestureDirection: 'vertical',
         }}
-      />
+      /> */}
 
 
       <Stack.Screen
@@ -255,6 +268,16 @@ function RootNavigator({ theme }) {
       <Stack.Screen
         name="NewDeskItem"
         component={NewDeskItem}
+        options={{
+          gestureDirection: "horizontal",
+
+        }}
+
+      />
+
+      <Stack.Screen
+        name="NewDeskItemUpload"
+        component={NewDeskItemUpload}
         options={{
           gestureDirection: "vertical",
 
@@ -268,6 +291,26 @@ function RootNavigator({ theme }) {
         component={DeskItem}
         options={{
           gestureDirection: "vertical",
+
+        }}
+
+      />
+
+      <Stack.Screen
+        name="DeskItems"
+        component={DeskItems}
+
+
+      />
+
+
+
+      <Stack.Screen
+        name="SelectDeskItem"
+        component={SelectDeskItem}
+        options={{
+          gestureDirection: "vertical",
+          presentation: 'modal'
 
         }}
 

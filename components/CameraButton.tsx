@@ -57,7 +57,7 @@ const CameraButton = ({ maxDuration, isRecording }) => {
 
 
 
-            {!isRecording && <Svg height={120} width={200} >
+            {!isRecording && <Svg height={110} width={110} >
 
                 <AnimatedCircle
                     cx={50 + (STROKE_WIDTH / 2)}
@@ -79,7 +79,7 @@ const CameraButton = ({ maxDuration, isRecording }) => {
                     cx={50 + (STROKE_WIDTH / 2)}
                     cy={50 + (STROKE_WIDTH / 2)}
                     r={RADIUS - 10}
-                    fill={Colors.light.primary}
+                    fill={Colors.accent}
                     strokeWidth={STROKE_WIDTH}
                 />
 

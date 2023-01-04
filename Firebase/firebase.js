@@ -124,10 +124,6 @@ export function RemoveUserFromClass(classID, userUid) {
 }
 
 
-export function AddUserToClass(classID, userUid) {
-    updateCollection('classes', classID, { users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(userUid)) });
-    updateCollection('users', userUid, { classes: firebase.firestore.FieldValue.arrayUnion(db.collection('classes').doc(classID)) });
-}
 
 
 export function RemoveUserFromSchool(schoolID, userUid) {
@@ -143,24 +139,25 @@ export function RemoveUserFromSchool(schoolID, userUid) {
 }
 
 
-export function AddUserToSchool(schoolID, userUid) {
+export function AddUserToSchool(schoolID) {
 
-
-    updateCollection('users', userUid,
+    updateCollection('users', auth.currentUser.uid,
         {
+            school: db.collection('schools').doc(schoolID),
             classes: [],
-            chatrooms: []
-        })
-    updateCollection('schools', schoolID,
-        {
-            users: firebase.firestore.FieldValue.arrayUnion(db.collection('users').doc(userUid))
+
         });
+    db.collection('schools').doc(schoolID).update({
+        users: firebase.firestore.FieldValue.arrayUnion(
+            db.collection('users')
+                .doc(auth.currentUser.uid)
+        )
+
+    })
 
 
-    updateCollection('users', userUid,
-        {
-            school: db.collection('schools').doc(schoolID)
-        });
+
+
 
 }
 
@@ -171,7 +168,7 @@ export function getData(collectionPath, docId, setData) {
             .doc(docId)
             .get()
             .then(doc => {
-                console.log("HI")
+
                 setData(doc.data())
             }).catch((error) => console.log(error))
     }

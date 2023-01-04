@@ -34,6 +34,18 @@ export async function openMediaLibrary(mediaType, selectionLimit) {
 
 }
 
+export function getDeskCategory(contentType) {
+    switch (contentType) {
+        case "notes": return "Notes"
+        case "flashcards": "Flashcards"
+        case "poll": "Poll"
+        case "burning question": "Burning Question"
+
+    }
+}
+
+
+
 export function getZodiacSign(day, month, isEmoji) {
 
     let sign = "Unknown";
@@ -128,46 +140,72 @@ export function getZodiacSign(day, month, isEmoji) {
 
 }
 
-export function getDisplayName(firstName, lastName) {
-    let displayName = ""
-    if (!firstName) {
-        displayName = lastName
-    }
-    else if (!lastName) {
-        displayName = firstName
-    }
-    else {
-        displayName = firstName + " " + lastName
-    }
-    if (displayName)
-        return displayName
-    return "Someone"
 
-}
+
 
 
 export function getDisplayNameOrYou(userData) {
 
-    let displayName = ""
+
 
     if (userData?.uid === auth.currentUser.uid) {
         return "You"
     }
 
-    if (!userData?.firstName) {
-        displayName = userData?.lastName
-    }
-    else if (!userData?.lastName) {
-        displayName = userData?.firstName
-    }
-    else {
-        displayName = userData?.firstName + " " + userData?.lastName
-    }
-    if (displayName)
-        return displayName
-    return "Someone"
+    return userData?.displayName
+
 
 }
+export function handleSearch(value, setData, data) {
+
+    if (!value.length) {
+        return setData(data)
+    }
+
+    const filteredData = data.filter((item) =>
+        item?.name?.toLowerCase().includes(value.toLowerCase())
+    )
+
+    if (filteredData.length) {
+        setData(filteredData)
+    }
+
+    else {
+        setData([])
+    }
+
+
+
+}
+
+export function isSelected(selectedData, item) {
+    return selectedData.includes(item)
+}
+
+
+
+
+export function onSelect(selectedData, setSelectedData, item, selectionLimit) {
+
+    if (selectedData.includes(item)) //if we select an item that is already selected
+    {
+        const deselect = selectedData.filter(selected => selected != item) // create a new data array that does not include the selected item
+        return setSelectedData(deselect)
+    }
+
+    if (selectedData.length === selectionLimit && selectionLimit != 1) {
+        return
+    }
+
+    if (selectedData.length === selectionLimit && selectionLimit == 1) {
+        return setSelectedData([item]); // add item to selected items array
+
+    }
+
+    setSelectedData([...selectedData, item]); // add item to selected items array
+
+}
+
 
 export function haptics(feedbackStyle) {
     if (feedbackStyle === 'light')
@@ -197,5 +235,4 @@ export function getName(firstName, lastName) {
     return "Someone"
 
 }
-
 

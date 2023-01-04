@@ -4,14 +4,15 @@ import Header from '../components/Header'
 import { useRoute } from '@react-navigation/native'
 import { auth, db } from '../Firebase/firebase'
 import DeskItemPreview from '../components/DeskItemPreview'
-import { assets } from '../constants'
+import { assets, Colors } from '../constants'
+import useColorScheme from '../hooks/useColorScheme'
 
 const BookmarkedItems = ({ navigation }) => {
     const route = useRoute()
     const deskCategory = route.params.deskCategory
     const deskItems = route.params.deskItems
     const [bookmarkedItems, setBookmarkedItems] = useState([])
-
+    const colorScheme = useColorScheme()
     const getItemLayout = (data, index) => {
         const productHeight = 80;
         return {
@@ -48,12 +49,13 @@ const BookmarkedItems = ({ navigation }) => {
     }, [])
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+        <View style={{ flex: 1, backgroundColor: Colors[colorScheme].background }}>
             <Header
                 navigation={navigation}
                 title={'Bookmarked'}
                 direction={'vertical'}
                 icon={assets.bookmark}
+                style={{ backgroundColor: Colors.primary }}
                 shadow
             />
             <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 50, height: '100%' }}>

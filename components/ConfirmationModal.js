@@ -2,10 +2,11 @@ import { View, Text, TextInput, TouchableOpacity, Animated, Modal, useWindowDime
 import React, { useRef } from 'react'
 import { Colors } from '../constants';
 import Button from './Button';
+import useColorScheme from '../hooks/useColorScheme';
 
 const ConfirmationModal = ({ message, title = 'Are You Sure?', cancelText = "Cancel", confirmText = "I'm Sure 👍", onCancelPress, onConfirmPress, showModal }) => {
     const { width, height } = useWindowDimensions()
-
+    const colorScheme = useColorScheme()
     const translateValue = useRef(new Animated.Value(0)).current
 
     function slideIn() {
@@ -47,10 +48,10 @@ const ConfirmationModal = ({ message, title = 'Are You Sure?', cancelText = "Can
             <View style={{ backgroundColor: '#00000085', flex: 1, alignItems: 'center' }} >
 
 
-                <Animated.View style={{ borderColor: 'gray', borderWidth: 1, alignSelf: 'center', height: 280, backgroundColor: '#333', width: 300, marginTop: height, borderRadius: 25, padding: 20, transform: [{ translateY: translateValue }], }}>
+                <Animated.View style={{ borderColor: 'gray', borderWidth: 1, alignSelf: 'center', height: 280, backgroundColor: Colors[colorScheme].background, width: 300, marginTop: height, borderRadius: 25, padding: 20, transform: [{ translateY: translateValue }], }}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', padding: 5 }}>
-                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', paddingBottom: 5 }}>
-                            <Text style={{ color: 'white', fontSize: 18, fontFamily: 'Kanit' }}>{title}</Text>
+                        <View style={{ borderBottomWidth: 2, borderBottomColor: Colors[colorScheme].tint, paddingBottom: 5 }}>
+                            <Text style={{ color: Colors[colorScheme].tint, fontSize: 18, fontFamily: 'Kanit' }}>{title}</Text>
 
                         </View>
 
@@ -74,7 +75,7 @@ const ConfirmationModal = ({ message, title = 'Are You Sure?', cancelText = "Can
                         <TouchableOpacity
                             style={{ position: 'absolute', bottom: -40 }}
                             onPress={onCancelPress}>
-                            <Text style={{ color: 'white', fontFamily: "KanitBold", marginTop: 5, fontSize: 16 }}>{cancelText}</Text>
+                            <Text style={{ color: Colors[colorScheme].tint, fontFamily: "KanitBold", marginTop: 5, fontSize: 16 }}>{cancelText}</Text>
                         </TouchableOpacity>
                     </View>
                 </Animated.View>

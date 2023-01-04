@@ -11,6 +11,7 @@ import { auth, db, updateCollection } from '../Firebase/firebase'
 import firebase from 'firebase/compat'
 import { assets } from '../constants'
 import { Class } from '../types'
+import SelectionButton from './SelectionButton'
 
 
 interface Props {
@@ -24,9 +25,9 @@ interface Props {
 
 
 }
-
 const ClassListItem: FC<Props> = (props) => {
     const colorScheme = useColorScheme()
+
 
     return (
         <TouchableWithoutFeedback
@@ -39,31 +40,23 @@ const ClassListItem: FC<Props> = (props) => {
                         defaultImage={assets.book}
                         onPress={props.onPress}
                         size={40}
-                        nameStyle={{ color: Colors.light.accent }}
-                        imageStyle={{ width: 5, height: 5 }}
                     />
 
-                    <View>
-                        <Text style={[styles.className, { color: Colors.light.accent }]}>{props.Class?.name}</Text>
+                    <View style={{ marginLeft: 10 }}>
+                        <Text style={[styles.className, { color: Colors.primary }]}>{props.Class?.name}</Text>
 
-                        {props.type !== 'selectable' && <ActivePeople userCount={props.Class?.users?.length} activeCount={props.Class?.active?.length} />}
+                        {props.type !== 'selectable' &&
+                            <ActivePeople userCount={props.Class?.users.length} activeCount={0} />}
 
                     </View>
-                    {props.type === 'selectable' && <TouchableOpacity
-                        onPress={props.onSelect}
-                        activeOpacity={0.7}
-                        style={{ position: 'absolute', right: 10 }}>
-
-                        <View style={!props.isSelected && styles.addButtonContainer}>
-                            {!props.isSelected ? <Text style={{ color: 'white', fontFamily: 'KanitMedium' }}>{"Add"}</Text>
-                                :
-                                <View style={styles.selected}>
-                                    <Image source={assets.check} style={{ width: 28, height: 28, tintColor: Colors.light.accent }} />
-                                </View>
-
-                            }
-                        </View>
-                    </TouchableOpacity>}
+                    {props.type === 'selectable' &&
+                        <SelectionButton
+                            style={{ position: 'absolute', right: 10 }}
+                            isSelected={props.isSelected}
+                            onSelect={props.onSelect}
+                            color={Colors.primary}
+                        />
+                    }
                 </View>
 
             </View>
@@ -87,7 +80,7 @@ const styles = StyleSheet.create({
         width: 35,
         height: 35,
         borderRadius: 100,
-        borderColor: Colors.light.accent,
+        borderColor: Colors.primary,
         borderWidth: 2,
         justifyContent: 'center',
         alignItems: 'center',
@@ -101,8 +94,7 @@ const styles = StyleSheet.create({
         height: 35,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor:
-            Colors.light.accent,
+        backgroundColor: Colors.primary,
         borderRadius: 50,
 
 
@@ -127,8 +119,8 @@ const styles = StyleSheet.create({
         color: Colors.light.tint,
         marginBottom: 5,
         fontFamily: 'Kanit',
-        marginLeft: 10,
-        width: '95%'
+
+        width: '100%'
 
 
 

@@ -6,6 +6,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import firebase from 'firebase/compat';
 import { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 
 declare global {
@@ -42,7 +43,7 @@ export type BottomTabParamList = {
 
 };
 export type School = {
-  id: Int32,
+  id: string,
   name: string,
   type: string,
   location: string
@@ -68,77 +69,141 @@ export type HomeParamList = {
 }
 
 export type User = {
-  id: Int32;
-  firstName: String;
-  lastName: String;
-  username: String;
-  studyBuddy: boolean;
-  story: String[];
-  images: String[];
-  class: String
 
+  uid: string,
+  displayName: string,
+  photoURL: string,
+  birthday: Date,
+  gpa: string,
+  gradYear: string,
+  school: School,
+  lastActive: Date,
+  studyBuddies: [],
+  friends: [],
+  classes: []
 }
 
-export type ChatRoom = {
-  id: Int32;
+export type Chatroom = {
+  id: string;
   users: User[];
-  messages: Message[];
-  type: String;
+  chats: Chat[];
+  type: string;
+  name: string;
 
 }
 
 
 
 export type Class = {
-  id: String;
+  id: string;
   users: [User];
-  name: String;
-  chatRooms: ChatRooms;
-  announcements: Announcement[];
-  image: String
+  name: string;
+  chatrooms: Chatroom;
+  announcements: [];
+  photoURL: string;
+  active: [];
+  room: string;
+  building: string;
+  startDate: Date;
+  endDate: Date;
+  teacher: string;
+  description: string;
 
 }
-export type ChatRooms = {
-  classChatRooms: ChatRoom[];
-  groupChatRooms: ChatRoom[];
-  privateChatRooms: ChatRoom[];
+
+
+
+export type ChatroomUser = {
+
+  uid: string,
+  displayName: string,
+  photoURL: string,
+  birthday: Date,
+  gpa: string,
+  gradYear: string,
+  school: School,
+  lastActive: Date,
+  studyBuddies: [],
+  friends: [],
+  classes: []
+  color: string;
+
 
 }
 
-
-export type Message = {
-  user: User
-  id: String;
-  content: string;
-  contentType: String;
-  timestamp: Date;
-  status: String;
-  isPrivate: boolean;
+export type Chat = {
+  user: ChatUser;
+  id: string;
+  text: string;
+  contentType: string;
+  createdAt: firebase.firestore.FieldValue;
+  isSystem: boolean;
+  deskItem: DeskItem;
+  poll: Poll;
+  reactions: Reaction[];
+  burningQuestion: object;
 
 }
+
+export type Reaction = {
+  reaction: string;
+  user: ChatUser;
+}
+
 
 export type Announcement = {
-  id: String;
+  id: string;
   title: string;
   dueDate: Date;
   timestamp: Date;
 
 }
 
-export type Notes = {
-  id: String;
+export type DeskItem = {
+  id: string;
+  category: string;
   title: string;
   likes: User[];
   views: User[];
   comments: User[];
-  section: String;
-  images: String[];
-  owner: User;
+  section: string;
+  sectionNumber: number;
+  files: string[];
+  ownerUID: string;
   timestamp: Date;
+  isPublic: boolean;
 
 
 
 }
+export type ChatUser = {
+  uid: string;
+  photoURL: string;
+  displayName: string;
+
+}
+export type Flashcards = {
+  id: string;
+  title: string;
+  likes: User[];
+  views: User[];
+  comments: User[];
+  section: string;
+  cards: Flashcard[];
+  ownerUID: string;
+  timestamp: Date;
+  isPublic: boolean;
+  sectionNumber: number;
+
+
+
+}
+
+export type Flashcard = {
+  cardFront: string;
+  cardBack: string;
+}
+
 
 
 
@@ -148,6 +213,7 @@ export type Poll = {
   user: User;
   options: PollOption[]
   timestamp: Date;
+  totalVotes: number;
 
 
 
@@ -155,7 +221,7 @@ export type Poll = {
 }
 
 export type PollOption = {
-  option: String;
+  option: string;
   votes: User[];
 
 }

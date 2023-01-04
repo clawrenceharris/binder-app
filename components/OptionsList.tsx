@@ -2,9 +2,11 @@ import { View, Text, TouchableWithoutFeedback, StyleSheet, Image } from 'react-n
 import React, { useState } from 'react'
 import { assets, Colors } from '../constants'
 import ToggleSwitch from 'toggle-switch-react-native'
+import useColorScheme from '../hooks/useColorScheme'
 
 const OptionsList = (props) => {
     const [isOn, setIsOn] = useState(props.isOn)
+    const colorScheme = useColorScheme()
     const getIcon = (title) => {
 
         switch (title) {
@@ -18,6 +20,8 @@ const OptionsList = (props) => {
             case 'Public': return assets.unlock;
             case 'New Notes': return assets.add;
             case 'Leave Group': return assets.leave;
+            case 'Leave Class': return assets.leave;
+
             case 'Desk Settings': return assets.settings;
             case 'Mute': return assets.bell;
             case 'Copy': return assets.copy;
@@ -37,8 +41,50 @@ const OptionsList = (props) => {
 
 
         }
-        return 'white'
+        return Colors[colorScheme].tint
     }
+    const styles = StyleSheet.create({
+        topOptionContainer: {
+            backgroundColor: Colors[colorScheme].background,
+            width: '100%',
+            padding: 15,
+            borderBottomColor: '#474747',
+            borderBottomWidth: 1,
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+        },
+
+        middleOptionContainer: {
+            backgroundColor: Colors[colorScheme].background,
+
+            width: '100%',
+            padding: 15,
+            borderBottomColor: Colors[colorScheme].gray,
+            borderBottomWidth: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+
+
+
+
+
+        },
+        bottomOptionContainer: {
+            backgroundColor: Colors[colorScheme].background,
+            width: '100%',
+            padding: 15,
+            borderBottomLeftRadius: 15,
+            borderBottomRightRadius: 15,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+
+
+
+        },
+
+    })
     return (
         <View>
             {props.options?.map((item, index) =>
@@ -58,7 +104,8 @@ const OptionsList = (props) => {
                         index === 0 ? styles.topOptionContainer : styles.middleOptionContainer,
                         index === props.options.length - 1 ? styles.bottomOptionContainer : styles.middleOptionContainer]}>
                         <View style={{ flexDirection: 'row' }}>
-                            {getIcon(item) != null && <Image source={getIcon(item)} style={{ width: 25, height: 25, tintColor: 'white' }} />}
+                            {getIcon(item) != null && <Image source={getIcon(item)} style={{ width: 25, height: 25, tintColor: Colors[colorScheme].tint }} />}
+
                             <Text style={{ marginLeft: 10, fontFamily: 'KanitMedium', fontSize: 18, color: getColor(item) }}>{item}</Text>
 
                         </View>
@@ -73,7 +120,7 @@ const OptionsList = (props) => {
                                     setIsOn(!isOn)
                                 }}
                                 isOn={isOn}
-                                onColor={Colors.light.primary}
+                                onColor={Colors.accent}
                                 size={'large'}
                                 offColor={'#646464'} />}
 
@@ -85,54 +132,5 @@ const OptionsList = (props) => {
         </View>
     )
 }
-const styles = StyleSheet.create({
-    topOptionContainer: {
-        backgroundColor: '#333',
-        width: '100%',
-        padding: 15,
-        borderBottomColor: '#474747',
-        borderBottomWidth: 1,
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
 
-    middleOptionContainer: {
-        backgroundColor: '#333',
-        width: '100%',
-        padding: 15,
-        borderBottomColor: '#474747',
-        borderBottomWidth: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-
-
-
-
-
-    },
-    bottomOptionContainer: {
-        backgroundColor: '#333',
-        width: '100%',
-        padding: 15,
-        borderBottomLeftRadius: 15,
-        borderBottomRightRadius: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-
-
-
-    },
-    cancelOption: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'center',
-        width: '100%',
-        padding: 10,
-        backgroundColor: '#333',
-        marginTop: 10,
-        borderRadius: 15
-    }
-})
 export default OptionsList

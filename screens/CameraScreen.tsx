@@ -24,6 +24,8 @@ import ModalComponent from '../components/Modal'
 import * as Haptics from 'expo-haptics'
 import CameraButton from '../components/CameraButton'
 import { haptics } from '../utils'
+import { ProfileButton } from '../components'
+import { ActivityBadge } from '../components/ProfileBadges'
 
 const MAX_VIDEO_DURATION = 10000
 
@@ -190,21 +192,15 @@ const CameraScreen = ({ navigation }) => {
                 <View>
                     <View style={{ borderBottomColor: Colors[colorScheme].tint, borderBottomWidth: 1, padding: 10 }}>
                         <Text style={{ fontFamily: 'KanitMedium', color: Colors[colorScheme].tint, fontSize: 16, textAlign: 'center' }}>Uh oh!</Text>
-
-
                     </View>
                     <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].tint, textAlign: 'center', marginTop: 20 }}>Binder needs acces to your camera. Allow access in Settings to start taking pics!</Text>
                     <TouchableOpacity style={{ backgroundColor: Colors[colorScheme].tint, borderRadius: 50, padding: 10, marginTop: 30 }} onPress={() => { Linking.openSettings() }}>
                         <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].background, textAlign: 'center', fontSize: 16 }}>Allow</Text>
                     </TouchableOpacity>
-
                     <TouchableOpacity style={{ backgroundColor: Colors[colorScheme].tint, borderRadius: 50, padding: 10, marginTop: 30 }} onPress={() => { setOpenCameraModal(false) }}>
                         <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].background, textAlign: 'center', fontSize: 16 }}>Don't Allow</Text>
                     </TouchableOpacity>
                 </View>
-
-
-
             )} />} */}
 
 
@@ -252,43 +248,44 @@ const CameraScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.bottomContianer}>
-                <View style={{ flex: 1 }}>
-                    {!isRecording &&
 
-                        <TouchableOpacity
-                            style={styles.galleryButton}
-                            onPress={pickFromGallery}
-                        >
-                            {galleryItems[0] == undefined
-                                ?
-                                <></>
-                                :
-                                <Image source={{ uri: galleryItems[0].uri }} style={styles.galleryButtonImage} />
-                            }
-                        </TouchableOpacity>}
-                </View>
-
-
-                <View style={{ flex: 1, alignSelf: 'center', width: '100%' }}>
-
-
+                {!isRecording &&
 
                     <TouchableOpacity
-                        onLongPress={route.params?.canRecord && recordVideo}
-                        delayLongPress={500}
-                        onPress={takePicture}
+                        style={styles.galleryButton}
+                        onPress={pickFromGallery}
                     >
-
-                        <CameraButton maxDuration={MAX_VIDEO_DURATION} isRecording={isRecording} />
-
-                    </TouchableOpacity>
-                </View>
-
-                <View style={{ flex: 1 }} >
-                    {!isRecording && <TouchableOpacity style={{ flex: 1 }} onPress={onFlipPressed}>
-                        <Image source={assets.flip} style={[styles.icon, { width: 35, height: 35, marginTop: 40 }]} />
+                        {galleryItems[0] == undefined
+                            ?
+                            <></>
+                            :
+                            <Image source={{ uri: galleryItems[0].uri }} style={styles.galleryButtonImage} />
+                        }
                     </TouchableOpacity>}
-                </View>
+
+
+
+
+
+
+
+                <TouchableOpacity
+                    onLongPress={route.params?.canRecord && recordVideo}
+                    delayLongPress={500}
+                    onPress={takePicture}
+                >
+
+
+                    <CameraButton maxDuration={MAX_VIDEO_DURATION} isRecording={isRecording} />
+                </TouchableOpacity>
+
+
+
+                {!isRecording &&
+                    <TouchableOpacity onPress={onFlipPressed}>
+                        <Image source={assets.flip} style={[styles.icon, { width: 35, height: 35 }]} />
+                    </TouchableOpacity>}
+
 
 
 
@@ -302,18 +299,24 @@ const CameraScreen = ({ navigation }) => {
 }
 const styles = StyleSheet.create({
     container: {
+        width: '100%',
+        height: '100%',
         justifyContent: 'center',
         flex: 1,
+        borderRadius: 15,
+        overflow: 'hidden',
         backgroundColor: 'black'
     },
     camera: {
+        width: '100%',
+        height: '100%',
         flex: 1,
         aspectRatio: 9 / 16,
 
     },
 
     cameraButtonContainer: {
-        flex: 1,
+
 
     },
     cameraButton: {
@@ -355,13 +358,13 @@ const styles = StyleSheet.create({
     },
 
     bottomContianer: {
-        position: 'absolute',
         flexDirection: 'row',
-        bottom: '5%',
-        paddingVertical: 50,
+        width: '100%',
+        position: 'absolute',
+        bottom: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%'
+
 
     },
 
@@ -393,9 +396,9 @@ const styles = StyleSheet.create({
         height: 38,
         borderWidth: 2,
         borderColor: 'white',
-        borderRadius: 10,
-        marginLeft: 60,
-        overflow: 'hidden'
+        borderRadius: 50,
+        overflow: 'hidden',
+        marginRight: 5
 
     },
 

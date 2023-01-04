@@ -5,7 +5,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors, assets } from '../constants';
 import useColorScheme from '../hooks/useColorScheme';
 import { RootTabScreenProps, BottomTabParamList } from '../types';
-import { CameraScreen, Chats, ClassesScreen, Profile } from '../screens';
+import { CameraScreen, Chats, Classes, Profile } from '../screens';
 import Desk from '../screens/Desk';
 import Playground from '../screens/Playground';
 import { SHADOWS, SIZES } from '../constants/Theme';
@@ -19,81 +19,51 @@ import EditNameModal from '../components/EditNameModal';
 
 const Drawer = createDrawerNavigator();
 
-function ChatScreen({ navigation }) {
+
+
+function ClassesScreen({ navigation }) {
+
+
     return (
-        <Drawer.Navigator
-            initialRouteName="Chat"
-            drawerStyle={{
-                backgroundColor: '#333',
-                width: '100%',
-            }}
-            drawerType={'slide'}
-            drawerContent={() => {
-                return (
-                    <CurrentUserProfile navigation={navigation} />
+        <View style={{ flex: 1, backgroundColor: 'black' }}>
+            <Classes navigation={navigation} />
 
-
-
-                )
-            }}>
-            <Drawer.Screen name='Chat' component={Chat} />
-            <Drawer.Screen name='Profile' component={CurrentUserProfile} />
-
-
-        </Drawer.Navigator>)
+        </View>
+    )
 }
 
-function Home({ navigation }) {
+function ChatScreen({ navigation }) {
 
 
     return (
+        <View style={{ flex: 1, backgroundColor: 'black' }}>
+            <Chat navigation={navigation} />
 
-        <Drawer.Navigator
-
-            initialRouteName="Classes"
-            drawerStyle={{
-                backgroundColor: '#333',
-                width: '100%',
-            }}
-            drawerType={'slide'}
-            drawerContent={() => {
-                return (
-                    <CurrentUserProfile navigation={navigation} />
-
-
-
-                )
-            }}>
-            <Drawer.Screen name='Classes' component={ClassesScreen} />
-            <Drawer.Screen name='Profile' component={CurrentUserProfile} />
-
-
-        </Drawer.Navigator>)
+        </View>
+    )
 }
 
 function DeskScreen({ navigation }) {
 
 
     return (
+        <View style={{ flex: 1, backgroundColor: 'black' }}>
+            <Desk navigation={navigation} />
 
-        <Drawer.Navigator
-
-            initialRouteName="Desk"
-            drawerStyle={{
-                backgroundColor: '#333',
-                width: '100%',
-            }}
-            drawerType={'slide'}
-            drawerContent={() => {
-                return (
-                    <CurrentUserProfile navigation={navigation} />
-                )
-            }}>
-            <Drawer.Screen name='Desk' component={Desk} />
-            <Drawer.Screen name='Profile' component={CurrentUserProfile} />
+        </View>
+    )
+}
 
 
-        </Drawer.Navigator>)
+function Camera({ navigation }) {
+
+
+    return (
+        <View style={{ flex: 1, backgroundColor: 'black' }}>
+            <CameraScreen navigation={navigation} />
+
+        </View>
+    )
 }
 
 
@@ -115,22 +85,6 @@ const styles = StyleSheet.create({
 
 
 
-const NewPostButton = ({ children, onPress }) => {
-    const colorScheme = useColorScheme()
-    return (<TouchableOpacity
-        style={{ top: -20, justifyContent: 'center', alignItems: 'center', ...styles.shadow, shadowColor: 'lightgray', elevation: 5 }}
-        onPress={onPress}
-    >
-        <View style={{ width: 70, height: 70, borderRadius: 50, backgroundColor: Colors.light.primary, alignItems: 'center', justifyContent: 'center' }}>
-            {children}
-
-        </View>
-
-    </TouchableOpacity>)
-}
-
-
-
 
 
 
@@ -145,22 +99,19 @@ export default function BottomTabNavigator() {
     return (
 
         <BottomTab.Navigator
-            initialRouteName="Home"
+            initialRouteName="Root"
 
             screenOptions={{
 
                 tabBarStyle: {
-                    backgroundColor: 'white',
-                    height: 70,
+                    backgroundColor: 'black',
+                    height: 90,
+                    borderTopColor: 'black',
 
-                    position: 'absolute',
-                    bottom: 25,
-                    left: 20,
-                    right: 20,
-                    borderRadius: 20,
+
 
                 },
-                tabBarActiveTintColor: Colors.light.primary,
+                tabBarActiveTintColor: Colors.primary,
 
                 headerTitleStyle: { fontFamily: 'KanitBold', fontSize: 26, color: Colors.light.background },
 
@@ -168,17 +119,17 @@ export default function BottomTabNavigator() {
 
 
             <BottomTab.Screen
-                name="Home"
+                name="Classes"
 
-                component={Home}
+                component={ClassesScreen}
                 options={{
 
                     headerShown: false,
                     title: '',
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: ({ focused }) => (
 
                         <View style={{ alignItems: 'center', justifyContent: 'center', top: 20 }}>
-                            <Image source={assets.school} style={{ tintColor: color, width: ICON_SIZE, height: ICON_SIZE }} />
+                            <Image source={assets.book} style={{ tintColor: focused ? Colors.primary : 'rgb(225,228,233)', width: ICON_SIZE, height: ICON_SIZE }} />
                         </View>
                     )
 
@@ -197,10 +148,10 @@ export default function BottomTabNavigator() {
                     headerShown: false,
 
                     title: '',
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: ({ focused }) => (
 
                         <View style={{ alignItems: 'center', justifyContent: 'center', top: 20 }}>
-                            <Image source={assets.send} style={{ tintColor: color, width: ICON_SIZE, height: ICON_SIZE, transform: [{ rotateZ: '-90deg' }] }} />
+                            <Image source={assets.send} style={{ tintColor: focused ? Colors.primary : 'rgb(225,228,233)', width: ICON_SIZE, height: ICON_SIZE, transform: [{ rotateZ: '-90deg' }] }} />
                         </View>
                     )
                 }}
@@ -211,22 +162,22 @@ export default function BottomTabNavigator() {
 
             <BottomTab.Screen
                 name="Post"
-                component={CameraScreen}
+                component={Camera}
                 options={{
-                    tabBarVisible: false,
-                    tabBarStyle: { display: 'none' },
+
                     headerShown: false,
 
                     title: '',
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: ({ focused }) => (
+
 
                         <Image
                             source={assets.capture}
-                            style={{ tintColor: 'white', width: 30, height: 30, top: 7 }} />
+                            style={{ tintColor: focused ? Colors.accent : 'rgb(225,228,233)', width: 30, height: 30, top: 20 }}
+                        />
+
                     ),
-                    tabBarButton: (props) => (
-                        <NewPostButton onPress={() => { }} {...props} />
-                    )
+
                 }}
             />
 
@@ -242,10 +193,10 @@ export default function BottomTabNavigator() {
                     title: '',
                     headerShown: false,
 
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: ({ focused }) => (
 
                         <View style={{ alignItems: 'center', justifyContent: 'center', top: 20 }}>
-                            <Image source={assets.desk} style={{ tintColor: color, width: ICON_SIZE, height: ICON_SIZE }} />
+                            <Image source={assets.desk} style={{ tintColor: focused ? Colors.primary : 'rgb(225,228,233)', width: ICON_SIZE, height: ICON_SIZE }} />
                         </View>
                     )
                 }}
@@ -260,10 +211,10 @@ export default function BottomTabNavigator() {
                     headerShown: false,
 
                     title: '',
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: ({ focused }) => (
 
                         <View style={{ alignItems: 'center', justifyContent: 'center', top: 20 }}>
-                            <Image source={assets.playground} style={{ tintColor: color, width: ICON_SIZE, height: ICON_SIZE }} />
+                            <Image source={assets.playground} style={{ tintColor: focused ? Colors.primary : 'rgb(225,228,233)', width: ICON_SIZE, height: ICON_SIZE }} />
                         </View>
                     )
                 }}

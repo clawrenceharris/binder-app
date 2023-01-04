@@ -4,8 +4,9 @@ import { useForm, Controller } from 'react-hook-form'
 import { TextInput } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Colors } from '../constants'
+import Input from './Input'
 
-const CustomInput = ({ rules, control, name, placeholder, secureTextEntry, keyboardType }) => {
+const CustomInput = ({ rules, control, name, placeholder, secureTextEntry, keyboardType, selectionColor }) => {
     return (
         <Controller
             control={control}
@@ -14,16 +15,13 @@ const CustomInput = ({ rules, control, name, placeholder, secureTextEntry, keybo
             render={({ field: { value, onChange, onBlur }, fieldState: { error } }) =>
 
                 <View>
-                    <TextInput
+                    <Input
                         secureTextEntry={secureTextEntry}
                         value={value}
                         placeholder={placeholder}
-                        style={[styles.input, { borderBottomColor: error ? '#FD6464' : 'lightgray', }]}
                         onChangeText={onChange}
                         onBlur={onBlur}
-                        placeholderTextColor='lightgray'
-                        selectionColor={Colors.light.primary}
-                        keyboardAppearance={'dark'}
+                        selectionColor={selectionColor || Colors.accent}
                         keyboardType={keyboardType}
 
                     />

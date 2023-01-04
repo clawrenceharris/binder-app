@@ -1,4 +1,4 @@
-import ClassesScreen from './ClassesScreen'
+import Classes from './Classes'
 import Classmates from './Classmates'
 import Chats from './Feed'
 import Chatroom from './Chatroom'
@@ -23,7 +23,7 @@ import SignUpSchool from './SignUp/SignUpSchool'
 import SignUpPhoto from './SignUp/SignUpPhoto'
 
 export {
-    ClassesScreen,
+    Classes,
     Classmates,
     Chats,
     Chatroom,

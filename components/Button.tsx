@@ -15,12 +15,12 @@ import useColorScheme from '../hooks/useColorScheme'
 interface Props {
     onPress: () => void;
     titleStyle?: TextStyle;
-    title: string;
+    title?: string;
     icon?: JSX.Element;
     disabled?: boolean;
     style?: ViewStyle;
     background?: string;
-    tint?: string
+    tint?: string;
 
 
 }
@@ -29,7 +29,7 @@ const Button: FC<Props> = (props) => {
         buttonContainer: {
             borderRadius: 50,
             width: '100%',
-            backgroundColor: !props.disabled ? props.background || Colors.light.primary : '#00000020',
+            backgroundColor: !props.disabled ? props.background || Colors.accent : '#00000020',
             padding: 10,
             alignItems: 'center',
             justifyContent: 'center',

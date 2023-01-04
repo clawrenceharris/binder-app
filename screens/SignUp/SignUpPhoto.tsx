@@ -7,6 +7,7 @@ import { useRoute } from '@react-navigation/native'
 import { AddUserToSchool, auth, db, updateCollection, updateUserProfile } from '../../Firebase/firebase'
 import Button from '../../components/Button'
 import OptionsModal from '../../components/OptionsModal'
+import Header from '../../components/Header'
 
 //TODO: need to implement uploading picture using camera
 const SignUpPhoto = ({ navigation }) => {
@@ -40,11 +41,11 @@ const SignUpPhoto = ({ navigation }) => {
 
 
 
-        updateUserProfile(name, image)
+        updateUserProfile(displayName, image)
 
         //add user doc reference to school collection
-        AddUserToSchool(school.id, auth.currentUser.uid)
-        navigation.navigate('Root')
+        AddUserToSchool(school.id)
+        navigation.popToTop()
     }
 
     const onSkipPressed = () => {
@@ -75,7 +76,7 @@ const SignUpPhoto = ({ navigation }) => {
 
 
         updateUserProfile(displayName, image)
-        AddUserToSchool(school.id, auth.currentUser.uid)
+        AddUserToSchool(school.id)
         navigation.navigate('Root')
 
 
@@ -104,20 +105,19 @@ const SignUpPhoto = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
 
-            {/* <ModalComponent setOpen={setShowModal} renderContent={modal()} width={300} height={modalHeight} toValue={-580} open={showModal} animated={true} showBottomCancelBar={true} cancelText="Cancel" /> */}
-
+            <Header
+                navigation={navigation}
+                style={{ backgroundColor: Colors.primary }}
+            />
             <OptionsModal
                 options={['Take Picture', 'Choose From Library']}
                 onOptionPress={[onTakePicturePress, onLibraryPress]}
                 showModal={showImageOptionsModal}
                 onCancelPress={() => { setShowImageOptionsModal(false) }}
             />
-            <TouchableWithoutFeedback onPress={onBackPressed}>
-                <Image source={assets.left_arrow} style={{ width: 28, height: 28, tintColor: Colors.light.primary, margin: 20 }} />
 
-            </TouchableWithoutFeedback>
 
             <View style={{ padding: 20 }}>
 
@@ -126,10 +126,10 @@ const SignUpPhoto = ({ navigation }) => {
 
                 <TouchableOpacity
                     onPress={onProfilePicturePress}
-                    style={{ alignSelf: 'center', alignItems: 'center', padding: 20, marginTop: 40, borderWidth: 3, width: 150 + 20, height: 150 + 20, borderRadius: 150, justifyContent: 'center', borderColor: Colors.light.primary }}>
-                    <View style={{ width: 150, height: 150, borderRadius: 100, backgroundColor: 'lightgray', justifyContent: 'center', alignItems: 'center' }}>
+                    style={{ alignSelf: 'center', alignItems: 'center', padding: 20, marginTop: 40, borderWidth: 3, width: 150 + 20, height: 150 + 20, borderRadius: 150, justifyContent: 'center', borderColor: Colors.accent }}>
+                    <View style={{ width: 150, height: 150, borderRadius: 100, backgroundColor: '#00000020', justifyContent: 'center', alignItems: 'center' }}>
 
-                        {!image ? <Image source={assets.person} style={{ width: 140, height: 140, tintColor: 'gray' }} />
+                        {!image ? <Image source={assets.person} style={{ width: 140, height: 140, tintColor: '#00000050' }} />
                             :
                             <View style={{ width: 150, height: 150, borderRadius: 100, overflow: 'hidden', justifyContent: 'center', alignItems: 'center' }}>
 
@@ -137,8 +137,8 @@ const SignUpPhoto = ({ navigation }) => {
                             </View>
                         }
 
-                        <View style={{ borderRadius: 100, padding: 8, backgroundColor: Colors.light.accent, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: -20, right: -10 }}>
-                            <Image source={assets.add_image} style={{ width: 40, height: 40, tintColor: Colors.light.primary }} />
+                        <View style={{ borderRadius: 100, padding: 8, backgroundColor: Colors.primary, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: -20, right: -10 }}>
+                            <Image source={assets.add_image} style={{ width: 40, height: 40, tintColor: 'white' }} />
 
                         </View>
 
@@ -162,7 +162,7 @@ const SignUpPhoto = ({ navigation }) => {
                 </TouchableWithoutFeedback>
 
             </View>
-        </SafeAreaView>
+        </View>
 
     )
 }

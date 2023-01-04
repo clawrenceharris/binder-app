@@ -1,38 +1,58 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React, { useState } from 'react'
-import { assets, Colors } from '../constants'
+import { Colors } from '../constants'
 import useColorScheme from '../hooks/useColorScheme'
 import Header from '../components/Header'
-import { useRoute } from '@react-navigation/native'
 import OptionsModal from '../components/OptionsModal'
-import { db } from '../Firebase/firebase'
+import { auth, db } from '../Firebase/firebase'
 import ScrollableImages from '../components/ScrollableImages'
-import FlippableFlashcard from '../components/FlippableFlashcard'
 import ScrollableFlashcards from '../components/ScrollableFlashcards'
-const DeskItem = ({ navigation }) => {
+import MoreButton from '../components/MoreButton'
+const DeskItem = ({ navigation, route }) => {
 
-    const route = useRoute()
-    const deskItem = route.params.deskItem
-    const deskCategory = route.params.deskCategory
+    const { deskItem, deskType } = route.params;
     const [showModal, setShowModal] = useState(false)
-
-    const [currentIndex, setCurrentIndex] = useState(0)
-    const [reset, setReset] = useState(false)
-
+    const colorScheme = useColorScheme()
     const headerRight = () => (
-        <TouchableOpacity
-            onPress={() => setShowModal(true)}
-            style={{ backgroundColor: '#272727', width: 40, height: 40, borderRadius: 50, alignItems: 'center', padding: 5, justifyContent: 'center' }}>
-            <Image source={assets.more} style={{ width: 20, height: 20, tintColor: 'white' }} />
 
-        </TouchableOpacity>
+        <MoreButton onPress={() => setShowModal(true)} />
     )
+    //useEffect(() => {
+    //     db.collection('desks')
+    //         .doc(deskItem.ownerUID)
+    //         .get()
+    //         .then(doc => {
+
+    //             if (deskCategory === "Flashcards") {
+    //                 doc.data().flashcards.forEach(item => {
+    //                     if (item.id == id) {
+    //                         setDeskItem(item)
+    //                     }
+
+    //                 })
+
+    //             }
+
+    //             if (deskCategory === "Notes") {
+    //                 doc.data().notes.forEach(item => {
+    //                     if (item.id == id) {
+    //                         setDeskItem(item)
+    //                     }
+
+    //                 })
+
+    //             }
+
+    //         })
+
+
+    // }, [])
 
     const toggleIsPublic = () => {
-        db.collection(deskCategory.toLowerCase())
+        db.collection(deskType.toLowerCase())
             .doc(deskItem.id)
             .update({
-                isPublic: !deskItem?.isPublic
+                isPublic: !deskItem.isPublic
             })
     }
 
@@ -57,100 +77,75 @@ const DeskItem = ({ navigation }) => {
     const onDeletePress = () => {
 
     }
+    console.log(deskItem.cards)
 
 
     return (
-        <View style={{ backgroundColor: '#333', flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <Header
                 navigation={navigation}
-                title={deskCategory}
+                title={deskType}
                 direction={'vertical'}
                 headerRight={headerRight()}
-                shadow
+                style={{ backgroundColor: Colors.primary, height: 170, zIndex: 0 }}
 
 
             />
-            <View style={{ padding: 20, alignItems: 'center' }}>
-                {/* <Text style={styles.sectionHeaderText}>Description</Text> */}
-                <Text style={{ fontFamily: 'Kanit', color: 'white', fontSize: 24 }}>{deskItem?.title}</Text>
-                <View style={{ flexDirection: 'row' }}>
-                    {deskItem?.class && <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 18 }}>{deskItem.class + ": "}</Text>}
 
-                    {deskItem?.sectionNumber && <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 18 }}>{deskItem?.section + " " + deskItem?.sectionNumber}</Text>}
+            <ScrollView style={{ marginTop: -30, borderRadius: 25, zIndex: 1, backgroundColor: Colors[colorScheme].background }}>
+                <View style={{ alignItems: 'center', marginTop: 20 }}>
 
 
-                </View>
+                    <Text style={{ fontFamily: 'KanitMedium', color: Colors[colorScheme].tint, fontSize: 24 }}>{deskItem.title}</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        {deskItem.class &&
+                            <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 18 }}>{deskItem.class.name + ": "}</Text>}
 
-            </View>
-            <OptionsModal
-                showModal={showModal}
-                options={['Bookmark', 'Share', 'Edit', 'Public', 'Delete']}
-                redIndex={5}
-                toValue={-400}
-                switchIndex={3}
-                onToggle={toggleIsPublic}
-                isOn={deskItem?.isPublic}
+                        {deskItem.sectionNumber &&
+                            <Text style={{ fontFamily: 'Kanit', color: 'gray', fontSize: 18 }}>{deskItem.section + " " + deskItem.sectionNumber}</Text>}
 
-                onCancelPress={() => setShowModal(false)}
-                onOptionPress={[onBookmarkPress, onSharePress, onEditPress, onPublicPress, onDeletePress]}
-            />
 
-            {deskCategory !== 'Flashcards' ?
-
-                <ScrollableImages images={deskItem?.files} />
-
-                :
-
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30 }}>
-                    {/* <TouchableOpacity
-                        onPress={() => {
-                            setReset(!reset);
-                            setCurrentIndex(currentIndex - 1);
-
-                        }}
-                        disabled={currentIndex === 0}>
-
-                        <Image
-                            source={assets.right_arrow}
-                            style={{
-                                width: 40,
-                                height: 40,
-                                tintColor: currentIndex !== 0 ? Colors.light.primary : 'gray',
-                                transform: [{ rotate: '180deg' }]
-                            }} />
-
-                    </TouchableOpacity> */}
-
-                    <ScrollableFlashcards flashcards={deskItem?.cards} />
-                    {/* <TouchableOpacity
-                        disabled={currentIndex === deskItem?.cards.length - 1}
-                        onPress={() => {
-                            setReset(!reset);
-                            setCurrentIndex(currentIndex + 1);
-
-                        }}>
-
-                        <Image
-                            source={assets.right_arrow}
-                            style={{
-                                width: 40,
-                                height: 40,
-                                tintColor: currentIndex !== deskItem?.cards.length - 1 ? Colors.light.primary : 'gray'
-                            }} />
-
-                    </TouchableOpacity> */}
+                    </View>
 
                 </View>
 
+                <OptionsModal
+                    showModal={showModal}
+                    options={['Bookmark', 'Share', 'Edit', 'Public', 'Delete']}
+                    redIndex={5}
+                    toValue={-400}
+                    switchIndex={3}
+                    onToggle={toggleIsPublic}
+                    isOn={deskItem?.isPublic}
 
-            }
+                    onCancelPress={() => setShowModal(false)}
+                    onOptionPress={[onBookmarkPress, onSharePress, onEditPress, onPublicPress, onDeletePress]}
+                />
+
+                {deskType !== 'Flashcards' ?
+
+                    <ScrollableImages images={deskItem.files} />
+
+                    :
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 30 }}>
 
 
-            {deskItem?.description && <View style={{ padding: 20 }}>
-                <Text style={styles.sectionHeaderText}>Description</Text>
-                <Text style={{ fontFamily: 'Kanit', color: 'white' }}>{deskItem.description}</Text>
-            </View>}
+                        <ScrollableFlashcards flashcards={deskItem.cards} />
 
+
+                    </View>
+
+
+                }
+
+
+                {deskItem.description && <View style={{ paddingHorizontal: 20 }}>
+                    <Text style={styles.sectionHeaderText}>{"Description"}</Text>
+                    <Text style={{ fontFamily: 'Kanit', color: Colors[colorScheme].tint }}>{deskItem.description}</Text>
+                </View>}
+
+            </ScrollView>
 
         </View>
     )

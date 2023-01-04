@@ -7,7 +7,6 @@ import book from '../assets/icons/book.png'
 import add_class from '../assets/icons/add_class.png'
 import grad_cap from '../assets/icons/grad_cap.png'
 import school from '../assets/icons/school.png'
-import school_outlined from '../assets/icons/school_outlined.png'
 import desk from '../assets/icons/desk.png'
 import profile from '../assets/icons/profile.png'
 import left_arrow from '../assets/icons/left_arrow.png'
@@ -27,6 +26,11 @@ import add_image from '../assets/icons/add-image.png'
 import notes from '../assets/icons/notes.png'
 import chat_o from '../assets/icons/chat-o.png'
 import camera_o from '../assets/icons/camera-o.png'
+import reading from '../assets/icons/reading.png'
+import flashcards from '../assets/icons/flashcards.png'
+import grade from '../assets/icons/grade.png'
+import guide from '../assets/icons/guide.png'
+
 import camera from '../assets/icons/camera.png'
 import person from '../assets/icons/person.png'
 import loading from '../assets/icons/loading.png'
@@ -36,9 +40,10 @@ import logo_cube from '../assets/icons/logo.png'
 import image01 from '../assets/images/image01.jpeg'
 
 import group01 from '../assets/images/group01.jpg'
-import notes01 from '../assets/images/notes01.jpg'
 import chat_search from '../assets/icons/chat_search.png'
 import horn from '../assets/icons/horn.png'
+import other from '../assets/icons/other.png'
+
 import poll from '../assets/icons/poll.png'
 import fire from '../assets/icons/fire.png'
 import phone from '../assets/icons/phone.png'
@@ -97,6 +102,11 @@ export default {
     add,
     shines,
     info,
+    reading,
+    flashcards,
+    grade,
+    other,
+    guide,
     check,
     question_mark,
     star,
@@ -115,7 +125,6 @@ export default {
     logo_cube,
     grad_cap,
     loading,
-    school_outlined,
     school,
     desk,
     profile,
@@ -135,7 +144,6 @@ export default {
     fire,
     poll,
     group01,
-    notes01,
     chat_search,
     video_call,
     phone,

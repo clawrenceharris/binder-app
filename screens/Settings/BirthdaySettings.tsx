@@ -45,10 +45,11 @@ const BirthdaySettings = ({ route }) => {
 
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
             <Header
                 title='Birthday'
                 navigation={navigation}
+                style={{ backgroundColor: Colors.primary }}
 
             />
             <View style={{ padding: 20 }}>
@@ -64,8 +65,8 @@ const BirthdaySettings = ({ route }) => {
                             keyboardType={'number-pad'}
                             value={month}
                             onChangeText={setMonth}
-                            placeholderTextColor={'#6F6F6F'}
-                            selectionColor={Colors.light.primary}
+                            placeholderTextColor={'#00000040'}
+                            selectionColor={Colors.accent}
 
 
                         />
@@ -79,8 +80,8 @@ const BirthdaySettings = ({ route }) => {
                             keyboardType={'number-pad'}
                             value={day}
                             onChangeText={setDay}
-                            placeholderTextColor={'#6F6F6F'}
-                            selectionColor={Colors.light.primary}
+                            placeholderTextColor={'#00000040'}
+                            selectionColor={Colors.accent}
 
 
                         />
@@ -94,8 +95,8 @@ const BirthdaySettings = ({ route }) => {
                             value={year}
                             onChangeText={setYear}
                             keyboardType={'number-pad'}
-                            placeholderTextColor={'#6F6F6F'}
-                            selectionColor={Colors.light.primary}
+                            placeholderTextColor={'#00000040'}
+                            selectionColor={Colors.accent}
 
 
                         />
@@ -111,9 +112,9 @@ const BirthdaySettings = ({ route }) => {
                     title={'Save'}
                     background={Colors.light.primary}
                     tint={'white'}
-                    margin={40}
+                    style={{ margin: 20 }}
                     onPress={onSavePress}
-                    condition={isValidMonth(month) && isValidDay(day) && isValidYear(year)}
+                    disabled={!isValidMonth(month) || !isValidDay(day) || !isValidYear(year)}
                     width={'100%'}
 
                 />

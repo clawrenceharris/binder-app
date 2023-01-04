@@ -2,23 +2,28 @@ import assets from "./assets";
 
 const tintColorLight = '#2D3035';
 const tintColorDark = '#DEDEDE';
-const tintColorAccent = "#40BFFF"
-const tintColorPrimary = "#40BFFF"
-const accentColor = '#8C3BD7'
+
 export default {
+  primary: '#8C3BD7',
+  accent: '#40BFFF',
+  red: '#FD6464',
+  green: '#8BFF5D',
+  //green 7FF449
+  yellow: '',
+  blue: '#2E52F5',
+  orange: 'F89E3E',
+  pink: '#F64083',
+
+
+
   light: {
     text: '#000',
     background: '#f4f4f4',
     tint: '#1F1F1F',
-    primary: tintColorPrimary,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
     lightGray: '#EFEFEF',
-    chatBackground: assets.chat_background,
-    accent: accentColor,
-    red: '#FD6464',
-    gray: 'gray',
-    green: '#8FFD67',
+    gray: 'lightgray',
 
   },
   dark: {
@@ -26,13 +31,10 @@ export default {
     text: '#fff',
     background: '#333',
     tint: 'white',
-    primary: tintColorPrimary,
     gray: 'gray',
     lightGray: 'black',
-    chatBackground: assets.chat_background_dark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
-    accent: accentColor
 
   },
 };

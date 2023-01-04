@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     },
     description: {
         fontFamily: 'Kanit',
-        color: 'gray',
+        color: 'white',
         fontSize: 14,
         textAlign: 'center',
         margin: 5
@@ -37,13 +37,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     input: {
-        color: 'white',
-        padding: 15,
-        fontSize: 18,
         width: '100%',
-        backgroundColor: '#474747',
-        borderRadius: 10,
-        borderBottomColor: '#6F6F6F',
+        fontSize: 20,
+        padding: 10,
+        fontFamily: 'Kanit',
+        color: 'white',
+        backgroundColor: '#00000020',
+        borderRadius: 15
+
 
     },
 

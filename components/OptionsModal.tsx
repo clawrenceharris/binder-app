@@ -1,11 +1,25 @@
 import { View, Text, Modal, Animated, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, StyleSheet, } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { Colors } from '../constants'
 import useColorScheme from '../hooks/useColorScheme'
 import PollOptions from '../constants/data/PollOptions'
 import OptionsList from './OptionsList'
 
-const OptionsModal = (props) => {
+interface Props {
+    showModal: boolean
+    options: string[]
+    onOptionPress: (() => void)[]
+    isOn?: boolean;
+    onToggle?: () => void
+    onCancelPress: () => void
+    switchIndex?: number
+    redIndex?: number
+    toValue?: number
+
+
+}
+
+const OptionsModal: FC<Props> = (props) => {
     const colorScheme = useColorScheme()
     const translateValue = useRef(new Animated.Value(0)).current
     const modalHeight = 150
@@ -36,12 +50,25 @@ const OptionsModal = (props) => {
             }).start();
     }
 
+    const cancelOption = {
 
+
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        width: '100%',
+        padding: 10,
+        backgroundColor: Colors[colorScheme].background,
+        marginTop: 10,
+        borderRadius: 15
+
+    }
     return (
         <Modal
             transparent
             visible={props.showModal}
             onShow={slideIn}
+            onDismiss={slideOut}
         >
 
 
@@ -64,8 +91,8 @@ const OptionsModal = (props) => {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPress={props.onCancelPress}
-                        style={styles.cancelOption}>
-                        <Text style={{ fontFamily: 'KanitMedium', fontSize: 18, color: 'white' }}>Done</Text>
+                        style={{ ...cancelOption }}>
+                        <Text style={{ fontFamily: 'KanitMedium', fontSize: 18, color: Colors[colorScheme].tint }}>{"Done"}</Text>
 
                     </TouchableOpacity>
 
@@ -80,17 +107,5 @@ const OptionsModal = (props) => {
     )
 }
 
-const styles = StyleSheet.create({
 
-    cancelOption: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'center',
-        width: '100%',
-        padding: 10,
-        backgroundColor: '#333',
-        marginTop: 10,
-        borderRadius: 15
-    }
-})
 export default OptionsModal

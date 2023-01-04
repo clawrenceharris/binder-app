@@ -6,18 +6,18 @@ import Button from '../components/Button'
 
 const Playground = ({ navigation }) => {
     return (
-        <View style={{ flex: 1, backgroundColor: Colors.light.accent }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
             <Header
                 navigation={navigation}
                 title={'Playgrounds'}
 
-                style={{ backgroundColor: Colors.light.accent }}
+                style={{ backgroundColor: Colors.primary }}
 
 
             />
 
             <View style={{ padding: 20 }}>
-                <Text style={{ fontFamily: 'Kanit', color: 'white', textAlign: 'center' }}>{'Playgrounds is where you can socialize and study with students from other schools. Play fun study games, join study groups and more!'}</Text>
+                <Text style={{ fontFamily: 'Kanit', color: 'white', textAlign: 'center' }}>{'Playgrounds is where you can socialize and study with students from other schools. \n\n Play fun study games, join study groups and more!'}</Text>
 
                 <Button
                     title={'Get Started!'}

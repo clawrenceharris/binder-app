@@ -8,6 +8,8 @@ import { assets, Colors } from '../../constants'
 import { descriptions, styles } from '.'
 import Button from '../../components/Button'
 import BackButton from '../../components/BackButton'
+import Input from '../../components/Input'
+import Header from '../../components/Header'
 
 const SignUpBirthday = ({ navigation }) => {
     const route = useRoute()
@@ -50,10 +52,10 @@ const SignUpBirthday = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
-            <BackButton
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
+            <Header
                 navigation={navigation}
-                margin={20}
+                style={{ backgroundColor: Colors.primary }}
             />
             <View style={{ height: '25%', alignItems: 'center', justifyContent: 'center' }}>
 
@@ -69,14 +71,12 @@ const SignUpBirthday = ({ navigation }) => {
 
 
                     <View style={{ width: '25%' }}>
-                        <TextInput
+                        <Input
                             placeholder='MM'
-                            style={styles.input}
                             keyboardType={'number-pad'}
                             value={month}
                             onChangeText={setMonth}
-                            placeholderTextColor={'#00000090'}
-                            selectionColor={Colors.light.primary}
+                            style={{ color: 'white' }}
 
 
                         />
@@ -84,27 +84,24 @@ const SignUpBirthday = ({ navigation }) => {
                     </View>
 
                     <View style={{ width: '25%' }}>
-                        <TextInput
+                        <Input
                             placeholder='DD'
-                            style={styles.input}
                             keyboardType={'number-pad'}
                             value={day}
                             onChangeText={setDay}
-                            placeholderTextColor={'#00000090'}
-                            selectionColor={Colors.light.primary}
+                            style={{ color: 'white' }}
                         />
-
                     </View>
 
                     <View style={{ width: '40%' }}>
-                        <TextInput
+                        <Input
                             placeholder='YYYY'
-                            style={styles.input}
+                            keyboardType={'number-pad'}
                             value={year}
                             onChangeText={setYear}
-                            keyboardType={'number-pad'}
-                            placeholderTextColor={'#00000090'}
-                            selectionColor={Colors.light.primary}
+                            style={{ color: 'white' }}
+
+
                         />
 
                     </View>
@@ -123,7 +120,7 @@ const SignUpBirthday = ({ navigation }) => {
                 />
 
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 

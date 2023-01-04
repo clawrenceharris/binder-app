@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { assets, Colors } from '../constants'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,6 +9,8 @@ import { auth } from '../Firebase/firebase'
 import Button from '../components/Button'
 import BackButton from '../components/BackButton'
 import useColorScheme from '../hooks/useColorScheme'
+
+
 const SignIn = ({ navigation }) => {
   const colorScheme = useColorScheme()
   const { control, handleSubmit, watch } = useForm();
@@ -16,8 +18,6 @@ const SignIn = ({ navigation }) => {
   const email = watch('email')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  // const [email, setEmail] = useState('')
-  // const [password, setPassword] = useState('')
 
   const rewordError = (error) => {
     console.log(error.message)
@@ -35,6 +35,17 @@ const SignIn = ({ navigation }) => {
     }
     else return 'Sorry, something went wrong. Please try agian later.'
   }
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged(function (user) {
+      if (user) {
+
+        navigation.pop()
+        navigation.replace('Root');
+      }
+    })
+
+    return () => subscriber
+  }, [])
 
   const onSignInPressed = (data) => {
     setLoading(true)
@@ -42,7 +53,7 @@ const SignIn = ({ navigation }) => {
       .signInWithEmailAndPassword(data.email, data.password)
       .then(user => {
         setLoading(false)
-        navigation.navigate('Root')
+
 
 
       })
@@ -59,7 +70,7 @@ const SignIn = ({ navigation }) => {
 
   return (
 
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.primary }}>
       <View style={{ height: '25%' }}>
         <BackButton
           direction={'horizontal'}
@@ -68,7 +79,7 @@ const SignIn = ({ navigation }) => {
           navigation={navigation}
 
         />
-        <Text style={styles.screenTitle}>{"Log in to your account"}</Text>
+        <Text style={styles.screenTitle}>{"Log in to your account."}</Text>
       </View>
 
 
@@ -109,7 +120,6 @@ const SignIn = ({ navigation }) => {
         <Button
           title={'Log In'}
           onPress={handleSubmit(onSignInPressed)}
-          style={{ borderRadius: 15 }}
           disabled={!email || !password}
 
 
@@ -119,7 +129,7 @@ const SignIn = ({ navigation }) => {
         <View style={{ flexDirection: 'row', margin: 20, alignSelf: 'center' }}>
           <Text style={{ color: 'darkgray', fontFamily: 'Kanit' }}>{"Don't have an account?"}</Text>
           <Text
-            style={{ color: Colors.light.primary, marginLeft: 5, fontFamily: 'KanitSemiBold' }}
+            style={{ color: Colors.accent, marginLeft: 5, fontFamily: 'KanitSemiBold' }}
             onPress={() => { navigation.navigate('SignUpEmailPassword') }}
           >{"Sign Up"}</Text>
 
@@ -133,16 +143,7 @@ const SignIn = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-  continueBtn: {
-    borderRadius: 15,
-    backgroundColor: Colors.light.primary,
-    padding: 15,
-    width: '70%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-    alignSelf: 'center'
-  },
+
   input: {
     borderBottomColor: 'lightgray',
     borderBottomWidth: 2,

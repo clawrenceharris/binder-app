@@ -18,6 +18,7 @@ interface ProfileButtonProps {
     name?: string;
     defaultImageStyle?: ImageStyle;
     imageStyle?: ImageStyle;
+    imageContainerStyle?: ViewStyle;
 
 }
 //A profile button component that represents a user or a group profile and can be clicked on to navigate to their profile screen
@@ -42,32 +43,26 @@ const ProfileButton: FC<ProfileButtonProps> = (props) => {
             ]}>
 
 
-                <View style={[styles.buttonContainer, { width: props.size || 50, height: props.size || 50, ...props.buttonStyle }]}>
+                <View style={[styles.buttonContainer, { width: props.size || 40, height: props.size || 40, ...props.buttonStyle }]}>
 
                     <View
-                        style={[styles.imageContainer, { width: props.size || 50, height: props.size || 50, }]}>
-
+                        style={[styles.imageContainer, { width: props.size || 40, height: props.size || 40, ...props.imageContainerStyle }]}>
                         {
-                            props?.imageURL &&
+                            props.imageURL != null ?
 
-                            <Image
-                                source={{ uri: props.imageURL }}
-                                style={[styles.image, { width: props.size - 10 || 50, height: props.size - 10 || 50, ...props.imageStyle }]} />
+                                <Image
+                                    source={{ uri: props.imageURL }}
+                                    style={[styles.image, { width: props.size || 40, height: props.size || 40, ...props.imageStyle }]} />
+                                :
+                                <Image
+                                    source={props.defaultImage || assets.person}
+                                    style={[styles.defaultImage, { width: props.size - 5 || 40, height: props.size - 5 || 40, ...props.defaultImageStyle, }]} />
                         }
-
-                        {
-                            <Image
-                                source={props.defaultImage || assets.logo_cube}
-                                style={[styles.defaultImage, { width: props.size - 10 || 40, height: props.size - 10 || 40, ...props.defaultImageStyle, }]} />
-                        }
-
                     </View>
 
 
                     <View style={[
                         styles.badgeContainer, {
-
-
                             ...props.badgeContainerStyle,
                         }]}>
 
@@ -82,7 +77,7 @@ const ProfileButton: FC<ProfileButtonProps> = (props) => {
                     props.showsName &&
                     <Text
                         numberOfLines={2}
-                        style={[{ fontFamily: 'KanitBold', fontSize: 18, color: 'white', marginLeft: 10, width: '60%' }, { ...props.nameStyle }]}>
+                        style={{ fontFamily: 'KanitBold', fontSize: 18, color: 'white', marginLeft: 10, width: '70%', ...props.nameStyle }}>
                         {props.name}
                     </Text>
                 }
@@ -113,10 +108,12 @@ const styles = StyleSheet.create({
 
     image: {
         resizeMode: 'cover',
+
     },
 
     imageContainer: {
         borderRadius: 100,
+
         alignItems: 'center',
         overflow: 'hidden',
         justifyContent: 'center',

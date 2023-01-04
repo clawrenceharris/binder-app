@@ -1,13 +1,33 @@
-import PollOptions from "./PollOptions";
+import Users from "./Users";
 
 export default [
 
     {
-        id: 'String',
-        title: 'How much did you study for the test',
-        user: [],
-        options: [PollOptions[0], PollOptions[1], PollOptions[3]],
+        id: '0',
+        title: 'How much did you study for the test?',
+        user: Users[1],
+        options: [
 
-        timestamp: new Date(2022, 10, 11)
-    }
+
+            {
+                option: 'read the whole book',
+                votes: [Users[2]]
+            },
+
+            {
+                option: 'Not enough',
+                votes: [Users[3], Users[4], Users[0]]
+            },
+            {
+                option: 'forgot the test was today',
+                votes: [Users[1], Users[4]]
+            },
+        ],
+
+
+
+        timestamp: new Date(),
+        totalVotes: 5
+
+    },
 ]

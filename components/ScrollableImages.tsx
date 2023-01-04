@@ -1,10 +1,11 @@
-import { View, Text, FlatList, Image } from 'react-native'
+import { View, Text, FlatList, Image, useWindowDimensions } from 'react-native'
 import React, { useRef, useState } from 'react'
-import NotePost from './NotePost'
 import { Colors } from '../constants'
 const ScrollableImages = ({ images }) => {
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
 
+    const { width } = useWindowDimensions();
+    const postDim = width - 20
     const onViewableItemsChanged = useRef((item) => {
         const index = item.viewableItems[0].index;
         setCurrentSlideIndex(index)
@@ -31,7 +32,11 @@ const ScrollableImages = ({ images }) => {
             </View >
             <FlatList
                 data={images}
-                renderItem={({ item }) => <NotePost item={item} />}
+                renderItem={({ item }) =>
+                    <View style={{ padding: 10, height: '70%' }}>
+                        <Image source={{ uri: item }} style={{ resizeMode: 'cover', width: postDim, height: postDim }} />
+                    </View>
+                }
 
                 keyExtractor={(item) => item}
                 horizontal
@@ -46,7 +51,7 @@ const ScrollableImages = ({ images }) => {
                 {images?.map((item, index) =>
                     <View
                         key={index.toString()}
-                        style={{ marginTop: 10, width: 6, height: 6, borderRadius: 50, backgroundColor: currentSlideIndex === index ? Colors.light.primary : 'lightgray', marginRight: 10 }} />
+                        style={{ marginTop: 10, width: 6, height: 6, borderRadius: 50, backgroundColor: currentSlideIndex === index ? Colors.accent : 'lightgray', marginRight: 10 }} />
                 )}
             </View>
 

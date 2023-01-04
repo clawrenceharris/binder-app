@@ -13,20 +13,11 @@ const descriptions = {
 }
 
 const styles = StyleSheet.create({
-    continueBtn: {
-        borderRadius: 25,
-        backgroundColor: Colors.light.primary,
-        padding: 15,
-        width: '70%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 20,
-        alignSelf: 'center'
-    },
+
 
 
     textInputTitle: {
-        color: 'lightgray',
+        color: '#00000050',
         alignSelf: 'flex-start',
         fontSize: 12
     },
@@ -64,7 +55,7 @@ const styles = StyleSheet.create({
         padding: 10,
         fontFamily: 'Kanit',
         color: 'white',
-        backgroundColor: '#00000020',
+        backgroundColor: '#00000010',
         borderRadius: 15
     },
 

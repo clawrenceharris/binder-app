@@ -23,10 +23,9 @@ export default function Feed() {
     const [users, setUsers] = useState(null)
     const navigation = useNavigation()
     const route = useRoute()
-    console.log(route.params?.chatroomID)
     useEffect(() => {
         const subscriber = db.collection('classes')
-            .doc(route.params.chatroomID).get().then(doc => {
+            .doc(route.params.id).get().then(doc => {
                 setClassData(doc.data())
 
             })
@@ -48,12 +47,12 @@ export default function Feed() {
     )
 
     return (
-        <View style={{ flex: 1, backgroundColor: Colors.light.accent }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
             <Header
                 navigation={navigation}
                 title={'Feed'}
-                style={{ backgroundColor: Colors.light.accent }}
-
+                style={{ backgroundColor: Colors.primary }}
+                color
 
             />
 

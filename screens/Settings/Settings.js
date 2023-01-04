@@ -9,16 +9,24 @@ import Button from '../../components/Button'
 import { Colors } from '../../constants'
 import { SHADOWS } from '../../constants/Theme'
 
-const Settings = () => {
+const Settings = ({ navigation }) => {
     const [userData, setUserData] = useState(null)
     const [schoolData, setSchoolData] = useState(null)
     const [secondSchoolData, setSecondSchoolData] = useState(null)
 
-    const navigation = useNavigation()
 
 
-    const onLogoutPress = () => {
+    const onLogoutPress = async () => {
         //TODO: log user out using firebase
+
+        try {
+            await auth.signOut();
+            navigation.pop()
+            navigation.replace('StartScreen');
+        } catch (e) {
+            console.log(e);
+        }
+
 
     }
 
@@ -45,12 +53,12 @@ const Settings = () => {
 
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#333' }}>
+        <View style={{ flex: 1, backgroundColor: Colors.primary }}>
             <Header
                 navigation={navigation}
                 direction={'horizontal'}
                 title={'Settings'}
-                shadow
+                style={{ backgroundColor: Colors.primary }}
 
             />
 
@@ -67,7 +75,7 @@ const Settings = () => {
                         title='Name'
                         value={auth.currentUser?.displayName}
                         isTop={true}
-                        onPress={() => { navigation.navigate('NameSettings', { firstName: userData.firstName, lastName: userData.lastName }) }}
+                        onPress={() => { navigation.navigate('NameSettings', { displayName: userData.displayName }) }}
                     />
 
 
@@ -132,14 +140,11 @@ const Settings = () => {
                         title='Desk Privacy'
                         onPress={() => navigation.navigate('DeskPrivacy')}
                         isTop
-                    />
-
-
-                    <SettingsListItem
-                        title='Trash'
-                        onPress={() => navigation.navigate('DeskPrivacy')}
                         isBottom
                     />
+
+
+
 
                 </View>
 
@@ -165,8 +170,9 @@ const Settings = () => {
 
 const styles = StyleSheet.create({
     sectionContainer: {
-        marginVertical: 30,
-        ...SHADOWS.dark
+        marginVertical: 15,
+        ...SHADOWS.dark,
+        shadowColor: '#870290'
 
     },
 

@@ -1,22 +1,23 @@
-import { View, Text, Animated, Pressable, StyleSheet, TouchableOpacity, PanResponder } from 'react-native'
+import { View, Text, Animated, Pressable, StyleSheet, TouchableOpacity, PanResponder, Image } from 'react-native'
 import React, { Component, useEffect, useRef, useState } from 'react'
 import { Colors } from '../constants';
 import { useSharedValue } from 'react-native-reanimated';
+import { SHADOWS } from '../constants/Theme';
+import useColorScheme from '../hooks/useColorScheme';
 
-const FlippableFlashcard = ({ card, reset, margin }) => {
+const FlippableFlashcard = ({ card }) => {
 
     let flipRotation = 0
     const flipAnimation = useRef(new Animated.Value(0)).current;
-
+    const colorScheme = useColorScheme();
     flipAnimation.addListener(({ value }) => {
         flipRotation = value
     })
     useEffect(() => {
-        //flip back to front to reset 
-        console.log("reset")
+
         flipToFront()
 
-    }, [reset])
+    }, [])
 
     const flipToFront = () => {
         Animated.spring(flipAnimation, {
@@ -72,15 +73,25 @@ const FlippableFlashcard = ({ card, reset, margin }) => {
         <TouchableOpacity
             activeOpacity={1}
             onPress={flipCard}
-            style={[styles.cardContainer, { marginRight: margin }]}>
+            style={[styles.cardContainer, { marginBottom: 40, ...SHADOWS[colorScheme] }]}>
             <View>
 
                 <Animated.View style={{ ...styles.flipCard, ...flipToFrontStyle, }}>
-                    <Text style={styles.term}>{card.cardFront}</Text>
+                    {
+                        !card.cardFront.isImage ?
+                            <Text style={styles.term}>{card.cardFront.data}</Text>
+                            :
+                            <Image source={{ uri: card.cardFront.data }} style={{ width: '90%', height: '90%', borderRadius: 10, resizeMode: 'contain' }} />
+                    }
                 </Animated.View>
 
                 <Animated.View style={{ ...styles.flipCard, ...flipToBackStyle, ...styles.cardBack }}>
-                    <Text numberOfLines={10} style={styles.definition}>{card.cardBack}</Text>
+                    {!card.cardBack.isImage ?
+                        <Text numberOfLines={10} style={styles.definition}>{card.cardBack.data}</Text>
+                        :
+                        <Image source={{ uri: card.cardBack.data }} style={{ width: '100%', height: '90%', resizeMode: 'contain' }} />
+
+                    }
                 </Animated.View>
 
 
@@ -94,8 +105,8 @@ const FlippableFlashcard = ({ card, reset, margin }) => {
 const styles = StyleSheet.create({
 
     flipCard: {
-        width: 290,
-        height: 200,
+        width: 320,
+        height: 180,
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center',
@@ -114,7 +125,7 @@ const styles = StyleSheet.create({
     },
 
     term: {
-        color: Colors.light.primary,
+        color: Colors.accent,
         fontSize: 28,
         textAlign: 'center',
         width: "100%",
@@ -137,8 +148,8 @@ const styles = StyleSheet.create({
 
     cardFront: {
         padding: 10,
-        width: 300,
-        height: 200,
+
+
         backgroundColor: 'white',
         borderRadius: 15,
         justifyContent: 'center'

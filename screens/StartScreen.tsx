@@ -6,7 +6,7 @@ import { SHADOWS } from '../constants/Theme'
 
 const StartScreen = ({ navigation }) => {
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.accent, alignItems: 'center', justifyContent: 'space-evenly' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'space-evenly' }}>
             <View style={{ height: 70 }} />
 
 
@@ -14,13 +14,13 @@ const StartScreen = ({ navigation }) => {
             <View style={{ width: '100%', alignItems: 'center', padding: 50 }}>
                 <Button
                     onPress={() => navigation.navigate('SignIn')}
-                    style={{ marginTop: 20, width: '100%', borderRadius: 15, ...SHADOWS.dark, shadowColor: '#73017B' }}
+                    style={{ marginTop: 20, width: '100%', borderRadius: 15, ...SHADOWS.dark, shadowColor: '#870290' }}
                     title={'Log In'}
 
                 />
                 <Button
                     onPress={() => navigation.navigate('SignUpEmailPassword')}
-                    style={{ marginTop: 20, width: '100%', backgroundColor: 'white', borderRadius: 15, ...SHADOWS.dark, shadowColor: '#73017B' }}
+                    style={{ marginTop: 20, width: '100%', backgroundColor: 'white', borderRadius: 15, ...SHADOWS.dark, shadowColor: '#870290' }}
                     tint={'black'}
                     title={'Sign Up'}
 
